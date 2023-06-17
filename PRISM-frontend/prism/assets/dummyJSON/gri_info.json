@@ -1,0 +1,17 @@
+[
+    {
+       "Sustain_report_id":1, 
+       "Gri_info_id":1, 
+       "GRI_index_id":1
+    },
+    {
+        "Sustain_report_id":2, 
+        "Gri_info_id":2, 
+        "GRI_index_id":2
+    },
+    {
+        "Sustain_report_id":3, 
+        "Gri_info_id":3, 
+        "GRI_index_id":3
+    }
+]

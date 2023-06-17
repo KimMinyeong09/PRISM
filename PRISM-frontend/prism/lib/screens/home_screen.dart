@@ -1,13 +1,19 @@
 import 'package:easy_sidemenu/easy_sidemenu.dart';
 import 'package:flutter/material.dart';
 import 'package:number_paginator/number_paginator.dart';
+import 'package:prism/screens/detail_screen.dart';
 
-import '../models/company_model.dart';
-import '../models/esglab_score_model.dart';
-import '../models/kcgs_score_model.dart';
-import '../models/prism_score_model.dart';
-import '../models/sustain_report_model.dart';
-import '../services/api_services.dart';
+class Company {
+  final int companyId;
+  final String name;
+  final String industry;
+
+  Company({
+    required this.companyId,
+    required this.name,
+    required this.industry,
+  });
+}
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -29,7 +35,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   List<String> comparing_industries = [];
   // ** 필터링된 기업명
   String search_name = "";
-  // ** 랭킹 내 비교 선택 저장 변수
+  // * 랭킹 내 비교 선택 저장 변수
   List<String> comparing_items = [];
 
   // 비교용 변수
@@ -40,7 +46,19 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   bool remove_comparing_items = true;
 
   // API- 회사 정보 저장
-  late List<CompanyModel> company_list = [];
+  List<Company> company_list = [
+    Company(companyId: 1, name: 'Company A', industry: '에너지장비및서비스'),
+    Company(companyId: 2, name: 'Company B', industry: '석유와가스'),
+    Company(companyId: 3, name: 'Company C', industry: '에너지장비및서비스'),
+    Company(companyId: 4, name: 'Company D', industry: '에너지장비및서비스'),
+    Company(companyId: 5, name: 'Company E', industry: '건축자재'),
+    Company(companyId: 6, name: 'Company F', industry: '에너지장비및서비스'),
+    Company(companyId: 7, name: 'Company C', industry: '복합기업'),
+    Company(companyId: 8, name: 'Company G', industry: '에너지장비및서비스'),
+    Company(companyId: 9, name: 'Company H', industry: '석유와가스'),
+    Company(companyId: 10, name: 'Company I', industry: '복합기업'),
+    Company(companyId: 11, name: 'Company J', industry: '복합기업'),
+  ];
 
   // 업종 리스트
   List<String> industries = [
@@ -97,6 +115,12 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     '전기,가스 유틸리티',
   ];
 
+  // GRI 리스트
+  List<String> gris = [
+    "201-1",
+    "202-2",
+  ];
+
   @override
   void initState() {
     // 사이드 메뉴 페이지 이동
@@ -106,16 +130,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
     // 랭킹 탭
     tab_controller = TabController(length: 8, vsync: this);
-
-    // 회사 정보 가져오기
-    ApiService.outCompany(comparing_industries, search_name).then((outCompany) {
-      // TODO: 인자 수정 - 선택한 업종과 검색어로 수정할 것
-      setState(() {
-        company_list = outCompany;
-      });
-    }).catchError((error) {
-      print('Error fetching companies: $error');
-    });
 
     super.initState();
   }
@@ -186,7 +200,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                   side_menu.changePage(page);
                   remove_comparing_items = true;
                 },
-                // icon: Image.asset('../../assets/images/Ranking-icon.png'),
                 icon: const Icon(Icons.home),
               ),
               SideMenuItem(
@@ -275,13 +288,13 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                             controller: tab_controller,
                             children: [
                               rankingTab(context, "prism-ALL"),
-                              //rankingTab(context, "prism-E"),
-                              // rankingTab(context, "prism-S"),
-                              // rankingTab(context, "prism-G"),
-                              // rankingTab(context, "Wprism-ALL"),
-                              // rankingTab(context, "Wprism-E"),
-                              // rankingTab(context, "Wprism-S"),
-                              // rankingTab(context, "Wprism-G"),
+                              rankingTab(context, "prism-E"),
+                              rankingTab(context, "prism-S"),
+                              rankingTab(context, "prism-G"),
+                              rankingTab(context, "Wprism-ALL"),
+                              rankingTab(context, "Wprism-E"),
+                              rankingTab(context, "Wprism-S"),
+                              rankingTab(context, "Wprism-G"),
                             ],
                           ),
                         )
@@ -289,6 +302,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                     ),
                   ),
                 ),
+                // 비교 페이지
                 Container(
                   color: Colors.white,
                   child: Padding(
@@ -317,7 +331,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                               SizedBox(
                                 child: OutlinedButton.icon(
                                   onPressed: () {
-                                    //TODO: 창 만들기
+                                    chooseGRI(context);
                                   },
                                   icon: const Icon(
                                     Icons.filter_list,
@@ -369,29 +383,147 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                           ),
                         ),
                         if (comparing_items.isNotEmpty)
-                          Column(
-                            children:
-                                List.generate(comparing_items.length, (index) {
-                              String item = comparing_items[index];
-                              List<String> splitText = item.split("\n");
-                              String companyName = splitText[0];
-                              String companyYear = splitText[1];
-
-                              return Row(
-                                children: [
-                                  Text(item),
-                                  const Text("prism 스코어"),
-                                  const Text("Wprism 스코어"),
-                                  const Text("KCGS 스코어"),
-                                  const Text("한국ESG스코어"),
-                                  // TODO: GRI 정보 출력 - 함수 만들기 : 인자로 리스트 (comparing_gris) 주기
-                                  if (comparing_gris.isEmpty)
-                                    const Text("all")
-                                  else
-                                    Text("$comparing_gris"),
-                                ],
-                              );
-                            }),
+                          SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Column(
+                              children: List.generate(comparing_items.length,
+                                  (index) {
+                                String item = comparing_items[index];
+                                List<String> splitText = item.split("\n");
+                                String companyName = splitText[0];
+                                String companyYear = splitText[1];
+                                // TODO: 내용 불러오기
+                                return Row(
+                                  children: [
+                                    SizedBox(
+                                      width: 200,
+                                      child: Column(
+                                        children: [
+                                          Text(
+                                            companyName,
+                                            style:
+                                                const TextStyle(fontSize: 20),
+                                          ),
+                                          Text(companyYear),
+                                        ],
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      width: 500,
+                                      child: Column(
+                                        children: [
+                                          Text("overallPRISM 스코어"),
+                                          Row(
+                                            children: [
+                                              Text("ePRISM 스코어"),
+                                              Text("sPRISM 스코어"),
+                                              Text("gPRISM 스코어"),
+                                            ],
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      width: 500,
+                                      child: Column(
+                                        children: [
+                                          Text("overallPRISM 스코어"),
+                                          Row(
+                                            children: [
+                                              Text("ePRISM 스코어"),
+                                              Text("sPRISM 스코어"),
+                                              Text("gPRISM 스코어"),
+                                            ],
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 300,
+                                      child: Table(
+                                        children: const [
+                                          TableRow(
+                                            children: [
+                                              TableCell(child: Text("종합점수")),
+                                              TableCell(
+                                                  child: Text(
+                                                      "A")), // TODO: 점수 받아오기
+                                            ],
+                                          ),
+                                          TableRow(
+                                            children: [
+                                              TableCell(child: Text("E")),
+                                              TableCell(
+                                                  child: Text(
+                                                      "A")), // TODO: 점수 받아오기
+                                            ],
+                                          ),
+                                          TableRow(
+                                            children: [
+                                              TableCell(child: Text("S")),
+                                              TableCell(
+                                                  child: Text(
+                                                      "A")), // TODO: 점수 받아오기
+                                            ],
+                                          ),
+                                          TableRow(
+                                            children: [
+                                              TableCell(child: Text("G")),
+                                              TableCell(
+                                                  child: Text(
+                                                      "A")), // TODO: 점수 받아오기
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 300,
+                                      child: Table(
+                                        children: const [
+                                          TableRow(
+                                            children: [
+                                              TableCell(child: Text("종합점수")),
+                                              TableCell(
+                                                  child: Text(
+                                                      "A")), // TODO: 점수 받아오기
+                                            ],
+                                          ),
+                                          TableRow(
+                                            children: [
+                                              TableCell(child: Text("E")),
+                                              TableCell(
+                                                  child: Text(
+                                                      "A")), // TODO: 점수 받아오기
+                                            ],
+                                          ),
+                                          TableRow(
+                                            children: [
+                                              TableCell(child: Text("S")),
+                                              TableCell(
+                                                  child: Text(
+                                                      "A")), // TODO: 점수 받아오기
+                                            ],
+                                          ),
+                                          TableRow(
+                                            children: [
+                                              TableCell(child: Text("G")),
+                                              TableCell(
+                                                  child: Text(
+                                                      "A")), // TODO: 점수 받아오기
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    if (comparing_gris.isEmpty)
+                                      const Text("GRI")
+                                    else
+                                      Text("$comparing_gris")
+                                  ],
+                                );
+                              }),
+                            ),
                           ),
                       ],
                     ),
@@ -437,14 +569,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                       ),
                       onChanged: (value) {
                         search_name = value;
-                        ApiService.outCompany(comparing_industries, search_name)
-                            .then((outCompany) {
-                          setState(() {
-                            company_list = outCompany;
-                          });
-                        }).catchError((error) {
-                          print('Error fetching companies: $error');
-                        });
                       },
                     ),
                   ),
@@ -594,54 +718,93 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                                 context: context,
                                 barrierDismissible: true,
                                 builder: (BuildContext context) => AlertDialog(
-                                  content: FutureBuilder<List<SustainReport>>(
-                                    future: ApiService.outSustainReport(
-                                        company_list[rowIndex].id),
-                                    builder: (BuildContext context,
-                                        AsyncSnapshot<List<SustainReport>>
-                                            snapshot) {
-                                      if (snapshot.connectionState ==
-                                          ConnectionState.waiting) {
-                                        return const CircularProgressIndicator();
-                                      } else if (snapshot.hasError) {
-                                        return const Text('Error');
-                                      } else if (!snapshot.hasData) {
-                                        return const Text('No data available');
-                                      } else {
-                                        final companyReports = snapshot.data!;
-                                        return Row(
-                                          children: companyReports
-                                              .map((companyReport) {
-                                            return TextButton(
-                                              onPressed: () {
-                                                if (comparing_items.contains(
-                                                    '${company_list[rowIndex].name}\n${companyReport.year.toString()}')) {
-                                                  comparing_items.remove(
-                                                      '${company_list[rowIndex].name}\n${companyReport.year.toString()}');
-                                                } else {
-                                                  comparing_items.add(
-                                                      '${company_list[rowIndex].name}\n${companyReport.year.toString()}');
-                                                }
-                                                Navigator.pop(
-                                                  context,
-                                                );
-                                                setState(() {});
-                                              },
-                                              child: Text(
-                                                companyReport.year.toString(),
-                                                style: TextStyle(
-                                                  fontWeight:
-                                                      comparing_items.contains(
-                                                              '${company_list[rowIndex].name}\n${companyReport.year.toString()}')
-                                                          ? FontWeight.bold
-                                                          : FontWeight.normal,
-                                                ),
-                                              ),
-                                            );
-                                          }).toList(),
-                                        );
-                                      }
-                                    },
+                                  content: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      TextButton(
+                                        onPressed: () {
+                                          if (comparing_items.contains(
+                                              '${company_list[rowIndex].name}\n2020')) {
+                                            comparing_items.remove(
+                                                '${company_list[rowIndex].name}\n2020');
+                                          } else {
+                                            if (comparing_items.length < 3) {
+                                              comparing_items.add(
+                                                  '${company_list[rowIndex].name}\n2020');
+                                            }
+                                          }
+                                          Navigator.pop(
+                                            context,
+                                          );
+                                          setState(() {});
+                                        },
+                                        child: Text(
+                                          "2020",
+                                          style: TextStyle(
+                                            fontWeight: comparing_items.contains(
+                                                    '${company_list[rowIndex].name}\n2020')
+                                                ? FontWeight.bold
+                                                : FontWeight.normal,
+                                          ),
+                                        ),
+                                      ),
+                                      TextButton(
+                                        onPressed: () {
+                                          if (comparing_items.contains(
+                                              '${company_list[rowIndex].name}\n2021')) {
+                                            // 수정: 기업명\n연도 로 수정할 것
+                                            comparing_items.remove(
+                                                '${company_list[rowIndex].name}\n2021'); // 수정: 기업명\n연도 로 수정할 것
+                                          } else {
+                                            if (comparing_items.length < 3) {
+                                              comparing_items.add(
+                                                  '${company_list[rowIndex].name}\n2021'); // 수정: 기업명\n연도 로 수정할 것
+                                            }
+                                          }
+                                          Navigator.pop(
+                                            context,
+                                          );
+                                          setState(() {});
+                                        },
+                                        child: Text(
+                                          "2021",
+                                          style: TextStyle(
+                                            fontWeight: comparing_items.contains(
+                                                    '${company_list[rowIndex].name}\n2021')
+                                                ? FontWeight.bold
+                                                : FontWeight.normal,
+                                          ),
+                                        ),
+                                      ),
+                                      TextButton(
+                                        onPressed: () {
+                                          if (comparing_items.contains(
+                                              '${company_list[rowIndex].name}\n2022')) {
+                                            // 수정: 기업명\n연도 로 수정할 것
+                                            comparing_items.remove(
+                                                '${company_list[rowIndex].name}\n2022'); // 수정: 기업명\n연도 로 수정할 것
+                                          } else {
+                                            if (comparing_items.length < 3) {
+                                              comparing_items.add(
+                                                  '${company_list[rowIndex].name}\n2022'); // 수정: 기업명\n연도 로 수정할 것
+                                            }
+                                          }
+                                          Navigator.pop(
+                                            context,
+                                          );
+                                          setState(() {});
+                                        },
+                                        child: Text(
+                                          "2022",
+                                          style: TextStyle(
+                                            fontWeight: comparing_items.contains(
+                                                    '${company_list[rowIndex].name}\n2022')
+                                                ? FontWeight.bold
+                                                : FontWeight.normal,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
                               );
@@ -649,80 +812,27 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                             icon: const Icon(Icons.add),
                           ),
                         ),
-                        // DataCell(
-                        //   IconButton(
-                        //     onPressed: () {
-                        //       // ...다이얼로그 표시
-                        //     },
-                        //     icon: const Icon(Icons.add),
-                        //   ),
-                        // ),
                         DataCell(Text((rowIndex + 1).toString())),
-                        DataCell(Text(company_list[rowIndex].name)),
-                        DataCell(Text(company_list[rowIndex].industry)),
-                        DataCell(
-                          FutureBuilder<PrismScoreModel>(
-                            future: ApiService.outPrismScore(
-                                company_list[rowIndex].id),
-                            builder: (BuildContext context,
-                                AsyncSnapshot<PrismScoreModel> snapshot) {
-                              if (snapshot.connectionState ==
-                                  ConnectionState.waiting) {
-                                return const CircularProgressIndicator(); // 데이터 로딩 중일 때 보여줄 위젯
-                              } else if (snapshot.hasError) {
-                                return const Text('Error'); // 에러 발생 시 보여줄 위젯
-                              } else {
-                                final prismScore = snapshot.data!;
-                                final overallScore = prismScore.overallScore;
-                                return Text(
-                                    overallScore.toString()); // 데이터를 받아와 보여줄 위젯
-                              }
-                            },
-                          ),
-                        ),
-                        DataCell(
+                        DataCell(Text(company_list[rowIndex].name)), // 수정
+                        DataCell(Text(company_list[rowIndex].industry)), // 수정
+                        const DataCell(Text("100")),
+                        const DataCell(
                           Row(
                             children: [
-                              FutureBuilder<KcgsScoreModel?>(
-                                future: ApiService.outKcgsScore(
-                                    company_list[rowIndex].id),
-                                builder: (BuildContext context,
-                                    AsyncSnapshot<KcgsScoreModel?> snapshot) {
-                                  if (snapshot.connectionState ==
-                                      ConnectionState.waiting) {
-                                    return const CircularProgressIndicator(); // 데이터 로딩 중일 때 보여줄 위젯
-                                  } else if (snapshot.hasError) {
-                                    return const Text(''); // 에러 발생 시 보여줄 위젯
-                                  } else {
-                                    return const Text(
-                                      " KCGS ",
-                                    ); // 데이터를 받아와 보여줄 위젯
-                                  }
-                                },
-                              ),
-                              FutureBuilder<EsglabScoreModel?>(
-                                future: ApiService.outEsglabScore(
-                                    company_list[rowIndex].id),
-                                builder: (BuildContext context,
-                                    AsyncSnapshot<EsglabScoreModel?> snapshot) {
-                                  if (snapshot.connectionState ==
-                                      ConnectionState.waiting) {
-                                    return const CircularProgressIndicator(); // 데이터 로딩 중일 때 보여줄 위젯
-                                  } else if (snapshot.hasError) {
-                                    return const Text(''); // 에러 발생 시 보여줄 위젯
-                                  } else {
-                                    return const Text(
-                                      " 한국ESG연구소 ",
-                                    ); // 데이터를 받아와 보여줄 위젯
-                                  }
-                                },
-                              ),
+                              Text(" KCGS "),
+                              Text(" 한국ESG연구소 "),
                             ],
                           ),
                         ),
                         DataCell(
                           IconButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          SecondPage(company_list[rowIndex])));
+                            },
                             icon: const Icon(Icons.arrow_right),
                           ),
                         ),
@@ -797,6 +907,82 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
               ),
             ),
           ),
+        ),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.pop(context, 'OK'),
+            child: const Text('OK'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<String?> chooseGRI(BuildContext context) {
+    return showDialog<String>(
+      context: context,
+      barrierDismissible: true, // 바깥 영역 터치시 닫을지 여부
+      builder: (BuildContext context) => AlertDialog(
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: TextField(
+                decoration: const InputDecoration(
+                  hintText: 'GRI index 검색..',
+                  prefixIcon: Icon(Icons.search),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(10.0),
+                    ),
+                  ),
+                ),
+                onChanged: (value) {},
+              ),
+            ),
+            Column(
+              children: List.generate(
+                (gris.length / 5).ceil(),
+                (rowIndex) => Row(
+                  children: List.generate(
+                    5,
+                    (index) {
+                      final currentIndex = rowIndex * 5 + index;
+                      if (currentIndex < gris.length) {
+                        return Expanded(
+                          child: TextButton(
+                            onPressed: () {
+                              setState(() {
+                                if (comparing_gris
+                                    .contains(gris[currentIndex])) {
+                                  comparing_gris.remove(gris[currentIndex]);
+                                } else {
+                                  comparing_gris.add(gris[currentIndex]);
+                                }
+                              });
+                            },
+                            child: Text(
+                              gris[currentIndex],
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontWeight:
+                                    comparing_gris.contains(gris[currentIndex])
+                                        ? FontWeight.bold
+                                        : FontWeight.normal,
+                              ),
+                            ),
+                          ),
+                        );
+                      } else {
+                        return Expanded(child: Container());
+                      }
+                    },
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
         actions: <Widget>[
           TextButton(

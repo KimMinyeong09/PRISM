@@ -1,0 +1,30 @@
+[
+    {
+       "Esglab_score_id" : 1,
+       "Year" : 2020,
+       "Industry" : 1,
+       "Overall_score" : "B+",
+       "E_score" : "A",
+       "S_score" : "B",
+       "G_score" : "C"
+    },
+    {
+       "Esglab_score_id" : 2,
+       "Year" : 2021,
+       "Industry" : 1,
+       "Overall_score" : "A+",
+       "E_score" : "B",
+       "S_score" : "C",
+       "G_score" : "A"
+    },
+    {
+       "Esglab_score_id" : 3,
+       "Year" : 2022,
+       "Industry" : 2,
+       "Overall_score" : "A",
+       "E_score" : "A+",
+       "S_score" : "B+",
+       "G_score" : "C"
+    }
+
+]

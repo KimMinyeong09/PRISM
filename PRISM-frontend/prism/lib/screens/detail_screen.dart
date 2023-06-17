@@ -1,14 +1,20 @@
 import 'package:d_chart/d_chart.dart';
 import 'package:flutter/material.dart';
 
+import 'home_screen.dart';
+
 class SecondPage extends StatefulWidget {
-  const SecondPage({Key? key}) : super(key: key);
+  final Company company;
+
+  const SecondPage(this.company, {Key? key}) : super(key: key);
 
   @override
   _SecondPageState createState() => _SecondPageState();
 }
 
 class _SecondPageState extends State<SecondPage> with TickerProviderStateMixin {
+  late Company company;
+
   late TabController _scoreTabController;
   late TabController _yearTabController;
   late TabController _detailScoreTabController;
@@ -17,6 +23,9 @@ class _SecondPageState extends State<SecondPage> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
+
+    company = widget.company;
+
     _scoreTabController = TabController(length: 2, vsync: this);
     _yearTabController = TabController(length: 3, vsync: this);
     _detailScoreTabController = TabController(length: 4, vsync: this);
@@ -36,37 +45,80 @@ class _SecondPageState extends State<SecondPage> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: Column(
-          children: [
-            const Text(
-              '기업명',
-              style: TextStyle(
-                fontSize: 35,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            TabBar(
-              controller: _scoreTabController,
-              tabs: const [
-                Tab(text: 'PRISM 스코어'),
-                Tab(text: '평가기관 등급'),
-              ],
-              indicatorColor: Colors.black,
-              labelColor: Colors.black,
-              labelStyle: const TextStyle(fontWeight: FontWeight.bold),
-              unselectedLabelStyle:
-                  const TextStyle(fontWeight: FontWeight.normal),
-            ),
-            Expanded(
-              child: TabBarView(
-                controller: _scoreTabController,
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
                 children: [
-                  _buildPRISMScoreTab(),
-                  _buildRatingTab(),
+                  IconButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    icon: const Icon(Icons.arrow_back),
+                  ),
+                  Text(
+                    company.name,
+                    style: const TextStyle(
+                      fontSize: 35,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(width: 20),
+                  Text(company.industry),
+                  Column(
+                    children: [
+                      IconButton(
+                        onPressed: (() {}),
+                        icon: const Icon(Icons.book),
+                      ),
+                      const Text("2020"),
+                    ],
+                  ),
+                  Column(
+                    children: [
+                      IconButton(
+                        onPressed: (() {}),
+                        icon: const Icon(Icons.book),
+                      ),
+                      const Text("2021"),
+                    ],
+                  ),
+                  Column(
+                    children: [
+                      IconButton(
+                        onPressed: (() {}),
+                        icon: const Icon(Icons.book),
+                      ),
+                      const Text("2022"),
+                    ],
+                  ),
                 ],
               ),
-            ),
-          ],
+              TabBar(
+                controller: _scoreTabController,
+                tabs: const [
+                  Tab(text: 'PRISM 스코어'),
+                  Tab(text: '평가기관 등급'),
+                ],
+                indicatorColor: Colors.black,
+                labelColor: Colors.black,
+                labelStyle: const TextStyle(fontWeight: FontWeight.bold),
+                unselectedLabelStyle:
+                    const TextStyle(fontWeight: FontWeight.normal),
+              ),
+              Expanded(
+                child: TabBarView(
+                  controller: _scoreTabController,
+                  children: [
+                    _buildPRISMScoreTab(),
+                    _buildRatingTab(),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -105,7 +157,10 @@ class _SecondPageState extends State<SecondPage> with TickerProviderStateMixin {
     return CustomScrollView(
       slivers: [
         SliverToBoxAdapter(
-          child: Text('연도별 점수 추이 ($year)'),
+          child: Text(
+            '연도별 점수 추이 ($year)',
+            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          ),
         ),
         SliverToBoxAdapter(
           child: TabBar(
@@ -125,6 +180,7 @@ class _SecondPageState extends State<SecondPage> with TickerProviderStateMixin {
         ),
         SliverFillRemaining(
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Expanded(
                 child: TabBarView(
@@ -138,7 +194,10 @@ class _SecondPageState extends State<SecondPage> with TickerProviderStateMixin {
                 ),
               ),
               _prismScore(),
-              const Text('ESG 비율'),
+              const Text(
+                'ESG 비율',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
               _rateESG(),
               TabBar(
                 controller: _esgTabController,
@@ -182,23 +241,29 @@ class _SecondPageState extends State<SecondPage> with TickerProviderStateMixin {
                 final aspectRatio =
                     constraints.maxWidth / constraints.maxHeight;
                 return AspectRatio(
-                  aspectRatio: aspectRatio,
-                  child: DChartLine(
-                    data: const [
-                      {
-                        'id': 'Line',
-                        'data': [
-                          {'domain': 0, 'measure': 4.1},
-                          {'domain': 1, 'measure': 4.5},
-                          {'domain': 2, 'measure': 6},
-                          {'domain': 3, 'measure': 3.8},
-                          {'domain': 4, 'measure': 2.5},
-                        ],
-                      },
-                    ],
-                    lineColor: (lineData, index, id) => Colors.amber,
-                  ),
-                );
+                    aspectRatio: aspectRatio,
+                    child: DChartLine(
+                      data: [
+                        {
+                          'id': company.name,
+                          'data': const [
+                            {'domain': 0, 'measure': 30},
+                            {'domain': 1, 'measure': 40},
+                            {'domain': 2, 'measure': 40},
+                          ],
+                        },
+                        {
+                          'id': company.industry,
+                          'data': const [
+                            {'domain': 0, 'measure': 50},
+                            {'domain': 1, 'measure': 60},
+                            {'domain': 2, 'measure': 65},
+                          ],
+                        },
+                      ],
+                      lineColor: (lineData, index, id) => Colors.amber,
+                      includePoints: true,
+                    ));
               },
             ),
           ),
@@ -208,34 +273,223 @@ class _SecondPageState extends State<SecondPage> with TickerProviderStateMixin {
   }
 
   Widget _buildESGTab(String tab) {
+    String gri = "GRI 300";
+    if (tab == "E") {
+      gri = "GRI 200";
+    } else if (tab == "S") {
+      gri = "GRI 400";
+    }
     return SingleChildScrollView(
       child: Column(
         children: [
-          Text('$tab 탭 설명'),
           // 여기에 ExpansionTile 위젯 추가
-          const Column(
+          Column(
             children: [
               ExpansionTile(
-                title: Text('ExpansionTile 3'),
-                subtitle: Text('Leading expansion arrow icon'),
+                title: Text(gri),
+                //subtitle: const Text('Leading expansion arrow icon'),
                 controlAffinity: ListTileControlAffinity.leading,
                 children: <Widget>[
+                  ListTile(
+                      title: Column(
+                    children: [
+                      const Text('한 문장, 두 문장입니다.',
+                          style: TextStyle(color: Colors.grey)),
+                      const Text('핵심 문장입니다.'),
+                      const Text('한 문장, 두 문장입니다.',
+                          style: TextStyle(color: Colors.grey)),
+                      const Divider(
+                          thickness: 1, height: 1, color: Colors.grey),
+                      const Text('한 문장, 두 문장입니다.',
+                          style: TextStyle(color: Colors.grey)),
+                      const Text('핵심 문장입니다.'),
+                      const Text('한 문장, 두 문장입니다.',
+                          style: TextStyle(color: Colors.grey)),
+                      const Divider(
+                          thickness: 1, height: 1, color: Colors.grey),
+                      const Text('한 문장, 두 문장입니다.',
+                          style: TextStyle(color: Colors.grey)),
+                      const Text('핵심 문장입니다.'),
+                      const Text('한 문장, 두 문장입니다.',
+                          style: TextStyle(color: Colors.grey)),
+                      const Divider(
+                          thickness: 1, height: 1, color: Colors.grey),
+                      DataTable(
+                        columns: const <DataColumn>[
+                          DataColumn(
+                            label: Expanded(
+                              child: Text(
+                                'Name',
+                                style: TextStyle(fontStyle: FontStyle.italic),
+                              ),
+                            ),
+                          ),
+                          DataColumn(
+                            label: Expanded(
+                              child: Text(
+                                'Age',
+                                style: TextStyle(fontStyle: FontStyle.italic),
+                              ),
+                            ),
+                          ),
+                          DataColumn(
+                            label: Expanded(
+                              child: Text(
+                                'Role',
+                                style: TextStyle(fontStyle: FontStyle.italic),
+                              ),
+                            ),
+                          ),
+                        ],
+                        rows: const <DataRow>[
+                          DataRow(
+                            cells: <DataCell>[
+                              DataCell(Text('Sarah')),
+                              DataCell(Text('19')),
+                              DataCell(Text('Student')),
+                            ],
+                          ),
+                          DataRow(
+                            cells: <DataCell>[
+                              DataCell(Text('Janine')),
+                              DataCell(Text('43')),
+                              DataCell(Text('Professor')),
+                            ],
+                          ),
+                          DataRow(
+                            cells: <DataCell>[
+                              DataCell(Text('William')),
+                              DataCell(Text('27')),
+                              DataCell(Text('Associate Professor')),
+                            ],
+                          ),
+                        ],
+                      ),
+                      const Divider(
+                          thickness: 1, height: 1, color: Colors.grey),
+                      DataTable(
+                        columns: const <DataColumn>[
+                          DataColumn(
+                            label: Expanded(
+                              child: Text(
+                                'Name',
+                                style: TextStyle(fontStyle: FontStyle.italic),
+                              ),
+                            ),
+                          ),
+                          DataColumn(
+                            label: Expanded(
+                              child: Text(
+                                'Age',
+                                style: TextStyle(fontStyle: FontStyle.italic),
+                              ),
+                            ),
+                          ),
+                          DataColumn(
+                            label: Expanded(
+                              child: Text(
+                                'Role',
+                                style: TextStyle(fontStyle: FontStyle.italic),
+                              ),
+                            ),
+                          ),
+                        ],
+                        rows: const <DataRow>[
+                          DataRow(
+                            cells: <DataCell>[
+                              DataCell(Text('Sarah')),
+                              DataCell(Text('19')),
+                              DataCell(Text('Student')),
+                            ],
+                          ),
+                          DataRow(
+                            cells: <DataCell>[
+                              DataCell(Text('Janine')),
+                              DataCell(Text('43')),
+                              DataCell(Text('Professor')),
+                            ],
+                          ),
+                          DataRow(
+                            cells: <DataCell>[
+                              DataCell(Text('William')),
+                              DataCell(Text('27')),
+                              DataCell(Text('Associate Professor')),
+                            ],
+                          ),
+                        ],
+                      ),
+                      const Divider(
+                          thickness: 1, height: 1, color: Colors.grey),
+                      DataTable(
+                        columns: const <DataColumn>[
+                          DataColumn(
+                            label: Expanded(
+                              child: Text(
+                                'Name',
+                                style: TextStyle(fontStyle: FontStyle.italic),
+                              ),
+                            ),
+                          ),
+                          DataColumn(
+                            label: Expanded(
+                              child: Text(
+                                'Age',
+                                style: TextStyle(fontStyle: FontStyle.italic),
+                              ),
+                            ),
+                          ),
+                          DataColumn(
+                            label: Expanded(
+                              child: Text(
+                                'Role',
+                                style: TextStyle(fontStyle: FontStyle.italic),
+                              ),
+                            ),
+                          ),
+                        ],
+                        rows: const <DataRow>[
+                          DataRow(
+                            cells: <DataCell>[
+                              DataCell(Text('Sarah')),
+                              DataCell(Text('19')),
+                              DataCell(Text('Student')),
+                            ],
+                          ),
+                          DataRow(
+                            cells: <DataCell>[
+                              DataCell(Text('Janine')),
+                              DataCell(Text('43')),
+                              DataCell(Text('Professor')),
+                            ],
+                          ),
+                          DataRow(
+                            cells: <DataCell>[
+                              DataCell(Text('William')),
+                              DataCell(Text('27')),
+                              DataCell(Text('Associate Professor')),
+                            ],
+                          ),
+                        ],
+                      ),
+                      const Divider(
+                          thickness: 1, height: 1, color: Colors.grey),
+                    ],
+                  )),
+                ],
+              ),
+              ExpansionTile(
+                title: Text(gri),
+                //subtitle: const Text('Leading expansion arrow icon'),
+                controlAffinity: ListTileControlAffinity.leading,
+                children: const <Widget>[
                   ListTile(title: Text('This is tile number 3')),
                 ],
               ),
               ExpansionTile(
-                title: Text('ExpansionTile 3'),
-                subtitle: Text('Leading expansion arrow icon'),
+                title: Text(gri),
+                //subtitle: const Text('Leading expansion arrow icon'),
                 controlAffinity: ListTileControlAffinity.leading,
-                children: <Widget>[
-                  ListTile(title: Text('This is tile number 3')),
-                ],
-              ),
-              ExpansionTile(
-                title: Text('ExpansionTile 3'),
-                subtitle: Text('Leading expansion arrow icon'),
-                controlAffinity: ListTileControlAffinity.leading,
-                children: <Widget>[
+                children: const <Widget>[
                   ListTile(title: Text('This is tile number 3')),
                 ],
               ),
@@ -269,74 +523,42 @@ class _SecondPageState extends State<SecondPage> with TickerProviderStateMixin {
     );
   }
 
-  // Widget _buildDChartGauge(int width, int height) {
-  //   return Expanded(
-  //     child: Padding(
-  //       padding: const EdgeInsets.all(16),
-  //       child: AspectRatio(
-  //         aspectRatio: width / height,
-  //         child: DChartGauge(
-  //           data: const [
-  //             {'domain': 'Off', 'measure': 30},
-  //             {'domain': 'Warm', 'measure': 30},
-  //             {'domain': 'Hot', 'measure': 30},
-  //           ],
-  //           fillColor: (pieData, index) {
-  //             switch (pieData['domain']) {
-  //               case 'Off':
-  //                 return Colors.green;
-  //               case 'Warm':
-  //                 return Colors.orange;
-  //               default:
-  //                 return Colors.red;
-  //             }
-  //           },
-  //           showLabelLine: false,
-  //           pieLabel: (pieData, index) {
-  //             return "${pieData['domain']}";
-  //           },
-  //           labelPosition: PieLabelPosition.inside,
-  //           labelPadding: 0,
-  //           labelColor: Colors.white,
-  //         ),
-  //       ),
-  //     ),
-  //   );
-  // }
-
   Widget _buildDChartGauge(int width, int height) {
     return Expanded(
       child: Padding(
         padding: const EdgeInsets.all(16),
-        child: FractionallySizedBox(
-          widthFactor: 1 / width, //0.25,
-          child: AspectRatio(
-            aspectRatio: 1,
-            child: DChartGauge(
-              data: const [
-                {'domain': 'Off', 'measure': 30},
-                {'domain': 'Warm', 'measure': 30},
-                {'domain': 'Hot', 'measure': 30},
-              ],
-              fillColor: (pieData, index) {
-                switch (pieData['domain']) {
-                  case 'Off':
-                    return Colors.green;
-                  case 'Warm':
-                    return Colors.orange;
-                  default:
-                    return Colors.red;
-                }
-              },
-              showLabelLine: false,
-              pieLabel: (pieData, index) {
-                return "${pieData['domain']}";
-              },
-              labelPosition: PieLabelPosition.inside,
-              labelPadding: 0,
-              labelColor: Colors.white,
+        child: Column(
+          children: [
+            const Text("prism-ALL"),
+            FractionallySizedBox(
+              widthFactor: 1 / width, //0.25,
+              child: AspectRatio(
+                aspectRatio: 1,
+                child: DChartGauge(
+                  data: const [
+                    {'domain': '', 'measure': 40},
+                  ],
+                  fillColor: (pieData, index) {
+                    switch (pieData['domain']) {
+                      case '':
+                        return Colors.purple;
+                    }
+                  },
+                  showLabelLine: false,
+                  pieLabel: (pieData, index) {
+                    return "${pieData['domain']}";
+                  },
+                  labelPosition: PieLabelPosition.inside,
+                  labelPadding: 0,
+                  labelColor: Colors.white,
+                ),
+              ),
             ),
-          ),
+            const Text("40"),
+            const Text("업계 평균 65"),
+            const Text("업계 152위"),
+            const Text("전체 152위"),
+          ],
         ),
       ),
     );

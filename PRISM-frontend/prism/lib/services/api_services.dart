@@ -20,7 +20,7 @@ class ApiService {
       for (var company in companies) {
         final instance = CompanyModel.fromJson(company);
         if (industries.isEmpty || industries.contains(instance.industry)) {
-          if (search.isEmpty || instance.name.contains(search)) {
+          if (search == "" || instance.name.contains(search)) {
             companyInstances.add(instance);
           }
         }
@@ -71,13 +71,25 @@ class ApiService {
     return null;
   }
 
-  static Future<PrismScoreModel> outPrismScore(int companyId) async {
+  static Future<PrismScoreModel> outPrismScore(int? companyId) async {
     final response = await http.get(Uri.parse(url));
     if (response.statusCode == 200) {
       final prismScore = jsonDecode(response.body);
       return PrismScoreModel.fromJson(prismScore);
     }
     throw Error();
+  }
+
+  static Future<PrismScoreModel?> outPrismScoreByCompanyName(
+      String companyName) async {
+    final companyId = await outCompanyId(companyName);
+
+    if (companyId != null) {
+      final prismScore = await outPrismScore(companyId);
+      return prismScore;
+    }
+
+    return null;
   }
 
   static Future<List<SustainReport>> outSustainReport(int companyId) async {

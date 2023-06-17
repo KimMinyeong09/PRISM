@@ -43,6 +43,7 @@ dependencies:
   number_paginator: ^0.2.3
   fl_chart: ^0.63.0
   d_chart: ^2.2.11
+  draw_graph: ^1.0.0
 
 dev_dependencies:
   flutter_test:

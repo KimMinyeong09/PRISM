@@ -1,0 +1,32 @@
+[
+    {
+        "Kcgs_score_id": 1,
+        "Eval_year" : 2021,
+        "Overall_score" : "B",
+        "E_score" : "B",
+        "S_score" : "A",
+        "G_score" : "A+",
+        "Company_id" : 1,
+        "Kcgs_ind_avg_id" : 1
+    },
+    {
+        "Kcgs_score_id": 2,
+        "Eval_year" : 2022,
+        "Overall_score" : "B",
+        "E_score" : "B",
+        "S_score" : "B",
+        "G_score" : "B",
+        "Company_id" : 1,
+        "Kcgs_ind_avg_id" : 1
+    },
+    {
+        "Kcgs_score_id": 3,
+        "Eval_year" : 2021,
+        "Overall_score" : "C",
+        "E_score" : "C",
+        "S_score" : "C",
+        "G_score" : "C",
+        "Company_id" : 2,
+        "Kcgs_ind_avg_id" : 2
+    }
+]
