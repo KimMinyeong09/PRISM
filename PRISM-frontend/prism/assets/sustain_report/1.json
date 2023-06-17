@@ -1,0 +1,47 @@
+[
+    {
+        "Sustain_report_id": 11,
+        "Year": 2020,
+        "Download_link": "...",
+        "Industry": "에너지장비및서비스",
+        "E_score": "100",
+        "S_score": "100",
+        "G_score": "100",
+        "Ind_e_score": "80",
+        "Ind_s_score": "80",
+        "Ind_g_score": "80",
+        "Company_id": "1",
+        "Gri_usage_score_id": "1",
+        "Gri_usage_ind_avg_id": "1"
+    },
+    {
+        "Sustain_report_id": 12,
+        "Year": 2021,
+        "Download_link": "...",
+        "Industry": "에너지장비및서비스",
+        "E_score": "99",
+        "S_score": "99",
+        "G_score": "99",
+        "Ind_e_score": "80",
+        "Ind_s_score": "80",
+        "Ind_g_score": "80",
+        "Company_id": "1",
+        "Gri_usage_score_id": "1",
+        "Gri_usage_ind_avg_id": "1"
+    },
+    {
+        "Sustain_report_id": 12,
+        "Year": 2022,
+        "Download_link": "...",
+        "Industry": "에너지장비및서비스",
+        "E_score": "99",
+        "S_score": "99",
+        "G_score": "99",
+        "Ind_e_score": "80",
+        "Ind_s_score": "80",
+        "Ind_g_score": "80",
+        "Company_id": "1",
+        "Gri_usage_score_id": "1",
+        "Gri_usage_ind_avg_id": "1"
+    }
+]
