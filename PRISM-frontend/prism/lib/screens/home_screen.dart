@@ -2,6 +2,9 @@ import 'package:easy_sidemenu/easy_sidemenu.dart';
 import 'package:flutter/material.dart';
 import 'package:number_paginator/number_paginator.dart';
 import 'package:prism/screens/detail_screen.dart';
+import 'package:syncfusion_flutter_charts/charts.dart';
+
+import '../chart_data.dart';
 
 class Company {
   final int companyId;
@@ -408,116 +411,36 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                                         ],
                                       ),
                                     ),
-                                    const SizedBox(
-                                      width: 500,
-                                      child: Column(
-                                        children: [
-                                          Text("overallPRISM 스코어"),
-                                          Row(
-                                            children: [
-                                              Text("ePRISM 스코어"),
-                                              Text("sPRISM 스코어"),
-                                              Text("gPRISM 스코어"),
-                                            ],
-                                          )
-                                        ],
-                                      ),
+                                    Column(
+                                      children: [
+                                        _buildDChartOverall(
+                                            companyName, "PRISM 스코어"),
+                                        Row(
+                                          children: [
+                                            _buildDChart(companyName, "E"),
+                                            _buildDChart(companyName, "S"),
+                                            _buildDChart(companyName, "G"),
+                                          ],
+                                        )
+                                      ],
                                     ),
-                                    const SizedBox(
-                                      width: 500,
-                                      child: Column(
-                                        children: [
-                                          Text("overallPRISM 스코어"),
-                                          Row(
-                                            children: [
-                                              Text("ePRISM 스코어"),
-                                              Text("sPRISM 스코어"),
-                                              Text("gPRISM 스코어"),
-                                            ],
-                                          )
-                                        ],
-                                      ),
+                                    Column(
+                                      children: [
+                                        _buildDChartOverall(
+                                            companyName, "wPRISM 스코어"),
+                                        Row(
+                                          children: [
+                                            _buildDChart(companyName, "E"),
+                                            _buildDChart(companyName, "S"),
+                                            _buildDChart(companyName, "G"),
+                                          ],
+                                        )
+                                      ],
                                     ),
-                                    SizedBox(
-                                      width: 300,
-                                      child: Table(
-                                        children: const [
-                                          TableRow(
-                                            children: [
-                                              TableCell(child: Text("종합점수")),
-                                              TableCell(
-                                                  child: Text(
-                                                      "A")), // TODO: 점수 받아오기
-                                            ],
-                                          ),
-                                          TableRow(
-                                            children: [
-                                              TableCell(child: Text("E")),
-                                              TableCell(
-                                                  child: Text(
-                                                      "A")), // TODO: 점수 받아오기
-                                            ],
-                                          ),
-                                          TableRow(
-                                            children: [
-                                              TableCell(child: Text("S")),
-                                              TableCell(
-                                                  child: Text(
-                                                      "A")), // TODO: 점수 받아오기
-                                            ],
-                                          ),
-                                          TableRow(
-                                            children: [
-                                              TableCell(child: Text("G")),
-                                              TableCell(
-                                                  child: Text(
-                                                      "A")), // TODO: 점수 받아오기
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      width: 300,
-                                      child: Table(
-                                        children: const [
-                                          TableRow(
-                                            children: [
-                                              TableCell(child: Text("종합점수")),
-                                              TableCell(
-                                                  child: Text(
-                                                      "A")), // TODO: 점수 받아오기
-                                            ],
-                                          ),
-                                          TableRow(
-                                            children: [
-                                              TableCell(child: Text("E")),
-                                              TableCell(
-                                                  child: Text(
-                                                      "A")), // TODO: 점수 받아오기
-                                            ],
-                                          ),
-                                          TableRow(
-                                            children: [
-                                              TableCell(child: Text("S")),
-                                              TableCell(
-                                                  child: Text(
-                                                      "A")), // TODO: 점수 받아오기
-                                            ],
-                                          ),
-                                          TableRow(
-                                            children: [
-                                              TableCell(child: Text("G")),
-                                              TableCell(
-                                                  child: Text(
-                                                      "A")), // TODO: 점수 받아오기
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                    ),
+                                    _buildAssociationRakingTable("KCGS"),
+                                    _buildAssociationRakingTable("한국ESG연구소"),
                                     if (comparing_gris.isEmpty)
-                                      const Text("GRI")
+                                      const Text("GRI index를 선택해주세요 (최대 5개)")
                                     else
                                       Text("$comparing_gris")
                                   ],
@@ -534,6 +457,108 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           )
         ],
       ),
+    );
+  }
+
+  SizedBox _buildAssociationRakingTable(String association) {
+    return SizedBox(
+      width: 300,
+      child: Table(
+        children: const [
+          TableRow(
+            children: [
+              TableCell(child: Text("종합점수")),
+              TableCell(child: Text("A")), // TODO: 점수 받아오기
+            ],
+          ),
+          TableRow(
+            children: [
+              TableCell(child: Text("E")),
+              TableCell(child: Text("A")), // TODO: 점수 받아오기
+            ],
+          ),
+          TableRow(
+            children: [
+              TableCell(child: Text("S")),
+              TableCell(child: Text("A")), // TODO: 점수 받아오기
+            ],
+          ),
+          TableRow(
+            children: [
+              TableCell(child: Text("G")),
+              TableCell(child: Text("A")), // TODO: 점수 받아오기
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Row _buildDChartOverall(String companyName, String title) {
+    return Row(
+      children: [
+        SizedBox(
+          width: 200,
+          height: 200,
+          child: SfCircularChart(
+            series: <CircularSeries>[
+              RadialBarSeries<ChartData, String>(
+                dataSource: <ChartData>[
+                  ChartData(companyName, 40),
+                  ChartData("업종", 65),
+                ],
+                xValueMapper: (ChartData data, _) => data.category,
+                yValueMapper: (ChartData data, _) => data.value,
+              ),
+            ],
+            palette: const <Color>[
+              Color(0xff7F56D9),
+              Color(0xffF0D9FF),
+            ],
+            title: ChartTitle(text: title),
+          ),
+        ),
+        const Column(
+          children: [
+            Text("40"),
+            Text("업계 평균 65"),
+            Text("업계 152위"),
+            Text("전체 152위"),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Column _buildDChart(String companyName, String title) {
+    return Column(
+      children: [
+        SizedBox(
+          width: 200,
+          height: 200,
+          child: SfCircularChart(
+            series: <CircularSeries>[
+              RadialBarSeries<ChartData, String>(
+                dataSource: <ChartData>[
+                  ChartData(companyName, 40),
+                  ChartData("업종", 65),
+                ],
+                xValueMapper: (ChartData data, _) => data.category,
+                yValueMapper: (ChartData data, _) => data.value,
+              ),
+            ],
+            palette: const <Color>[
+              Color(0xff7F56D9),
+              Color(0xffF0D9FF),
+            ],
+            title: ChartTitle(text: title),
+          ),
+        ),
+        const Text("40"),
+        const Text("업계 평균 65"),
+        const Text("업계 152위"),
+        const Text("전체 152위"),
+      ],
     );
   }
 
