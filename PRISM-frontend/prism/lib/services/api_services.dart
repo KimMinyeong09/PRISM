@@ -20,115 +20,23 @@ import '../models/one_row_model.dart';
 import '../models/report_sentences_model.dart';
 
 class ApiService {
-  static const String base_url = '../../assets/dummyJSOM'; // url 변경
-
-  // static Future<List<CompanyModel>> outCompany(
-  //     List<String> industries, String search) async {
-  //   List<CompanyModel> companyInstances = [];
-  //   final response = await http.get(Uri.parse(url));
-  //   if (response.statusCode == 200) {
-  //     final companies = jsonDecode(response.body);
-  //     for (var company in companies) {
-  //       final instance = CompanyModel.fromJson(company);
-  //       if (industries.isEmpty || industries.contains(instance.industry)) {
-  //         if (search == "" || instance.name.contains(search)) {
-  //           companyInstances.add(instance);
-  //         }
-  //       }
-  //     }
-  //     return companyInstances;
-  //   }
-  //   throw Error();
-  // }
-
-  // static Future<int?> outCompanyId(String name) async {
-  //   final response = await http.get(Uri.parse(url));
-  //   int? id;
-  //   if (response.statusCode == 200) {
-  //     final company = jsonDecode(response.body);
-  //     id = CompanyModel.fromJson(company).id;
-  //     return id;
-  //   } else {
-  //     return null;
-  //   }
-  // }
-
-  // static Future<KcgsScoreModel?> outKcgsScore(int? companyId) async {
-  //   if (companyId != null) {
-  //     final response = await http
-  //         .get(Uri.parse("./../assets/kcgs_score/$companyId")); //TODO: url 수정
-  //     if (response.statusCode == 200) {
-  //       final kcgsScore = jsonDecode(response.body);
-  //       return KcgsScoreModel.fromJson(kcgsScore);
-  //     } else {
-  //       return null;
-  //     }
-  //   }
-  //   return null;
-  //   // throw Error();
-  // }
-
-  // static Future<EsglabScoreModel?> outEsglabScore(int? companyId) async {
-  //   if (companyId != null) {
-  //     final response = await http
-  //         .get(Uri.parse("./../assets/esglab_score/$companyId")); //TODO: url 수정
-  //     if (response.statusCode == 200) {
-  //       final esglabScore = jsonDecode(response.body);
-  //       return EsglabScoreModel.fromJson(esglabScore);
-  //     } else {
-  //       return null;
-  //     }
-  //   }
-  //   return null;
-  // }
-
-  // static Future<PrismScoreModel> outPrismScore(int? companyId) async {
-  //   final response = await http.get(Uri.parse(base_url));
-  //   if (response.statusCode == 200) {
-  //     final prismScore = jsonDecode(response.body);
-  //     return PrismScoreModel.fromJson(prismScore);
-  //   }
-  //   throw Error();
-  // }
-
-  // static Future<PrismScoreModel?> outPrismScoreByCompanyName(
-  //     String companyName) async {
-  //   final companyId = await outCompanyId(companyName);
-
-  //   if (companyId != null) {
-  //     final prismScore = await outPrismScore(companyId);
-  //     return prismScore;
-  //   }
-
-  //   return null;
-  // }
-
-  // static Future<List<SustainReport>> outSustainReport(int companyId) async {
-  //   List<SustainReport> reportInstances = [];
-  //   final response = await http
-  //       .get(Uri.parse("./../assets/sustain_report/1.json")); // TODO: 수정
-  //   if (response.statusCode == 200) {
-  //     final reports = jsonDecode(response.body);
-  //     for (var report in reports) {
-  //       final instance = SustainReport.fromJson(report);
-  //       if (instance.company_id == companyId.toString()) {
-  //         reportInstances.add(instance);
-  //       }
-  //     }
-  //     return reportInstances;
-  //   }
-
-  //   throw Error();
-  // }
+  static const String base_url = '../../assets/dummyJSOM'; // TODO: url 변경
 
   // 한 페이지를 불러와야할 때
   // 필터결과에 해당하는 행 최대 10개
   static Future<List<OneRowModel>> outOnePage(int page, String filter_score, List<String> filter_industries, String filter_name) async {
     final url = Uri.parse('$base_url/rank/$page');
-    final response = await http.get(url);
+    
+    final requestData = {
+      'filter_score': filter_score,
+      'filter_industries': filter_industries,
+      'filter_name': filter_name,
+    };
+    
+    final response = await http.post(url, body: jsonEncode(requestData));
 
     List<OneRowModel> rows_instances = [];
-
+    
     if (response.statusCode == 200) {
       final rows = jsonDecode(response.body);
       for (var row in rows) {
@@ -137,29 +45,41 @@ class ApiService {
       }
       return rows_instances;
     }
-    throw Error();
+    // 에러 처리
+    throw Exception('Failed to fetch filtered data');
   }
 
   // 한 행(회사)의 년도를 선택해야할 때
   // 선택한 회사에 해당하는 년도 - 이렇게 하는게 맞을까요?
   static Future<List<int>> outCompanyYears(String company) async {
-    final url = Uri.parse('$base_url/rank/$company/years');
-    final response = await http.get(url);
-
-    List<int> year = [];
+    final url = Uri.parse('$base_url/rank/oneCompany/years');
+  
+    final requestData = {
+      'company': company,
+    };
+    
+    final response = await http.post(url, body: requestData); 
 
     if (response.statusCode == 200) {
-      final year = jsonDecode(response.body);
-      return year;
+      final responseData = jsonDecode(response.body);
+      if (responseData is List) {
+        return List<int>.from(responseData);
+      }
     }
-    throw Error();
+    // 에러 처리
+    throw Exception('Failed to fetch company years');
   }
 
   // 한 행(회사)의 상세페이지 내용 필요
   // prism스코어, 존재하는 년도개수만큼
   static Future<List<PrismScoreModel>> outPrismScores(String company) async {
-    final url = Uri.parse('$base_url/rank/$company');
-    final response = await http.get(url);
+    final url = Uri.parse('$base_url/rank/oneCompany');
+  
+    final requestData = {
+      'company': company,
+    };
+    
+    final response = await http.post(url, body: requestData); 
 
     List<PrismScoreModel> prism_scores = [];
 
@@ -171,13 +91,18 @@ class ApiService {
       }
       return prism_scores;
     }
-    throw Error();
-
+    // 예외 처리
+    throw Exception('Failed to fetch company Prism scores');
   }
   //특정 업종의 prism스코어, 존재하는 년도 개수 만큼
   static Future<List<PrismIndAvgScoreModel>> outPrismIndAvgScores(String company) async {
-    final url = Uri.parse('$base_url/rank/$company');
-    final response = await http.get(url);
+    final url = Uri.parse('$base_url/rank/oneCompany');
+  
+    final requestData = {
+      'company': company,
+    };
+    
+    final response = await http.post(url, body: requestData); 
 
     List<PrismIndAvgScoreModel> prism_ind_avg_scores = [];
 
@@ -193,8 +118,13 @@ class ApiService {
   }
   //kcgs스코어, 존재하는 년도 개수만큼
   static Future<List<KcgsScoreModel>> outKcgsScores(String company) async {
-    final url = Uri.parse('$base_url/rank/$company');
-    final response = await http.get(url);
+    final url = Uri.parse('$base_url/rank/oneCompany');
+  
+    final requestData = {
+      'company': company,
+    };
+    
+    final response = await http.post(url, body: requestData); 
 
     List<KcgsScoreModel> kcgs_scores = [];
 
@@ -210,8 +140,13 @@ class ApiService {
   }
   //esg연구소 스코어, 존재하는 년도 개수만큼
   static Future<List<EsglabScoreModel>> outEsglabScores(String company) async {
-    final url = Uri.parse('$base_url/rank/$company');
-    final response = await http.get(url);
+    final url = Uri.parse('$base_url/rank/oneCompany');
+  
+    final requestData = {
+      'company': company,
+    };
+    
+    final response = await http.post(url, body: requestData); 
 
     List<EsglabScoreModel> esglab_scores = [];
 
@@ -227,8 +162,13 @@ class ApiService {
   }
   //kcgs 평균스코어, 존재하는 년도 개수만큼
   static Future<List<KcgsIndAvgScoreModel>> outKcgsIndAvgScores(String company) async {
-    final url = Uri.parse('$base_url/rank/$company');
-    final response = await http.get(url);
+    final url = Uri.parse('$base_url/rank/oneCompany');
+  
+    final requestData = {
+      'company': company,
+    };
+    
+    final response = await http.post(url, body: requestData); 
 
     List<KcgsIndAvgScoreModel> kcgs_ind_avg_scores = [];
 
@@ -244,8 +184,13 @@ class ApiService {
   }
   //esg연구소 평균 스코어, 존재하는 년도 개수만큼
   static Future<List<EsglabIndAvgScoreModel>> outEsglabIndAvgScores(String company) async {
-    final url = Uri.parse('$base_url/rank/$company');
-    final response = await http.get(url);
+    final url = Uri.parse('$base_url/rank/oneCompany');
+  
+    final requestData = {
+      'company': company,
+    };
+    
+    final response = await http.post(url, body: requestData); 
 
     List<EsglabIndAvgScoreModel> esglab_scores = [];
 
@@ -261,8 +206,13 @@ class ApiService {
   }
   // 클릭한 회사 보고서 테이블, 존재하는 년도 개수만큼
   static Future<List<SustainReportModel>> outSustainReports(String company) async {
-    final url = Uri.parse('$base_url/rank/$company');
-    final response = await http.get(url);
+    final url = Uri.parse('$base_url/rank/oneCompany');
+  
+    final requestData = {
+      'company': company,
+    };
+    
+    final response = await http.post(url, body: requestData); 
 
     List<SustainReportModel> esglab_scores = [];
 
@@ -278,8 +228,13 @@ class ApiService {
   }
   //클릭한 회사 보고서가 사용한 gri정보, 최신년도만
   static Future<GriInfoModel> outGriInfos(String company) async {
-    final url = Uri.parse('$base_url/rank/$company');
-    final response = await http.get(url);
+    final url = Uri.parse('$base_url/rank/oneCompany');
+  
+    final requestData = {
+      'company': company,
+    };
+    
+    final response = await http.post(url, body: requestData); 
 
     if (response.statusCode == 200) {
       final gri_info = jsonDecode(response.body);
@@ -289,8 +244,13 @@ class ApiService {
   }
   //클릭한 회사 보고서내 gri유사 문장, 최신년도만
   static Future<ReportSentencesModel> outReportSentencess(String company) async {
-    final url = Uri.parse('$base_url/rank/$company');
-    final response = await http.get(url);
+    final url = Uri.parse('$base_url/rank/oneCompany');
+  
+    final requestData = {
+      'company': company,
+    };
+    
+    final response = await http.post(url, body: requestData); 
 
     if (response.statusCode == 200) {
       final gri_info = jsonDecode(response.body);
@@ -300,8 +260,13 @@ class ApiService {
   }
   //클릭한 회사 보고서내 gri유사 테이블, 최신년도만
   static Future<ReportTableModel> outReportTables(String company) async {
-    final url = Uri.parse('$base_url/rank/$company');
-    final response = await http.get(url);
+    final url = Uri.parse('$base_url/rank/oneCompany');
+  
+    final requestData = {
+      'company': company,
+    };
+    
+    final response = await http.post(url, body: requestData); 
 
     if (response.statusCode == 200) {
       final report_table = jsonDecode(response.body);
@@ -311,8 +276,13 @@ class ApiService {
   }
   //gri index사용 비율 업종 평균점수, 최신년도만
   static Future<GriUsageIndAvgScoreModel> outGriUsageIndAvgScores(String company) async {
-    final url = Uri.parse('$base_url/rank/$company');
-    final response = await http.get(url);
+    final url = Uri.parse('$base_url/rank/oneCompany');
+  
+    final requestData = {
+      'company': company,
+    };
+    
+    final response = await http.post(url, body: requestData); 
 
     if (response.statusCode == 200) {
       final gri_usage_ind_avg_score = jsonDecode(response.body);
@@ -325,7 +295,11 @@ class ApiService {
   // prism스코어, 해당하는 회사_년도 만큼
   static Future<List<PrismScoreModel>> outPrismScore(List<Map<String, int>> company_and_year) async {
     final url = Uri.parse('$base_url/comparing');
-    final response = await http.get(url);
+    final requestData = {
+      'company_and_year': company_and_year,
+    };
+    
+    final response = await http.post(url, body: requestData); 
 
     List<PrismScoreModel> prism_scores = [];
 
@@ -343,7 +317,11 @@ class ApiService {
   //특정 업종의 prism스코어, 존재하는 년도 개수 만큼
   static Future<List<PrismIndAvgScoreModel>> outPrismIndAvgScore(List<Map<String, int>> company_and_year) async {
     final url = Uri.parse('$base_url/comparing');
-    final response = await http.get(url);
+    final requestData = {
+      'company_and_year': company_and_year,
+    };
+    
+    final response = await http.post(url, body: requestData); 
 
     List<PrismIndAvgScoreModel> prism_ind_avg_scores = [];
 
@@ -360,7 +338,11 @@ class ApiService {
   // kcgs스코어, 해당하는 회사_년도 만큼
   static Future<List<KcgsScoreModel>> outKcgsScore(List<Map<String, int>> company_and_year) async {
     final url = Uri.parse('$base_url/comparing');
-    final response = await http.get(url);
+    final requestData = {
+      'company_and_year': company_and_year,
+    };
+    
+    final response = await http.post(url, body: requestData); 
 
     List<KcgsScoreModel> kcgs_scores = [];
 
@@ -377,7 +359,11 @@ class ApiService {
   //esg연구소 스코어,해당하는 회사_년도 만큼
   static Future<List<EsglabScoreModel>> outEsglabScore(List<Map<String, int>> company_and_year) async {
     final url = Uri.parse('$base_url/comparing');
-    final response = await http.get(url);
+    final requestData = {
+      'company_and_year': company_and_year,
+    };
+    
+    final response = await http.post(url, body: requestData); 
 
     List<EsglabScoreModel> esglab_scores = [];
 
@@ -394,7 +380,11 @@ class ApiService {
   //kcgs 평균스코어, 해당하는 회사_년도 만큼
   static Future<List<KcgsIndAvgScoreModel>> outKcgsIndAvgScore(List<Map<String, int>> company_and_year) async {
     final url = Uri.parse('$base_url/comparing');
-    final response = await http.get(url);
+    final requestData = {
+      'company_and_year': company_and_year,
+    };
+    
+    final response = await http.post(url, body: requestData); 
 
     List<KcgsIndAvgScoreModel> kcgs_ind_avg_scores = [];
 
@@ -411,7 +401,11 @@ class ApiService {
   //esg연구소 평균 스코어, 해당하는 회사_년도 만큼
   static Future<List<EsglabIndAvgScoreModel>> outEsglabIndAvgScore(List<Map<String, int>> company_and_year) async {
     final url = Uri.parse('$base_url/comparing');
-    final response = await http.get(url);
+    final requestData = {
+      'company_and_year': company_and_year,
+    };
+    
+    final response = await http.post(url, body: requestData); 
 
     List<EsglabIndAvgScoreModel> esglab_scores = [];
 
@@ -428,7 +422,11 @@ class ApiService {
   //회사 보고서 테이블 내용, 해당하는 회사_년도 만큼
   static Future<List<SustainReportModel>> outSustainReport(List<Map<String, int>> company_and_year) async {
     final url = Uri.parse('$base_url/comparing');
-    final response = await http.get(url);
+    final requestData = {
+      'company_and_year': company_and_year,
+    };
+    
+    final response = await http.post(url, body: requestData); 
 
     List<SustainReportModel> esglab_scores = [];
 
@@ -447,7 +445,12 @@ class ApiService {
   //클릭한 회사 보고서내 gri유사 문장, 해당하는 회사_년도 만큼
   static Future<ReportSentencesModel> outReportSentences(List<Map<int, int>> reports, List<String> gri_indexes) async {
     final url = Uri.parse('$base_url/comparing/context');
-    final response = await http.get(url);
+    final requestData = {
+      'reports': reports,
+      'gri_indexes': gri_indexes,
+    };
+    
+    final response = await http.post(url, body: requestData); 
 
     if (response.statusCode == 200) {
       final gri_info = jsonDecode(response.body);
@@ -458,7 +461,12 @@ class ApiService {
   //클릭한 회사 보고서내 gri유사 테이블, 해당하는 회사_년도 만큼
   static Future<ReportTableModel> outReportTable(List<Map<int, int>> reports, List<String> gri_indexes) async {
     final url = Uri.parse('$base_url/comparing/context');
-    final response = await http.get(url);
+    final requestData = {
+      'reports': reports,
+      'gri_indexes': gri_indexes,
+    };
+    
+    final response = await http.post(url, body: requestData); 
 
     if (response.statusCode == 200) {
       final report_table = jsonDecode(response.body);
@@ -469,7 +477,12 @@ class ApiService {
   //gri index사용 비율 업종 평균점수, 최신년도만
   static Future<GriUsageIndAvgScoreModel> outGriUsageIndAvgScore(List<Map<int, int>> reports, List<String> gri_indexes) async {
     final url = Uri.parse('$base_url/comparing/context');
-    final response = await http.get(url);
+    final requestData = {
+      'reports': reports,
+      'gri_indexes': gri_indexes,
+    };
+    
+    final response = await http.post(url, body: requestData); 
 
     if (response.statusCode == 200) {
       final gri_usage_ind_avg_score = jsonDecode(response.body);
