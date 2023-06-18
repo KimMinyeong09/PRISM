@@ -1,4 +1,4 @@
-class SustainReport {
+class SustainReportModel {
   final int sustain_report_id, year;
   final String download_link,
       industry,
@@ -12,7 +12,7 @@ class SustainReport {
       gri_usage_score_id,
       gri_usage_ind_avg_id;
 
-  SustainReport.fromJson(Map<String, dynamic> json)
+  SustainReportModel.fromJson(Map<String, dynamic> json)
       : sustain_report_id = json['Sustain_report_id'],
         year = json['Year'],
         download_link = json['Download_link'],
