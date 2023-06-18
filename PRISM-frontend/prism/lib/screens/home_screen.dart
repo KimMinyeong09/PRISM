@@ -647,12 +647,36 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                                           child: const Text(
                                               "GRI index를 선택해주세요 (최대 5개)"))
                                     else
-                                      SizedBox(
-                                          height: MediaQuery.of(context)
-                                                  .size
-                                                  .height /
-                                              4,
-                                          child: Text("$comparing_gris"))
+                                      for (var comparing_gri in comparing_gris)
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: SizedBox(
+                                              height: MediaQuery.of(context)
+                                                      .size
+                                                      .height /
+                                                  4,
+                                              child: Row(
+                                                children: [
+                                                    Column(
+                                                      mainAxisAlignment: MainAxisAlignment.center,
+                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                      children: [
+                                                        Text("[$comparing_gri]", style: TextStyle(fontWeight: FontWeight.bold),),
+                                                        Text(gri_subs.indexOf(comparing_gri) != -1 ? gri_subs_name[gri_subs.indexOf(comparing_gri)] : "" , style: TextStyle(fontWeight: FontWeight.bold),),
+                                                      ],
+                                                    ),
+                                                    // 텍스트
+                                                    extractSentences(),
+                                                    extractSentences(),
+                                                    extractSentences(),
+                                                    // 표
+                                                    extractTable(),
+                                                    extractTable(),
+                                                    extractTable(),
+                                                ],
+                                              ),
+                                            ),
+                                        ),
                                   ],
                                 );
                               }),
@@ -665,6 +689,69 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
               ],
             ),
           )
+        ],
+      ),
+    );
+  }
+
+  Padding extractTable() {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: DataTable(
+        columns: const <DataColumn>[
+          DataColumn(
+            label: Expanded(
+            child: Text('Name', style: TextStyle(fontStyle: FontStyle.italic)),
+          ),
+        ),
+        DataColumn(
+          label: Expanded(
+            child: Text('Age', style: TextStyle(fontStyle: FontStyle.italic)),
+          ),
+        ),
+        DataColumn(
+          label: Expanded(
+            child: Text('Role', style: TextStyle(fontStyle: FontStyle.italic)),
+          ),
+        ),
+      ],
+        rows: const <DataRow>[
+          DataRow(
+            cells: <DataCell>[
+              DataCell(Text('Sarah')),
+              DataCell(Text('19')),
+              DataCell(Text('Student')),
+            ],
+          ),
+          DataRow(
+            cells: <DataCell>[
+              DataCell(Text('Janine')),
+              DataCell(Text('43')),
+              DataCell(Text('Professor')),
+            ],
+          ),
+          DataRow(
+            cells: <DataCell>[
+              DataCell(Text('William')),
+              DataCell(Text('27')),
+              DataCell(Text('Associate Professor')),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Padding extractSentences() {
+    return const Padding(
+      padding: EdgeInsets.all(8.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('한 문장, 두 문장입니다.', style: TextStyle(color: Colors.grey)),
+          Text('핵심 문장입니다.'),
+          Text('한 문장, 두 문장입니다.', style: TextStyle(color: Colors.grey)),
         ],
       ),
     );
