@@ -233,7 +233,7 @@ class _SecondPageState extends State<SecondPage> with TickerProviderStateMixin {
   //                       'id': '${company.name} - prismALL',
   //                       'data': [
   //                         {'domain': '${company.name} 2020', 'measure': 32},
-  //                         {'domain': '${company.name} 2021', 'measure': 43},
+  //                         {'domain': '2021', 'measure': 43},
   //                         {'domain': '${company.name} 2022', 'measure': 29},
   //                       ],
   //                     },
@@ -241,7 +241,7 @@ class _SecondPageState extends State<SecondPage> with TickerProviderStateMixin {
   //                       'id': '${company.name} - prismE',
   //                       'data': [
   //                         {'domain': '${company.name} 2020', 'measure': 24},
-  //                         {'domain': '${company.name} 2021', 'measure': 42},
+  //                         {'domain': '2021', 'measure': 42},
   //                         {'domain': '${company.name} 2022', 'measure': 9},
   //                       ],
   //                     },
@@ -249,7 +249,7 @@ class _SecondPageState extends State<SecondPage> with TickerProviderStateMixin {
   //                       'id': '${company.name} - prismS',
   //                       'data': [
   //                         {'domain': '${company.name} 2020', 'measure': 17},
-  //                         {'domain': '${company.name} 2021', 'measure': 28},
+  //                         {'domain': '2021', 'measure': 28},
   //                         {'domain': '${company.name} 2022', 'measure': 12},
   //                       ],
   //                     },
@@ -257,7 +257,7 @@ class _SecondPageState extends State<SecondPage> with TickerProviderStateMixin {
   //                       'id': '${company.name} - prismG',
   //                       'data': [
   //                         {'domain': '${company.name} 2020', 'measure': 17},
-  //                         {'domain': '${company.name} 2021', 'measure': 28},
+  //                         {'domain': '2021', 'measure': 28},
   //                         {'domain': '${company.name} 2022', 'measure': 12},
   //                       ],
   //                     },
@@ -357,6 +357,112 @@ class _SecondPageState extends State<SecondPage> with TickerProviderStateMixin {
               fontWeight: FontWeight.bold,
             ),
           ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Row(
+                children: [
+                  const SizedBox(width: 8),
+                  Container(
+                    width: 20,
+                    height: 20,
+                    color: const Color(0xff000000),
+                  ),
+                  const SizedBox(width: 8), // 사각형과 텍스트 사이의 간격 조정
+                  Text('${company.name} - prsimALL'),
+                ],
+              ),
+              Row(
+                children: [
+                  const SizedBox(width: 8),
+                  Container(
+                    width: 20,
+                    height: 20,
+                    color: const Color(0xff4EA74A),
+                  ),
+                  const SizedBox(width: 8), // 사각형과 텍스트 사이의 간격 조정
+                  Text('${company.name} - prismE'),
+                ],
+              ),
+              Row(
+                children: [
+                  const SizedBox(width: 8),
+                  Container(
+                    width: 20,
+                    height: 20,
+                    color: const Color(0xff5EC1F7),
+                  ),
+                  const SizedBox(width: 8), // 사각형과 텍스트 사이의 간격 조정
+                  Text('${company.name} - prismS'),
+                ],
+              ),
+              Row(
+                children: [
+                  const SizedBox(width: 8),
+                  Container(
+                    width: 20,
+                    height: 20,
+                    color: const Color(0xffCE67FD),
+                  ),
+                  const SizedBox(width: 8), // 사각형과 텍스트 사이의 간격 조정
+                  Text('${company.name} - prismG'),
+                ],
+              ),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Row(
+                children: [
+                  const SizedBox(width: 8),
+                  Container(
+                    width: 20,
+                    height: 20,
+                    color: const Color.fromARGB(150, 0, 0, 0),
+                  ),
+                  const SizedBox(width: 8), // 사각형과 텍스트 사이의 간격 조정
+                  Text('${company.industry} - prsimALL'),
+                ],
+              ),
+              Row(
+                children: [
+                  const SizedBox(width: 8),
+                  Container(
+                    width: 20,
+                    height: 20,
+                    color: const Color.fromARGB(150, 78, 167, 82),
+                  ),
+                  const SizedBox(width: 8), // 사각형과 텍스트 사이의 간격 조정
+                  Text('${company.industry} - prismE'),
+                ],
+              ),
+              Row(
+                children: [
+                  const SizedBox(width: 8),
+                  Container(
+                    width: 20,
+                    height: 20,
+                    color: const Color.fromARGB(150, 94, 193, 247),
+                  ),
+                  const SizedBox(width: 8), // 사각형과 텍스트 사이의 간격 조정
+                  Text('${company.industry} - prismS'),
+                ],
+              ),
+              Row(
+                children: [
+                  const SizedBox(width: 8),
+                  Container(
+                    width: 20,
+                    height: 20,
+                    color: const Color.fromARGB(150, 206, 103, 253),
+                  ),
+                  const SizedBox(width: 8), // 사각형과 텍스트 사이의 간격 조정
+                  Text('${company.industry} - prismG'),
+                ],
+              ),
+            ],
+          ),
           Padding(
             padding: const EdgeInsets.all(16),
             child: LayoutBuilder(
@@ -368,66 +474,66 @@ class _SecondPageState extends State<SecondPage> with TickerProviderStateMixin {
                     data: [
                       {
                         'id': '${company.name} - prismALL',
-                        'data': [
-                          {'domain': '${company.name} 2020', 'measure': 32},
-                          {'domain': '${company.name} 2021', 'measure': 43},
-                          {'domain': '${company.name} 2022', 'measure': 29},
-                        ],
-                      },
-                      {
-                        'id': '${company.name} - prismE',
-                        'data': [
-                          {'domain': '${company.name} 2020', 'measure': 24},
-                          {'domain': '${company.name} 2021', 'measure': 42},
-                          {'domain': '${company.name} 2022', 'measure': 9},
-                        ],
-                      },
-                      {
-                        'id': '${company.name} - prismS',
-                        'data': [
-                          {'domain': '${company.name} 2020', 'measure': 17},
-                          {'domain': '${company.name} 2021', 'measure': 28},
-                          {'domain': '${company.name} 2022', 'measure': 12},
-                        ],
-                      },
-                      {
-                        'id': '${company.name} - prismG',
-                        'data': [
-                          {'domain': '${company.name} 2020', 'measure': 17},
-                          {'domain': '${company.name} 2021', 'measure': 28},
-                          {'domain': '${company.name} 2022', 'measure': 12},
+                        'data': const [
+                          {'domain': '2020', 'measure': 32},
+                          {'domain': '2021', 'measure': 43},
+                          {'domain': '2022', 'measure': 29},
                         ],
                       },
                       {
                         'id': '${company.industry} - prismALL',
-                        'data': [
-                          {'domain': '${company.industry} 2020', 'measure': 57},
-                          {'domain': '${company.industry} 2021', 'measure': 58},
-                          {'domain': '${company.industry} 2022', 'measure': 52},
+                        'data': const [
+                          {'domain': '2020', 'measure': 57},
+                          {'domain': '2021', 'measure': 58},
+                          {'domain': '2022', 'measure': 52},
+                        ],
+                      },
+                      {
+                        'id': '${company.name} - prismE',
+                        'data': const [
+                          {'domain': '2020', 'measure': 24},
+                          {'domain': '2021', 'measure': 42},
+                          {'domain': '2022', 'measure': 9},
                         ],
                       },
                       {
                         'id': '${company.industry} - prismE',
-                        'data': [
-                          {'domain': '${company.industry} 2020', 'measure': 87},
-                          {'domain': '${company.industry} 2021', 'measure': 88},
-                          {'domain': '${company.industry} 2022', 'measure': 82},
+                        'data': const [
+                          {'domain': '2020', 'measure': 87},
+                          {'domain': '2021', 'measure': 88},
+                          {'domain': '2022', 'measure': 82},
+                        ],
+                      },
+                      {
+                        'id': '${company.name} - prismS',
+                        'data': const [
+                          {'domain': '2020', 'measure': 17},
+                          {'domain': '2021', 'measure': 28},
+                          {'domain': '2022', 'measure': 12},
                         ],
                       },
                       {
                         'id': '${company.industry} - prismS',
-                        'data': [
-                          {'domain': '${company.industry} 2020', 'measure': 7},
-                          {'domain': '${company.industry} 2021', 'measure': 8},
-                          {'domain': '${company.industry} 2022', 'measure': 2},
+                        'data': const [
+                          {'domain': '2020', 'measure': 7},
+                          {'domain': '2021', 'measure': 8},
+                          {'domain': '2022', 'measure': 2},
+                        ],
+                      },
+                      {
+                        'id': '${company.name} - prismG',
+                        'data': const [
+                          {'domain': '2020', 'measure': 17},
+                          {'domain': '2021', 'measure': 28},
+                          {'domain': '2022', 'measure': 12},
                         ],
                       },
                       {
                         'id': '${company.industry} - prismG',
-                        'data': [
-                          {'domain': '${company.industry} 2020', 'measure': 17},
-                          {'domain': '${company.industry} 2021', 'measure': 28},
-                          {'domain': '${company.industry} 2022', 'measure': 12},
+                        'data': const [
+                          {'domain': '2020', 'measure': 17},
+                          {'domain': '2021', 'measure': 28},
+                          {'domain': '2022', 'measure': 12},
                         ],
                       },
                     ],
@@ -438,12 +544,26 @@ class _SecondPageState extends State<SecondPage> with TickerProviderStateMixin {
                     axisLinePointWidth: 10,
                     axisLineColor: Colors.green,
                     measureLabelPaddingToAxisLine: 16,
-                    barColor: (barData, index, id) =>
-                        id == '${company.name} - prismALL'
-                            ? Colors.green.shade300
-                            : id == '${company.name} - prismE'
-                                ? Colors.green.shade600
-                                : Colors.green.shade900,
+                    barColor: (barData, index, id) => id ==
+                            '${company.name} - prismALL'
+                        ? const Color(0xff000000)
+                        : id == '${company.name} - prismE'
+                            ? const Color(0xff4EA74A)
+                            : id == '${company.name} - prismS'
+                                ? const Color(0xff5EC1F7)
+                                : id == '${company.name} - prismG'
+                                    ? const Color(0xffCE67FD)
+                                    : id == '${company.industry} - prismALL'
+                                        ? const Color.fromARGB(150, 0, 0, 0)
+                                        : id == '${company.industry} - prismE'
+                                            ? const Color.fromARGB(
+                                                150, 78, 167, 82)
+                                            : id ==
+                                                    '${company.industry} - prismS'
+                                                ? const Color.fromARGB(
+                                                    150, 94, 193, 247)
+                                                : const Color.fromARGB(
+                                                    150, 206, 103, 253),
                     barValue: (barData, index) => '${barData['measure']}',
                     showBarValue: true,
                     barValueFontSize: 12,
@@ -804,7 +924,7 @@ class _SecondPageState extends State<SecondPage> with TickerProviderStateMixin {
                         'id': '${company.name} - KCGS',
                         'data': [
                           {'domain': '${company.name} 2020', 'measure': 100},
-                          {'domain': '${company.name} 2021', 'measure': 90},
+                          const {'domain': '2021', 'measure': 90},
                           {'domain': '${company.name} 2022', 'measure': 90},
                         ],
                       },
@@ -812,7 +932,7 @@ class _SecondPageState extends State<SecondPage> with TickerProviderStateMixin {
                         'id': '${company.name} - 한국ESG연구소',
                         'data': [
                           {'domain': '${company.name} 2020', 'measure': 80},
-                          {'domain': '${company.name} 2021', 'measure': 90},
+                          const {'domain': '2021', 'measure': 90},
                           {'domain': '${company.name} 2022', 'measure': 70},
                         ],
                       },
