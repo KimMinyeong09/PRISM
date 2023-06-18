@@ -397,9 +397,13 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                                 String companyYear = splitText[1];
                                 // TODO: 내용 불러오기
                                 return Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     SizedBox(
                                       width: 200,
+                                      height:
+                                          MediaQuery.of(context).size.height /
+                                              4,
                                       child: Column(
                                         children: [
                                           Text(
@@ -411,38 +415,39 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                                         ],
                                       ),
                                     ),
-                                    Column(
+                                    Row(
                                       children: [
-                                        _buildDChartOverall(
-                                            companyName, "PRISM 스코어"),
-                                        Row(
-                                          children: [
-                                            _buildDChart(companyName, "E"),
-                                            _buildDChart(companyName, "S"),
-                                            _buildDChart(companyName, "G"),
-                                          ],
-                                        )
+                                        _buildDChart(companyName, "PRISM 스코어"),
+                                        _buildDChart(companyName, "E"),
+                                        _buildDChart(companyName, "S"),
+                                        _buildDChart(companyName, "G"),
                                       ],
                                     ),
-                                    Column(
+                                    Row(
                                       children: [
-                                        _buildDChartOverall(
-                                            companyName, "wPRISM 스코어"),
-                                        Row(
-                                          children: [
-                                            _buildDChart(companyName, "E"),
-                                            _buildDChart(companyName, "S"),
-                                            _buildDChart(companyName, "G"),
-                                          ],
-                                        )
+                                        _buildDChart(companyName, "wPRISM 스코어"),
+                                        _buildDChart(companyName, "E"),
+                                        _buildDChart(companyName, "S"),
+                                        _buildDChart(companyName, "G"),
                                       ],
                                     ),
                                     _buildAssociationRakingTable("KCGS"),
                                     _buildAssociationRakingTable("한국ESG연구소"),
                                     if (comparing_gris.isEmpty)
-                                      const Text("GRI index를 선택해주세요 (최대 5개)")
+                                      SizedBox(
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .height /
+                                              4,
+                                          child: const Text(
+                                              "GRI index를 선택해주세요 (최대 5개)"))
                                     else
-                                      Text("$comparing_gris")
+                                      SizedBox(
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .height /
+                                              4,
+                                          child: Text("$comparing_gris"))
                                   ],
                                 );
                               }),
@@ -462,6 +467,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
   SizedBox _buildAssociationRakingTable(String association) {
     return SizedBox(
+      height: MediaQuery.of(context).size.height / 4,
       width: 300,
       child: Table(
         children: const [
@@ -494,48 +500,12 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     );
   }
 
-  Row _buildDChartOverall(String companyName, String title) {
-    return Row(
-      children: [
-        SizedBox(
-          width: 200,
-          height: 200,
-          child: SfCircularChart(
-            series: <CircularSeries>[
-              RadialBarSeries<ChartData, String>(
-                dataSource: <ChartData>[
-                  ChartData(companyName, 40),
-                  ChartData("업종", 65),
-                ],
-                xValueMapper: (ChartData data, _) => data.category,
-                yValueMapper: (ChartData data, _) => data.value,
-              ),
-            ],
-            palette: const <Color>[
-              Color(0xff7F56D9),
-              Color(0xffF0D9FF),
-            ],
-            title: ChartTitle(text: title),
-          ),
-        ),
-        const Column(
-          children: [
-            Text("40"),
-            Text("업계 평균 65"),
-            Text("업계 152위"),
-            Text("전체 152위"),
-          ],
-        ),
-      ],
-    );
-  }
-
   Column _buildDChart(String companyName, String title) {
     return Column(
       children: [
         SizedBox(
           width: 200,
-          height: 200,
+          height: MediaQuery.of(context).size.height / 4 - 100,
           child: SfCircularChart(
             series: <CircularSeries>[
               RadialBarSeries<ChartData, String>(
@@ -551,13 +521,25 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
               Color(0xff7F56D9),
               Color(0xffF0D9FF),
             ],
-            title: ChartTitle(text: title),
+            title: ChartTitle(
+                text: title,
+                textStyle: const TextStyle(
+                  fontSize: 15,
+                )),
+            margin: const EdgeInsets.all(1),
           ),
         ),
-        const Text("40"),
-        const Text("업계 평균 65"),
-        const Text("업계 152위"),
-        const Text("전체 152위"),
+        const Text("40",
+            style: TextStyle(
+              fontSize: 25,
+              fontWeight: FontWeight.bold,
+            )),
+        const Text("업계 평균 65",
+            style: TextStyle(fontSize: 10, color: Color(0xff667085))),
+        const Text("업계 152위",
+            style: TextStyle(fontSize: 10, color: Color(0xff667085))),
+        const Text("전체 152위",
+            style: TextStyle(fontSize: 10, color: Color(0xff667085))),
       ],
     );
   }
