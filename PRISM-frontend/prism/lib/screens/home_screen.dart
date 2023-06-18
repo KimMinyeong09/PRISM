@@ -119,10 +119,208 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   ];
 
   // GRI 리스트
-  List<String> gris = [
-    "201-1",
-    "202-2",
-  ];
+  final List<String> gri_mains = ["200", "300", "400",];
+  final List<String> gri_mids = ["201", "202", "203", "204", "205" ,"206", "301", "302", "303", "304", "305", "306", "307", "308", "401", "402", "403", "404", "405", "406", "407", "408", "409", "410", "411", "412", "413", "414", "415", "416", "417", "418", "419"];
+  final List<String> gri_subs = ["201-1",
+"201-2",
+"201-3",
+"201-4",
+
+"202-1",
+"202-2",
+
+"203-1",
+"203-2",
+
+"204-1",
+
+"205-1",
+"205-2",
+"205-3",
+
+"206-1",
+
+"301-1",
+"301-2",
+"301-3",
+
+"302-1",
+"302-2",
+"302-3",
+"302-4",
+"302-5",
+
+"303-1",
+"303-2",
+"303-3",
+"303-4",
+"303-5",
+
+"304-1",
+"304-2",
+"304-3",
+"304-4",
+
+"305-1",
+"305-2",
+"305-3",
+"305-4",
+"305-5",
+"305-6",
+"305-7",
+
+"306-1",
+"306-2",
+"306-3",
+"306-4",
+"306-5",
+
+"307-1",
+
+"308-1",
+"308-2",
+
+"401-1",
+"401-2",
+"401-3",
+
+"402-1",
+
+"403-1",
+"403-2",
+"403-3",
+"403-4",
+"403-5",
+"403-6",
+"403-7",
+"403-8",
+"403-9",
+"403-10",
+
+"404-1",
+"404-2",
+"404-3",
+
+"405-1",
+"405-2",
+
+"406-1",
+
+"407-1",
+
+"408-1",
+
+"409-1",
+
+"410-1",
+
+"411-1",
+
+"412-1",
+"412-2",
+"412-3",
+
+"413-1",
+"413-2",
+
+"414-1",
+"414-2",
+
+"415-1",
+
+"416-1",
+"416-2",
+
+"417-1",
+"417-2",
+"417-3",
+
+"418-1",
+
+"419-1"];
+  final List<String> gri_subs_name = ["직접적 경제가치 발생과 분배(EVG&D)", "기후변화에 따른 재무적 영향 및 기타 리스크와 기회", "확정급여형 연금 채무 및 기타 퇴직연금안", "정부 재정지원",
+"사업장 소재 지역의 최저 임금 대비 초임 임금의 비율 (성별에 따라 파악)",
+"사업장이 소재한 지역사회에서 고용된 고위 임원의 비율",
+"사회기반시설 투자 및 서비스 지원",
+"중요한 간접 경제 영향",
+"지역 공급업체에 지출하는 비용의 비중",
+"사업장 부패 리스크 평가",
+"반부패 정책과 절차에 관한 커뮤니케이션 및 교육",
+"확인된 부패 사례 및 조치",
+"경쟁저해 및 독과점금지 위반 관련 소송",
+"사용된 원재료의 중량 또는 용량",
+"재생 투입 원자재",
+"재생된 제품 및 포장재",
+"조직 내 에너지 소비",
+"조직 외부에서의 에너지 소비",
+"에너지 집약도",
+"에너지 소비 감축",
+"제품 및 서비스의 에너지 요구량 감축",
+"공유 자원으로서의 물과의 상호작용",
+"물 방류 관련 영향 관리",
+"취수",
+"방류",
+"물 소비",
+"보호지역 및 생물다양성 가치가 높은 지역 내 또는 그 인근에서 소유/임대/운영되는 사업장",
+"조직의 활동, 제품, 서비스가 생물다양성에 미치는 중대한 영향",
+"보호 또는 복원된 서식지",
+"IUCN 적색목록 및 조직 사업의 영향을 받는 지역 내에 서식하는 국가보호종 목록",
+"직접 온실가스 배출량 (Scope1)",
+"간접 온실가스 배출량 (Scope2)",
+"기타 간접 온실가스 배출량 (Scope3)",
+"온실가스 배출 집적도",
+"온실가스 배출량 감축",
+"오존층 파괴 물질(ODS) 배출량",
+"질소산화물(NOx), 황산화물(SOx) 및 기타 중요한 대기 배출량",
+"수질 및 목적지별 방류",
+"유형별, 처리방법별 폐기물",
+"중대한 유출",
+"유해 폐기물의 운반",
+"방류 또는 유출의 영향을 받는 수역",
+"환경 규제 위반",
+"환경 기준 심사를 거친 신규 공급업체",
+"공급망의 부정적 환경 영향 및 이에 대한 조치",
+"신규채용 및 이직",
+"비정규직 근로자에게는 제공되지 않는 정규직 근로자를 위한 복리후생",
+"육아휴직",
+"운영상의 변화와 관련한 최소 공지기간",
+"직장 건강 및 안전 관리 시스템",
+"위험요인 파악, 리스크 평가, 사고 조사",
+"직장 의료 서비스",
+"직장 건강 및 안전 관련 커뮤니케이션, 자문 및 근로자 참여",
+"직장 건강 및 안전 관련 근로자 교육",
+"근로자 건강 증진",
+"비즈니스 관계와 직접적으로 연계된 직장 건강 및 안전 영향의 예방과 완화",
+"직장 건강 및 안전 관리 시스템의 적용 대상 근로자",
+"업무 관련 부상",
+"업무 관련 질병",
+"직원 1인당 평균 교육 시간",
+"직원 역량강화 및 이직지원 프로그램",
+"정기적으로 성과 및 경력 개발 검토를 받는 직원 비율",
+"지배구조 기구와 직원의 다양성",
+"남성 대비 여성의 기본급 및 보수 비율",
+"차별 사례 및 이에 대한 시정조치",
+"집회결사 및 단체교섭권 훼손 위험이 있는 사업장 및 공급업체",
+"아동노동 발생 위험이 높은 사업장 및 공급업체",
+"강제 노역 발생 위험이 높은 사업장 및 공급업체",
+"인권 정책 및 절차에 관한 교육을 받은 보안 담당자",
+"원주민 권리 침해 사례",
+"인권 관련 검토 또는 영향 평가 대상 사업장",
+"인권 정책 및 절차 관련 직원 교육",
+"인권 관련 조항을 포함하고 있거나 인권 심사를 받은 주요 투자 협정 및 계약",
+"지역사회 참여, 영향 평가 및 개발 프로그램 운영 사업장",
+"지역사회에 중대한 실제적/잠재적 부정적 영향을 미치는 사업장",
+"사회적 기준에 따른 심사를 거친 신규 공급업체",
+"공급망 내 부정적 사회적 영향 및 그에 대한 대응조치",
+"정치 기부금",
+"제품/서비스의 건강 및 안전 영향 평가",
+"제품/서비스의 건강 및 안전 영향 관련 위반",
+"제품/서비스 관련 정보 및 라벨링 요건",
+"제품/서비스 정보 및 라벨링 관련 위반",
+"마케팅 커뮤니케이션 관련 위반",
+"고객 개인정보보호 위반 및 고객정보 분실 관련해 입증된 민원",
+"사회적 및 경제적 분야의 법률 및 규정 위반",];
+
 
   @override
   void initState() {
@@ -946,66 +1144,89 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       context: context,
       barrierDismissible: true, // 바깥 영역 터치시 닫을지 여부
       builder: (BuildContext context) => AlertDialog(
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: TextField(
-                decoration: const InputDecoration(
-                  hintText: 'GRI index 검색..',
-                  prefixIcon: Icon(Icons.search),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(10.0),
-                    ),
-                  ),
-                ),
-                onChanged: (value) {},
-              ),
-            ),
-            Column(
-              children: List.generate(
-                (gris.length / 5).ceil(),
-                (rowIndex) => Row(
-                  children: List.generate(
-                    5,
-                    (index) {
-                      final currentIndex = rowIndex * 5 + index;
-                      if (currentIndex < gris.length) {
-                        return Expanded(
-                          child: TextButton(
-                            onPressed: () {
-                              setState(() {
-                                if (comparing_gris
-                                    .contains(gris[currentIndex])) {
-                                  comparing_gris.remove(gris[currentIndex]);
-                                } else {
-                                  comparing_gris.add(gris[currentIndex]);
-                                }
-                              });
-                            },
-                            child: Text(
-                              gris[currentIndex],
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontWeight:
-                                    comparing_gris.contains(gris[currentIndex])
-                                        ? FontWeight.bold
-                                        : FontWeight.normal,
+        content: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Container(
+              //   padding: const EdgeInsets.symmetric(horizontal: 16),
+              //   child: TextField(
+              //     decoration: const InputDecoration(
+              //       hintText: 'GRI index 검색..',
+              //       prefixIcon: Icon(Icons.search),
+              //       border: OutlineInputBorder(
+              //         borderRadius: BorderRadius.all(
+              //           Radius.circular(10.0),
+              //         ),
+              //       ),
+              //     ),
+              //     onChanged: (value) {
+              //       setState(() {
+                      
+              //       });
+              //       // 검색한 거 찾는 로직을 생각해보자..
+              //     },
+              //   ),
+              // ),
+              for (int i = 0; i < gri_mains.length; i++)
+                ExpansionTile(
+                  title: Text(gri_mains[i]),
+                  controlAffinity: ListTileControlAffinity.leading,
+                  children: <Widget>[
+                    ListTile(
+                      title: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          for (int j = 0; j < gri_mids.length; j++)
+                            if (gri_mids[j][0] == gri_mains[i][0])
+                              ExpansionTile(
+                                title: Text(gri_mids[j]),
+                                controlAffinity: ListTileControlAffinity.leading,
+                                children: <Widget>[
+                                  ListTile(
+                                    title: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        for (int k = 0; k < gri_subs.length; k++)
+                                          if (gri_subs[k].contains(gri_mids[j]))
+                                              TextButton(
+                                                onPressed: () {
+                                                  setState(() {
+                                                    if (comparing_gris.contains(gri_subs[k])) {
+                                                      comparing_gris.remove(gri_subs[k]);
+                                                    } else {
+                                                      if (comparing_gris.length < 5) {
+                                                        comparing_gris.add(gri_subs[k]);
+                                                      }
+                                                    }
+                                                  });
+                                                },
+                                                child: Text(
+                                                  '${gri_subs[k]}: ${gri_subs_name[k]}',
+                                                  style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontWeight:
+                                                        comparing_gris.contains(gri_subs[k])
+                                                            ? FontWeight.bold
+                                                            : FontWeight.normal,
+                                                  ),
+                                                ),
+                                              ),
+                                            
+                                              
+
+                                      ],
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ),
-                          ),
-                        );
-                      } else {
-                        return Expanded(child: Container());
-                      }
-                    },
-                  ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
         actions: <Widget>[
           TextButton(
