@@ -399,12 +399,14 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                                 return Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
+                                    // 기업명 & 연도
                                     SizedBox(
                                       width: 200,
                                       height:
                                           MediaQuery.of(context).size.height /
                                               4,
                                       child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.center,
                                         children: [
                                           Text(
                                             companyName,
@@ -415,6 +417,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                                         ],
                                       ),
                                     ),
+                                    // PRISM 스코어
                                     Row(
                                       children: [
                                         _buildDChart(companyName, "PRISM 스코어"),
@@ -423,6 +426,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                                         _buildDChart(companyName, "G"),
                                       ],
                                     ),
+                                    // wPRISM 스코어
                                     Row(
                                       children: [
                                         _buildDChart(companyName, "wPRISM 스코어"),
@@ -431,8 +435,11 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                                         _buildDChart(companyName, "G"),
                                       ],
                                     ),
+                                    // KCGS
                                     _buildAssociationRakingTable("KCGS"),
+                                    // 한국ESG연구소
                                     _buildAssociationRakingTable("한국ESG연구소"),
+                                    // GRI info
                                     if (comparing_gris.isEmpty)
                                       SizedBox(
                                           height: MediaQuery.of(context)
@@ -469,33 +476,42 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     return SizedBox(
       height: MediaQuery.of(context).size.height / 4,
       width: 300,
-      child: Table(
-        children: const [
-          TableRow(
-            children: [
-              TableCell(child: Text("종합점수")),
-              TableCell(child: Text("A")), // TODO: 점수 받아오기
-            ],
-          ),
-          TableRow(
-            children: [
-              TableCell(child: Text("E")),
-              TableCell(child: Text("A")), // TODO: 점수 받아오기
-            ],
-          ),
-          TableRow(
-            children: [
-              TableCell(child: Text("S")),
-              TableCell(child: Text("A")), // TODO: 점수 받아오기
-            ],
-          ),
-          TableRow(
-            children: [
-              TableCell(child: Text("G")),
-              TableCell(child: Text("A")), // TODO: 점수 받아오기
-            ],
-          ),
-        ],
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(association, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+            SizedBox(height: 15),
+            Table(
+              children: const [
+                TableRow(
+                  children: [
+                    TableCell(child: Text("종합점수", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15,), textAlign: TextAlign.center,)),
+                    TableCell(child: Text("A", style: TextStyle(fontSize: 15,), textAlign: TextAlign.center,)), // TODO: 점수 받아오기
+                  ],
+                ),
+                TableRow(
+                  children: [
+                    TableCell(child: Text("E", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15,), textAlign: TextAlign.center,)),
+                    TableCell(child: Text("A", style: TextStyle(fontSize: 15,), textAlign: TextAlign.center,)), // TODO: 점수 받아오기
+                  ],
+                ),
+                TableRow(
+                  children: [
+                    TableCell(child: Text("S", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15,), textAlign: TextAlign.center,)),
+                    TableCell(child: Text("A", style: TextStyle(fontSize: 15,), textAlign: TextAlign.center,)), // TODO: 점수 받아오기
+                  ],
+                ),
+                TableRow(
+                  children: [
+                    TableCell(child: Text("G", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15,), textAlign: TextAlign.center,)),
+                    TableCell(child: Text("A", style: TextStyle(fontSize: 15,), textAlign: TextAlign.center,)), // TODO: 점수 받아오기
+                  ],
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
