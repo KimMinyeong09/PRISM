@@ -20,7 +20,7 @@ import '../models/one_row_model.dart';
 import '../models/report_sentences_model.dart';
 
 class ApiService {
-  static const String base_url = '../../assets/dummyJSOM'; // TODO: url 변경
+  static const String base_url = 'http://127.0.0.1:8000/'; // TODO: url 변경
 
   // 한 페이지를 불러와야할 때
   // 필터결과에 해당하는 행 최대 10개
@@ -63,7 +63,7 @@ class ApiService {
     List<int> yearsInstance = [];
 
     if (response.statusCode == 200) {
-      final jsonData = jsonDecode(response.body); // 예: [{years: [2022, 2021]}]
+      final jsonData = jsonDecode(response.body); // 예: [{"years": [2022, 2021]}]
       //years : List<int>
       var yearsDict = jsonData[0]; // {years: [2022, 2021]}
       for (var year in yearsDict["years"]) {
