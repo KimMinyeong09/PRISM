@@ -8,8 +8,10 @@ import 'home_screen.dart';
 
 class SecondPage extends StatefulWidget {
   final String company_name, company_industry;
+  final List<int> detail_info_years;
+  final Map<int, Map<String, dynamic>> detail_prism_info;
 
-  const SecondPage(this.company_name, this.company_industry, {Key? key}) : super(key: key);
+  const SecondPage(this.company_name, this.company_industry, this.detail_info_years, this.detail_prism_info, {Key? key}) : super(key: key);
 
   @override
   _SecondPageState createState() => _SecondPageState();
@@ -17,6 +19,8 @@ class SecondPage extends StatefulWidget {
 
 class _SecondPageState extends State<SecondPage> with TickerProviderStateMixin {
   late String company_name, company_industry;
+  late List<int> detail_info_years;
+  late Map<int, Map<String, dynamic>> detail_prism_info;
 
   late TabController _scoreTabController;
 
@@ -26,6 +30,8 @@ class _SecondPageState extends State<SecondPage> with TickerProviderStateMixin {
 
     company_name = widget.company_name;
     company_industry = widget.company_industry;
+    detail_info_years = widget.detail_info_years;
+    detail_prism_info = widget.detail_prism_info;
 
     _scoreTabController = TabController(length: 3, vsync: this);
   }
@@ -67,7 +73,6 @@ class _SecondPageState extends State<SecondPage> with TickerProviderStateMixin {
                   const SizedBox(width: 20),
                   // 기업명
                   Text(
-                    //company.name,
                     company_name,
                     style: const TextStyle(
                       fontSize: 35,
@@ -76,9 +81,7 @@ class _SecondPageState extends State<SecondPage> with TickerProviderStateMixin {
                   ),
                   const SizedBox(width: 20),
                   // 업종
-                  Text(company_industry.toString()
-                    // company.industry
-                  ),
+                  Text(company_industry),
                   const SizedBox(width: 20),
                   // 보고서 다운 버튼
                   Column(
@@ -87,7 +90,7 @@ class _SecondPageState extends State<SecondPage> with TickerProviderStateMixin {
                         onPressed: (() {}),
                         icon: const Icon(Icons.book),
                       ),
-                      const Text("2020"),
+                      Text(detail_info_years[0].toString()),
                     ],
                   ),
                   Column(

@@ -125,49 +125,75 @@ class ApiService {
   // 한 행(회사)의 상세페이지 내용 필요
   // prism스코어, 존재하는 년도개수만큼
   static Future<List<PrismScoreModel>> outPrismScores(String company) async {
-    final url = Uri.parse('$base_url/rank/oneCompany');
+    // final url = Uri.parse('$base_url/rank/oneCompany');
   
-    final requestData = {
-      'company': company,
-    };
+    // final requestData = {
+    //   'company': company,
+    // };
     
-    final response = await http.post(url, body: requestData); 
+    // final response = await http.post(url, body: requestData); 
 
-    List<PrismScoreModel> prism_scores = [];
+    // List<PrismScoreModel> prism_scores = [];
 
-    if (response.statusCode == 200) {
-      final scores = jsonDecode(response.body);
-      for (var score in scores) {
-        final instance = PrismScoreModel.fromJson(score);
-        prism_scores.add(instance);
-      }
-      return prism_scores;
+    // if (response.statusCode == 200) {
+    //   final scores = jsonDecode(response.body);
+    //   for (var score in scores) {
+    //     final instance = PrismScoreModel.fromJson(score);
+    //     prism_scores.add(instance);
+    //   }
+    //   return prism_scores;
+    // }
+    // // 에러 처리
+    // throw Exception('Failed to fetch company Prism scores');
+
+    final jsonString = await rootBundle.loadString("../../assets/dummyJson/prism_score.json");
+
+    List<PrismScoreModel> prism_scores_instances = [];
+
+    final jsonData = jsonDecode(jsonString);
+    final List<Map<String, dynamic>> prism_scores = List<Map<String, dynamic>>.from(jsonData);
+
+    for (var prism_score in prism_scores) {
+      final instance = PrismScoreModel.fromJson(prism_score);
+      prism_scores_instances.add(instance);
     }
-    // 에러 처리
-    throw Exception('Failed to fetch company Prism scores');
+    return prism_scores_instances;
   }
   //특정 업종의 prism스코어, 존재하는 년도 개수 만큼
   static Future<List<PrismIndAvgScoreModel>> outPrismIndAvgScores(String company) async {
-    final url = Uri.parse('$base_url/rank/oneCompany');
+    // final url = Uri.parse('$base_url/rank/oneCompany');
   
-    final requestData = {
-      'company': company,
-    };
+    // final requestData = {
+    //   'company': company,
+    // };
     
-    final response = await http.post(url, body: requestData); 
+    // final response = await http.post(url, body: requestData); 
 
-    List<PrismIndAvgScoreModel> prism_ind_avg_scores = [];
+    // List<PrismIndAvgScoreModel> prism_ind_avg_scores = [];
 
-    if (response.statusCode == 200) {
-      final scores = jsonDecode(response.body);
-      for (var score in scores) {
-        final instance = PrismIndAvgScoreModel.fromJson(score);
-        prism_ind_avg_scores.add(instance);
-      }
-      return prism_ind_avg_scores;
+    // if (response.statusCode == 200) {
+    //   final scores = jsonDecode(response.body);
+    //   for (var score in scores) {
+    //     final instance = PrismIndAvgScoreModel.fromJson(score);
+    //     prism_ind_avg_scores.add(instance);
+    //   }
+    //   return prism_ind_avg_scores;
+    // }
+    // // 에러 처리
+    // throw Exception('Failed to fetch industry Prism scores');
+
+    final jsonString = await rootBundle.loadString("../../assets/dummyJson/prism_ind_avg_score.json");
+
+    List<PrismIndAvgScoreModel> prism_ind_avg_scores_instances = [];
+
+    final jsonData = jsonDecode(jsonString);
+    final List<Map<String, dynamic>> prism_ind_avg_scores = List<Map<String, dynamic>>.from(jsonData);
+
+    for (var prism_ind_avg_score in prism_ind_avg_scores) {
+      final instance = PrismIndAvgScoreModel.fromJson(prism_ind_avg_score);
+      prism_ind_avg_scores_instances.add(instance);
     }
-    // 에러 처리
-    throw Exception('Failed to fetch industry Prism scores');
+    return prism_ind_avg_scores_instances;
   }
   //kcgs스코어, 존재하는 년도 개수만큼
   static Future<List<KcgsScoreModel>> outKcgsScores(String company) async {

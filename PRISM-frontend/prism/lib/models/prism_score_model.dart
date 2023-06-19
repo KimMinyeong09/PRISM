@@ -23,12 +23,11 @@ class PrismScoreModel {
       WGRank,
       companyId,
       prismIndAvgId,
-      indWeightId,
       kcgsScoreId,
       esglabScoreId;
 
   PrismScoreModel.fromJson(Map<String, dynamic> json)
-      : prismScoreId = json['Prism_scroe_id'],
+      : prismScoreId = json['Prism_score_id'],
         evalYear = json['Eval_year'],
         overallScore = json['Overall_score'],
         EScore = json['E_score'],
@@ -52,7 +51,6 @@ class PrismScoreModel {
         WGRank = json['W_g_rank'],
         companyId = json['Company_id'],
         prismIndAvgId = json['Prism_ind_avg_id '],
-        indWeightId = json['Ind_weight_id'],
         kcgsScoreId = json['Kcgs_score_id'],
         esglabScoreId = json['Esglab_score_id'];
 }

@@ -453,10 +453,12 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   Map<int, Map<String, dynamic>> detail_prism_info = {};
   void fetchCompanyDetailData(String company_name) async {
     try {
+      List<int> years = [];
+      Map<int, Map<String, dynamic>> prism_info = {};
       List<PrismScoreModel> prism_scores = await ApiService.outPrismScores(company_name);
       for (var prism_score in prism_scores) {
-        detail_info_years.add(prism_score.evalYear);
-        detail_prism_info[prism_score.evalYear] = {
+        years.add(prism_score.evalYear);
+        prism_info[prism_score.evalYear] = {
           'overallScore': prism_score.overallScore,
           'EScore': prism_score.EScore,
           'SScore': prism_score.SScore,
@@ -474,9 +476,10 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           'indGRank': prism_score.indGRank
         };
       }
+      
       List<PrismIndAvgScoreModel> prism_ind_avg_scores = await ApiService.outPrismIndAvgScores(company_name);
       for (var prism_ind_avg_score in prism_ind_avg_scores) {
-        detail_prism_info[prism_ind_avg_score.year] = {
+        prism_info[prism_ind_avg_score.year] = {
           'indOverallScore': prism_ind_avg_score.overallScore,
           'indEScore': prism_ind_avg_score.EScore,
           'indSScore': prism_ind_avg_score.SScore,
@@ -487,17 +490,26 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           'indWGScore': prism_ind_avg_score.wGScore,
         };
       }
+      print("----------------------------------------");
+      print(detail_info_years);
+      print(detail_prism_info);
+      print("----------------------------------------");
     
 
-      await ApiService.outKcgsScores(company_name);
-      await ApiService.outEsglabScores(company_name);
-      await ApiService.outKcgsIndAvgScores(company_name);
-      await ApiService.outEsglabIndAvgScores(company_name);
-      await ApiService.outSustainReports(company_name);
-      await ApiService.outGriInfos(company_name);
-      await ApiService.outReportSentencess(company_name);
-      await ApiService.outReportTables(company_name);
-      await ApiService.outGriUsageIndAvgScores(company_name);
+      // await ApiService.outKcgsScores(company_name);
+      // await ApiService.outEsglabScores(company_name);
+      // await ApiService.outKcgsIndAvgScores(company_name);
+      // await ApiService.outEsglabIndAvgScores(company_name);
+      // await ApiService.outSustainReports(company_name);
+      // await ApiService.outGriInfos(company_name);
+      // await ApiService.outReportSentencess(company_name);
+      // await ApiService.outReportTables(company_name);
+      // await ApiService.outGriUsageIndAvgScores(company_name);
+
+      setState(() {
+        detail_info_years = years;
+        detail_prism_info = prism_info;
+      });
     } catch (e) {
       print('Error: $e');
     }
@@ -1469,11 +1481,13 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                         DataCell(
                           IconButton(
                             onPressed: () {
+                              fetchCompanyDetailData(one_row_list[index].name);
+                              print(detail_info_years);
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) =>
-                                          SecondPage(one_row_list[index].name, one_row_list[index].industry)));
+                                          SecondPage(one_row_list[index].name, one_row_list[index].industry, detail_info_years, detail_prism_info)));
                             },
                             icon: const Icon(Icons.arrow_right),
                           ),
