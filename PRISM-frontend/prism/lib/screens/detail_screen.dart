@@ -5,17 +5,18 @@ import 'package:syncfusion_flutter_charts/charts.dart';
 import '../chart_data.dart';
 import 'home_screen.dart';
 
-class SecondPage extends StatefulWidget {
-  final Company company;
 
-  const SecondPage(this.company, {Key? key}) : super(key: key);
+class SecondPage extends StatefulWidget {
+  final String company_name, company_industry;
+
+  const SecondPage(this.company_name, this.company_industry, {Key? key}) : super(key: key);
 
   @override
   _SecondPageState createState() => _SecondPageState();
 }
 
 class _SecondPageState extends State<SecondPage> with TickerProviderStateMixin {
-  late Company company;
+  late String company_name, company_industry;
 
   late TabController _scoreTabController;
 
@@ -23,7 +24,8 @@ class _SecondPageState extends State<SecondPage> with TickerProviderStateMixin {
   void initState() {
     super.initState();
 
-    company = widget.company;
+    company_name = widget.company_name;
+    company_industry = widget.company_industry;
 
     _scoreTabController = TabController(length: 3, vsync: this);
   }
@@ -33,6 +35,16 @@ class _SecondPageState extends State<SecondPage> with TickerProviderStateMixin {
     _scoreTabController.dispose();
     super.dispose();
   }
+
+  // API- 회사 정보 저장 (하드코딩)
+  late List<OneRow> one_row_list;
+  late List<PrismScoreModel> prism_scores;
+  late List<PrismIndAvgScoreModel> prism_ind_avg_scores;
+  late List<KcgsScoreModel> kcgs_scores;
+  late List<EsglabScoreModel> esglab_scores;
+  late List<SustainReportModel> sustain_reports;
+  late List<ReportSentencesModel> gri_infos;
+  late List<ReportTableModel> report_tables;
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +68,8 @@ class _SecondPageState extends State<SecondPage> with TickerProviderStateMixin {
                   const SizedBox(width: 20),
                   // 기업명
                   Text(
-                    company.name,
+                    //company.name,
+                    company_name,
                     style: const TextStyle(
                       fontSize: 35,
                       fontWeight: FontWeight.bold,
@@ -64,7 +77,9 @@ class _SecondPageState extends State<SecondPage> with TickerProviderStateMixin {
                   ),
                   const SizedBox(width: 20),
                   // 업종
-                  Text(company.industry),
+                  Text(company_industry.toString()
+                    // company.industry
+                  ),
                   const SizedBox(width: 20),
                   // 보고서 다운 버튼
                   Column(
@@ -114,7 +129,7 @@ class _SecondPageState extends State<SecondPage> with TickerProviderStateMixin {
                 child: TabBarView(
                   controller: _scoreTabController,
                   children: [
-                    _buildDetailScoreTab(company),
+                    _buildDetailScoreTab(),
                     _buildRatingTab(),
                     _buildesgInfoTab(),
                   ],
@@ -129,7 +144,7 @@ class _SecondPageState extends State<SecondPage> with TickerProviderStateMixin {
 
   
   // PRISM 스코어 탭
-  Widget _buildDetailScoreTab(Company company) {
+  Widget _buildDetailScoreTab() {
     List<int> years = [2022, 2021, 2020];
 
     return SingleChildScrollView(
@@ -148,142 +163,31 @@ class _SecondPageState extends State<SecondPage> with TickerProviderStateMixin {
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              _infoGraph(const Color(0xff000000),'${company.name} - prsimALL'),
-              _infoGraph(const Color(0xff4EA74A),'${company.name} - prismE'),
-              _infoGraph(const Color(0xff5EC1F7),'${company.name} - prismS'),
-              _infoGraph(const Color(0xffCE67FD),'${company.name} - prismG'),
+              _infoGraph(const Color(0xff000000),'${company_name} - prsimALL'),
+              _infoGraph(const Color(0xff4EA74A),'${company_name} - prismE'),
+              _infoGraph(const Color(0xff5EC1F7),'${company_name} - prismS'),
+              _infoGraph(const Color(0xffCE67FD),'${company_name} - prismG'),
             ],
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              _infoGraph(const Color.fromARGB(150, 0, 0, 0),'${company.industry} - prsimALL'),
-              _infoGraph(const Color.fromARGB(150, 78, 167, 82),'${company.industry} - prismE'),
-              _infoGraph(const Color.fromARGB(150, 94, 193, 247),'${company.industry} - prismS'),
-              _infoGraph(const Color.fromARGB(150, 206, 103, 253),'${company.industry} - prismG'),
+              _infoGraph(const Color.fromARGB(150, 0, 0, 0),'${company_industry} - prsimALL'),
+              _infoGraph(const Color.fromARGB(150, 78, 167, 82),'${company_industry} - prismE'),
+              _infoGraph(const Color.fromARGB(150, 94, 193, 247),'${company_industry} - prismS'),
+              _infoGraph(const Color.fromARGB(150, 206, 103, 253),'${company_industry} - prismG'),
             ],
           ),
           // - 그래프 정보
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: LayoutBuilder(
-              builder: (context, constraints) {
-                const aspectRatio = 16 / 5;
-                return AspectRatio(
-                  aspectRatio: aspectRatio,
-                  child: DChartBar(
-                    data: [
-                      {
-                        'id': '${company.name} - prismALL',
-                        'data': const [
-                          {'domain': '2020', 'measure': 32},
-                          {'domain': '2021', 'measure': 43},
-                          {'domain': '2022', 'measure': 29},
-                        ],
-                      },
-                      {
-                        'id': '${company.industry} - prismALL',
-                        'data': const [
-                          {'domain': '2020', 'measure': 57},
-                          {'domain': '2021', 'measure': 58},
-                          {'domain': '2022', 'measure': 52},
-                        ],
-                      },
-                      {
-                        'id': '${company.name} - prismE',
-                        'data': const [
-                          {'domain': '2020', 'measure': 24},
-                          {'domain': '2021', 'measure': 42},
-                          {'domain': '2022', 'measure': 9},
-                        ],
-                      },
-                      {
-                        'id': '${company.industry} - prismE',
-                        'data': const [
-                          {'domain': '2020', 'measure': 87},
-                          {'domain': '2021', 'measure': 88},
-                          {'domain': '2022', 'measure': 82},
-                        ],
-                      },
-                      {
-                        'id': '${company.name} - prismS',
-                        'data': const [
-                          {'domain': '2020', 'measure': 17},
-                          {'domain': '2021', 'measure': 28},
-                          {'domain': '2022', 'measure': 12},
-                        ],
-                      },
-                      {
-                        'id': '${company.industry} - prismS',
-                        'data': const [
-                          {'domain': '2020', 'measure': 7},
-                          {'domain': '2021', 'measure': 8},
-                          {'domain': '2022', 'measure': 2},
-                        ],
-                      },
-                      {
-                        'id': '${company.name} - prismG',
-                        'data': const [
-                          {'domain': '2020', 'measure': 17},
-                          {'domain': '2021', 'measure': 28},
-                          {'domain': '2022', 'measure': 12},
-                        ],
-                      },
-                      {
-                        'id': '${company.industry} - prismG',
-                        'data': const [
-                          {'domain': '2020', 'measure': 17},
-                          {'domain': '2021', 'measure': 28},
-                          {'domain': '2022', 'measure': 12},
-                        ],
-                      },
-                    ],
-                    minimumPaddingBetweenLabel: 1,
-                    domainLabelPaddingToAxisLine: 16,
-                    domainLabelFontSize: 15,
-                    axisLineTick: 2,
-                    axisLinePointTick: 2,
-                    axisLinePointWidth: 10,
-                    measureLabelPaddingToAxisLine: 16,
-                    barColor: (barData, index, id) => id ==
-                            '${company.name} - prismALL'
-                        ? const Color(0xff000000)
-                        : id == '${company.name} - prismE'
-                            ? const Color(0xff4EA74A)
-                            : id == '${company.name} - prismS'
-                                ? const Color(0xff5EC1F7)
-                                : id == '${company.name} - prismG'
-                                    ? const Color(0xffCE67FD)
-                                    : id == '${company.industry} - prismALL'
-                                        ? const Color.fromARGB(150, 0, 0, 0)
-                                        : id == '${company.industry} - prismE'
-                                            ? const Color.fromARGB(
-                                                150, 78, 167, 82)
-                                            : id ==
-                                                    '${company.industry} - prismS'
-                                                ? const Color.fromARGB(
-                                                    150, 94, 193, 247)
-                                                : const Color.fromARGB(
-                                                    150, 206, 103, 253),
-                    barValue: (barData, index) => '${barData['measure']}',
-                    showBarValue: true,
-                    barValueFontSize: 12,
-                    barValuePosition: BarValuePosition.outside,
-                    measureMin: 0,
-                    measureMax: 100,
-                  ),
-                );
-              },
-            ),
-          ),
+          printPrismGraph(years),
           const SizedBox(height: 50),
           // 도넛 차트
           // - 그래프 색상 정보
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              _infoGraph(const Color(0xff7F56D9),'${company.name}'),
-              _infoGraph(const Color(0xffF0D9FF),'${company.industry}'),
+              _infoGraph(const Color(0xff7F56D9),'${company_name}'),
+              _infoGraph(const Color(0xffF0D9FF),'${company_industry}'),
             ],
           ),
           // 년도별 수치 정보
@@ -292,6 +196,131 @@ class _SecondPageState extends State<SecondPage> with TickerProviderStateMixin {
         ],
       ),
     );
+  }
+
+  Padding printPrismGraph(List<int> years) {
+
+    List<Map<String, dynamic>> dataPrismALL = [];
+    for (int i = 0; i < years.length; i++) {
+      Map<String, dynamic> item = {
+        'domain': years[i],
+        'measure': years[i] * years[i],
+      };
+      dataPrismALL.add(item);
+    }
+
+    return Padding(
+          padding: const EdgeInsets.all(16),
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              const aspectRatio = 16 / 5;
+              return AspectRatio(
+                aspectRatio: aspectRatio,
+                child: DChartBar(
+                  data: [
+                    {
+                      'id': '${company_name} - prismALL',
+                      'data': const [
+                        {'domain': '2020', 'measure': 32},
+                        {'domain': '2021', 'measure': 43},
+                        {'domain': '2022', 'measure': 29},
+                      ],
+                    },
+                    {
+                      'id': '${company_industry} - prismALL',
+                      'data': const [
+                        {'domain': '2020', 'measure': 57},
+                        {'domain': '2021', 'measure': 58},
+                        {'domain': '2022', 'measure': 52},
+                      ],
+                    },
+                    {
+                      'id': '${company_name} - prismE',
+                      'data': const [
+                        {'domain': '2020', 'measure': 24},
+                        {'domain': '2021', 'measure': 42},
+                        {'domain': '2022', 'measure': 9},
+                      ],
+                    },
+                    {
+                      'id': '${company_industry} - prismE',
+                      'data': const [
+                        {'domain': '2020', 'measure': 87},
+                        {'domain': '2021', 'measure': 88},
+                        {'domain': '2022', 'measure': 82},
+                      ],
+                    },
+                    {
+                      'id': '${company_name} - prismS',
+                      'data': const [
+                        {'domain': '2020', 'measure': 17},
+                        {'domain': '2021', 'measure': 28},
+                        {'domain': '2022', 'measure': 12},
+                      ],
+                    },
+                    {
+                      'id': '${company_industry} - prismS',
+                      'data': const [
+                        {'domain': '2020', 'measure': 7},
+                        {'domain': '2021', 'measure': 8},
+                        {'domain': '2022', 'measure': 2},
+                      ],
+                    },
+                    {
+                      'id': '${company_name} - prismG',
+                      'data': const [
+                        {'domain': '2020', 'measure': 17},
+                        {'domain': '2021', 'measure': 28},
+                        {'domain': '2022', 'measure': 12},
+                      ],
+                    },
+                    {
+                      'id': '${company_industry} - prismG',
+                      'data': const [
+                        {'domain': '2020', 'measure': 17},
+                        {'domain': '2021', 'measure': 28},
+                        {'domain': '2022', 'measure': 12},
+                      ],
+                    },
+                  ],
+                  minimumPaddingBetweenLabel: 1,
+                  domainLabelPaddingToAxisLine: 16,
+                  domainLabelFontSize: 15,
+                  axisLineTick: 2,
+                  axisLinePointTick: 2,
+                  axisLinePointWidth: 10,
+                  measureLabelPaddingToAxisLine: 16,
+                  barColor: (barData, index, id) => id ==
+                          '${company_name} - prismALL'
+                      ? const Color(0xff000000)
+                      : id == '${company_name} - prismE'
+                          ? const Color(0xff4EA74A)
+                          : id == '${company_name} - prismS'
+                              ? const Color(0xff5EC1F7)
+                              : id == '${company_name} - prismG'
+                                  ? const Color(0xffCE67FD)
+                                  : id == '${company_name} - prismALL'
+                                      ? const Color.fromARGB(150, 0, 0, 0)
+                                      : id == '${company_name} - prismE'
+                                          ? const Color.fromARGB(
+                                              150, 78, 167, 82)
+                                          : id ==
+                                                  '${company_name} - prismS'
+                                              ? const Color.fromARGB(
+                                                  150, 94, 193, 247)
+                                              : const Color.fromARGB(
+                                                  150, 206, 103, 253),
+                  barValue: (barData, index) => '${barData['measure']}',
+                  showBarValue: true,
+                  barValueFontSize: 12,
+                  barValuePosition: BarValuePosition.outside,
+                  measureMin: 0,
+                  measureMax: 100,
+                ),
+              );
+            },
+          ),
+        );
   }
   
   // - PRISM 도넛 차트 생성 호출
@@ -340,15 +369,15 @@ class _SecondPageState extends State<SecondPage> with TickerProviderStateMixin {
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              _infoGraph(const Color(0xff5EC1F7),'${company.name} - KCGS'),
-              _infoGraph(const Color(0xffCE67FD),'${company.name} - 한국ESG연구소'),
+              _infoGraph(const Color(0xff5EC1F7),'${company_name} - KCGS'),
+              _infoGraph(const Color(0xffCE67FD),'${company_name} - 한국ESG연구소'),
             ],
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              _infoGraph(const Color.fromARGB(150, 94, 193, 247),'${company.industry} - KCSG'),
-              _infoGraph(const Color.fromARGB(150, 206, 103, 253),'${company.industry} - 한국ESG연구소'),
+              _infoGraph(const Color.fromARGB(150, 94, 193, 247),'${company_industry} - KCSG'),
+              _infoGraph(const Color.fromARGB(150, 206, 103, 253),'${company_industry} - 한국ESG연구소'),
             ],
           ),
           // - 그래프 정보
@@ -362,7 +391,7 @@ class _SecondPageState extends State<SecondPage> with TickerProviderStateMixin {
                   child: DChartBar(
                     data: [
                       {
-                        'id': '${company.name} - KCGS',
+                        'id': '${company_name} - KCGS',
                         'data': const [
                           {'domain': '2020', 'measure': 100},
                           {'domain': '2021', 'measure': 90},
@@ -370,7 +399,7 @@ class _SecondPageState extends State<SecondPage> with TickerProviderStateMixin {
                         ],
                       },
                       {
-                        'id': '${company.industry} - KCGS',
+                        'id': '${company_industry} - KCGS',
                         'data': const [
                           {'domain': '2020', 'measure': 50},
                           {'domain': '2021', 'measure': 60},
@@ -378,7 +407,7 @@ class _SecondPageState extends State<SecondPage> with TickerProviderStateMixin {
                         ],
                       },
                       {
-                        'id': '${company.name} - 한국ESG연구소',
+                        'id': '${company_name} - 한국ESG연구소',
                         'data': const [
                           {'domain': '2020', 'measure': 80},
                           {'domain': '2021', 'measure': 90},
@@ -386,7 +415,7 @@ class _SecondPageState extends State<SecondPage> with TickerProviderStateMixin {
                         ],
                       },
                       {
-                        'id': '${company.industry} - 한국ESG연구소',
+                        'id': '${company_industry} - 한국ESG연구소',
                         'data': const [
                           {'domain': '2020', 'measure': 50},
                           {'domain': '2021', 'measure': 60},
@@ -402,11 +431,11 @@ class _SecondPageState extends State<SecondPage> with TickerProviderStateMixin {
                     axisLinePointWidth: 10,
                     measureLabelPaddingToAxisLine: 16,
                     barColor: (barData, index, id) =>
-                        id == '${company.name} - KCGS'
+                        id == '${company_name} - KCGS'
                             ?  const Color(0xff5EC1F7)
-                            : id == '${company.name} - 한국ESG연구소'
+                            : id == '${company_name} - 한국ESG연구소'
                                 ? const Color(0xffCE67FD)
-                                : id == '${company.industry} - KCGS' 
+                                : id == '${company_industry} - KCGS' 
                                   ? const Color.fromARGB(150, 94, 193, 247) 
                                   : const Color.fromARGB(150, 206, 103, 253),
                     barValue: (barData, index) => barData['measure'] == 100
@@ -438,7 +467,7 @@ class _SecondPageState extends State<SecondPage> with TickerProviderStateMixin {
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              Text('* ${company.name} / ${company.industry} 평균')
+              Text('* ${company_name} / ${company_industry} 평균')
             ],
           ),
           // 년도별 수치정보
@@ -530,8 +559,8 @@ class _SecondPageState extends State<SecondPage> with TickerProviderStateMixin {
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              _infoGraph(const Color(0xff7F56D9),'${company.name}'),
-              _infoGraph(const Color(0xffF0D9FF),'${company.industry}'),
+              _infoGraph(const Color(0xff7F56D9),'${company_name}'),
+              _infoGraph(const Color(0xffF0D9FF),'${company_industry}'),
             ],
           ),
           // - 그래프 정보
@@ -781,8 +810,8 @@ class _SecondPageState extends State<SecondPage> with TickerProviderStateMixin {
               series: <CircularSeries>[
                 RadialBarSeries<ChartData, String>(
                   dataSource: <ChartData>[
-                    ChartData(company.name, 40),
-                    ChartData(company.industry, 65),
+                    ChartData(company_name, 40),
+                    ChartData(company_industry.toString(), 65),
                   ],
                   xValueMapper: (ChartData data, _) => data.category,
                   yValueMapper: (ChartData data, _) => data.value,
