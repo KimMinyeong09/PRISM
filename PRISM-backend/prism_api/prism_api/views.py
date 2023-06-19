@@ -34,6 +34,7 @@ class IndustryAPIView(APIView):
 
 @api_view(["POST"])
 def oneOfPage(request):
+    pprint.pprint(request.data)
     with connection.cursor() as cursor:
         sql = f"SELECT * FROM COMPANY"
         cursor.execute(sql)
@@ -95,7 +96,7 @@ def oneOfPage(request):
     NUM_ROW_OF_ONE_PAGE = 10
     pages_number = (len(results)-1)//NUM_ROW_OF_ONE_PAGE + 1
     #해당하는 모든 결과를 찾았으니, 그중에서 사용자가 원하는 페이지의 정보(최대 10)개로만 슬라이싱한다
-    results = results[NUM_ROW_OF_ONE_PAGE*(page-1) : NUM_ROW_OF_ONE_PAGE*(page)-1]
+    results = results[NUM_ROW_OF_ONE_PAGE*(page-1) : NUM_ROW_OF_ONE_PAGE*(page)]
     
     serializer_data = [
         {
