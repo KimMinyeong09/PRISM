@@ -93,7 +93,7 @@ class ReportTableModel {
 }
 
 // API- 회사 정보 저장
-  late List<OneRowModel> one_row_list;
+  late List<OneRow> one_row_list;
   late List<PrismScoreModel> prism_scores;
   late List<PrismIndAvgScoreModel> prism_ind_avg_scores;
   late List<KcgsScoreModel> kcgs_scores;
