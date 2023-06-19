@@ -1,0 +1,42 @@
+[
+    {
+       "Prism_ind_avg_id" : 1,
+       "Year" : 2020,
+       "Industry" : 1,
+       "Overall_score" : 50,
+       "E_score" : 60,
+       "S_score" : 60,
+       "G_score" : 60,
+       "W_overall_score" : 40,
+       "W_e_score" : 40,
+       "W_s_score" : 40,
+       "W_g_score" : 40
+    },
+    {
+       "Prism_ind_avg_id" : 2,
+       "Year" : 2021,
+       "Industry" : 1,
+       "Overall_score" : 60,
+       "E_score" : 60,
+       "S_score" : 60,
+       "G_score" : 60,
+       "W_overall_score" : 40,
+       "W_e_score" : 40,
+       "W_s_score" : 40,
+       "W_g_score" : 40
+    },
+    {
+       "Prism_ind_avg_id" : 3,
+       "Year" : 2022,
+       "Industry" : 2,
+       "Overall_score" : 70,
+       "E_score" : 70,
+       "S_score" : 70,
+       "G_score" : 70,
+       "W_overall_score" : 40,
+       "W_e_score" : 40,
+       "W_s_score" : 40,
+       "W_g_score" : 40
+    }
+
+]
