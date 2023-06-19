@@ -145,7 +145,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   bool remove_comparing_items = true;
 
   // API- 회사 정보 저장
-  late List<OneRow> one_row_list;
+  // late List<OneRow> one_row_list;
   late List<PrismScoreModel> prism_scores;
   late List<PrismIndAvgScoreModel> prism_ind_avg_scores;
   late List<KcgsScoreModel> kcgs_scores;
@@ -444,15 +444,23 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       print('Error: $e');
     }
   }
+
+  late List<OneRowModel> one_row_list = [];
   List<OneRowModel> one_pages = [];
   void fetchOnePageData(String filter_score, int page) async {
     try {
+      print(page);
+      print(filter_score);
       one_pages = await ApiService.outOnePage(page, filter_score, comparing_industries, search_name);
       print(one_pages);
+      setState(() {
+        one_row_list = one_pages;
+      });
     } catch (e) {
       print('Error: $e');
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -592,26 +600,25 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                           ],
                           indicatorColor: Colors.black,
                           labelColor: Colors.black,
-                          labelStyle:
-                              const TextStyle(fontWeight: FontWeight.bold),
-                          unselectedLabelStyle:
-                              const TextStyle(fontWeight: FontWeight.normal),
+                          labelStyle: const TextStyle(fontWeight: FontWeight.bold),
+                          unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.normal),
                         ),
                         Expanded(
                           child: TabBarView(
                             controller: tab_controller,
                             children: [
-                              rankingTab(context, "prism-ALL"),
-                              rankingTab(context, "prism-E"),
-                              rankingTab(context, "prism-S"),
-                              rankingTab(context, "prism-G"),
-                              rankingTab(context, "Wprism-ALL"),
-                              rankingTab(context, "Wprism-E"),
-                              rankingTab(context, "Wprism-S"),
-                              rankingTab(context, "Wprism-G"),
+                              if (tab_controller.index == 0) rankingTab(context, "prism-ALL"),
+                              if (tab_controller.index == 1) rankingTab(context, "prism-E"),
+                              if (tab_controller.index == 2) rankingTab(context, "prism-S"),
+                              if (tab_controller.index == 3) rankingTab(context, "prism-G"),
+                              if (tab_controller.index == 4) rankingTab(context, "Wprism-ALL"),
+                              if (tab_controller.index == 5) rankingTab(context, "Wprism-E"),
+                              if (tab_controller.index == 6) rankingTab(context, "Wprism-S"),
+                              if (tab_controller.index == 7) rankingTab(context, "Wprism-G"),
                             ],
                           ),
                         )
+
                       ],
                     ),
                   ),
@@ -1109,8 +1116,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   // 랭킹 페이지 - 탭
   Container rankingTab(BuildContext context, String scoreName) {
     // comparing_industries, search_name, scoreName 이용해서 불러오기
-    fetchOnePageData(scoreName, 1);
-    one_row_list = [
+    fetchOnePageData(scoreName, _current_page + 1);
+    print(one_row_list);
+    [
       OneRow(name: "Example Company 1", industry: 1, score: 90, esg_insts: ["KCGS", "한국ESG연구소"], pages_number: 1),
       OneRow(name: "Example Company 2", industry: 1, score: 89, esg_insts: ["KCGS"], pages_number: 1),
     ];
@@ -1145,10 +1153,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                         ),
                       ),
                       onChanged: (value) {
-                        search_name = value;
-                      },
-                      onSubmitted: (value) {
-                        fetchOnePageData(scoreName, 1);
+                        setState(() {
+                          search_name = value;
+                        });
                       },
                     ),
                   ),
@@ -1278,8 +1285,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 10, // 한 페이지에 표시할 행의 개수
                 (index) {
                   final rowIndex = (_current_page * 10) + index;
-                  // if (rowIndex >= company_list.length) {
-                  if (rowIndex >= one_row_list.length) {
+                  if (index >= one_row_list.length) {
                     return const DataRow(cells: [
                       DataCell(Text("")),
                       DataCell(Text("")),
@@ -1341,7 +1347,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                         ),
                         DataCell(Text((rowIndex + 1).toString())),
                         DataCell(Text(one_row_list[index].name)), // 수정
-                        DataCell(Text(industries[one_row_list[index].industry])), // 수정
+                        DataCell(Text(one_row_list[index].industry)), // 수정
                         DataCell(Text(one_row_list[index].score.toString())),
                         DataCell(
                           Row(
@@ -1371,9 +1377,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             ),
             NumberPaginator(
               // by default, the paginator shows numbers as center content
-              numberPages: one_row_list[0].pages_number,
+              numberPages: one_row_list.isNotEmpty ? one_row_list[0].pages_number : 1,
               onPageChange: (int index) {
-                fetchOnePageData(scoreName, index + 1);
                 setState(() {
                   _current_page =
                       index; // _current_page is a variable within State of StatefulWidget
@@ -1395,7 +1400,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   Future<String?> chooseIndustries(BuildContext context, String scoreName) {
     return showDialog<String>(
       context: context,
-      barrierDismissible: false, // 바깥 영역 터치시 닫을지 여부: 닫지 않음
+      barrierDismissible: true, // 바깥 영역 터치시 닫을지 여부: 닫지 않음
       builder: (BuildContext context) => AlertDialog(
         content: Column(
           mainAxisSize: MainAxisSize.min,
@@ -1439,7 +1444,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         actions: <Widget>[
           TextButton(
             onPressed: () {
-              fetchOnePageData(scoreName, _current_page);
               Navigator.pop(context, 'OK');
             },
             child: const Text('OK'),

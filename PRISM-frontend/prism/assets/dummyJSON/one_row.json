@@ -1,0 +1,72 @@
+[
+    {
+        "name": "Company 1",
+        "industry": "에너지장비및서비스",
+        "score": 99,
+        "esg_insts": ["KCGS", "한국ESG연구소"],
+        "pages_number": 2
+    },
+    {
+        "name": "Company 2",
+        "industry": "에너지장비및서비스",
+        "score": 98,
+        "esg_insts": ["KCGS"],
+        "pages_number": 2
+    },
+    {
+        "name": "Company 3",
+        "industry": "에너지장비및서비스",
+        "score": 96,
+        "esg_insts": ["KCGS", "한국ESG연구소"],
+        "pages_number": 2
+    },
+    {
+        "name": "Company 4",
+        "industry": "에너지장비및서비스",
+        "score": 99,
+        "esg_insts": ["KCGS", "한국ESG연구소"],
+        "pages_number": 2
+    },
+    {
+        "name": "Company 5",
+        "industry": "에너지장비및서비스",
+        "score": 98,
+        "esg_insts": ["KCGS"],
+        "pages_number": 2
+    },
+    {
+        "name": "Company 6",
+        "industry": "에너지장비및서비스",
+        "score": 96,
+        "esg_insts": ["KCGS", "한국ESG연구소"],
+        "pages_number": 2
+    },
+    {
+        "name": "Company 7",
+        "industry": "화학",
+        "score": 99,
+        "esg_insts": ["KCGS", "한국ESG연구소"],
+        "pages_number": 2
+    },
+    {
+        "name": "Company 8",
+        "industry": "비철금속",
+        "score": 98,
+        "esg_insts": ["KCGS"],
+        "pages_number": 2
+    },
+    {
+        "name": "Company 9",
+        "industry": "포장재",
+        "score": 96,
+        "esg_insts": ["KCGS", "한국ESG연구소"],
+        "pages_number": 2
+    },
+    {
+        "name": "Company 10",
+        "industry": "상업서비스와공급품",
+        "score": 99,
+        "esg_insts": ["KCGS", "한국ESG연구소"],
+        "pages_number": 2
+    }
+]

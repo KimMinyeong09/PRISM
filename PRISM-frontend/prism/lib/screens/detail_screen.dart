@@ -7,8 +7,7 @@ import 'home_screen.dart';
 
 
 class SecondPage extends StatefulWidget {
-  final String company_name;
-  final int company_industry;
+  final String company_name, company_industry;
 
   const SecondPage(this.company_name, this.company_industry, {Key? key}) : super(key: key);
 
@@ -17,8 +16,7 @@ class SecondPage extends StatefulWidget {
 }
 
 class _SecondPageState extends State<SecondPage> with TickerProviderStateMixin {
-  late String company_name;
-  late int company_industry;
+  late String company_name, company_industry;
 
   late TabController _scoreTabController;
 

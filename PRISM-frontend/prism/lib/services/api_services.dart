@@ -1,5 +1,7 @@
 import 'dart:convert';
+import 'dart:js_util';
 
+import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:prism/models/gri_info_model.dart';
 import 'package:prism/models/prism_ind_avg_score_model.dart';
@@ -7,10 +9,6 @@ import 'package:prism/models/prism_score_model.dart';
 import 'package:prism/models/report_table_model.dart';
 import 'package:prism/models/sustain_report_model.dart';
 
-// import '../models/x_company_model.dart';
-// import '../models/esglab_score_model.dart';
-// import '../models/kcgs_score_model.dart';
-// import '../models/sustain_report_model.dart';
 import '../models/esglab_ind_avg_score_model.dart';
 import '../models/esglab_score_model.dart';
 import '../models/gri_usage_ind_avg_score_model.dart';
@@ -19,13 +17,14 @@ import '../models/kcgs_score_model.dart';
 import '../models/one_row_model.dart';
 import '../models/report_sentences_model.dart';
 
+
 class ApiService {
-  static const String base_url = 'http://127.0.0.1:8000/'; // TODO: url 변경
+  static const String base_url = 'http://127.0.0.1:8000/';
 
   // 한 페이지를 불러와야할 때
   // 필터결과에 해당하는 행 최대 10개
   static Future<List<OneRowModel>> outOnePage(int page, String filter_score, List<String> filter_industries, String filter_name) async {
-    final url = Uri.parse('$base_url/rank/$page');
+    // final url = Uri.parse('$base_url/rank/$page');
     
     final requestData = {
       'filter_score': filter_score,
@@ -33,18 +32,66 @@ class ApiService {
       'filter_name': filter_name,
     };
     
-    final response = await http.post(url, body: jsonEncode(requestData));
+    // final response = await http.post(url, body: jsonEncode(requestData));
+
+    // List<OneRowModel> rows_instances = [];
+    
+    // if (response.statusCode == 200) {
+    //   final rows = jsonDecode(response.body);
+    //   for (var row in rows) {
+    //     final instance = OneRowModel.fromJson(row);
+    //     rows_instances.add(instance);
+    //   }
+    //   return rows_instances;
+    // }
+    
+    final jsonString = await rootBundle.loadString("../../assets/dummyJson/one_row.json");
 
     List<OneRowModel> rows_instances = [];
+
+    final jsonData = jsonDecode(jsonString);
+    final List<Map<String, dynamic>> rows = List<Map<String, dynamic>>.from(jsonData);
     
-    if (response.statusCode == 200) {
-      final rows = jsonDecode(response.body);
-      for (var row in rows) {
-        final instance = OneRowModel.fromJson(row);
-        rows_instances.add(instance);
+    for (var row in rows) {
+      if (page <= row['pages_number']) {
+        if (filter_score == "prism-ALL") {
+          if (filter_industries.isNotEmpty){
+            for (var industry in filter_industries) {
+              if (row['industry'] == industry) {
+                if (filter_name == "") {
+                  final instance = OneRowModel.fromJson(row);
+                  rows_instances.add(instance);
+                }
+                else {
+                  if (row['name'].toString().contains(filter_name)) {
+                    final instance = OneRowModel.fromJson(row);
+                    rows_instances.add(instance);
+                  }
+                }
+              }
+            }
+            
+          }
+          else
+          {
+            if (filter_name == "") {
+                  final instance = OneRowModel.fromJson(row);
+                  rows_instances.add(instance);
+                }
+                else {
+                  if (row['name'].toString().contains(filter_name)) {
+                    final instance = OneRowModel.fromJson(row);
+                    rows_instances.add(instance);
+                  }
+                }
+          }
+        }
       }
-      return rows_instances;
     }
+    
+    return rows_instances;
+
+
     // 에러 처리
     throw Exception('Failed to fetch filtered data');
   }
