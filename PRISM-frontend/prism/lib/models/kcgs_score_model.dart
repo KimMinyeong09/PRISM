@@ -1,9 +1,9 @@
 class KcgsScoreModel {
   final String overallScore, EScore, SScore, GScore;
-  final int kcgsScroeId, evalYear, companyId, kcgsIndAvgId;
+  final int kcgsScoreId, evalYear, companyId, kcgsIndAvgId;
 
   KcgsScoreModel.fromJson(Map<String, dynamic> json)
-      : kcgsScroeId = json['Kcgs_scroe_id'],
+      : kcgsScoreId = json['Kcgs_score_id'],
         evalYear = json['Eval_year'],
         overallScore = json['Overall_score'],
         EScore = json['E_score'],

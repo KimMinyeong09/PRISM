@@ -5,7 +5,10 @@ import 'package:prism/screens/detail_screen.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 import '../chart_data.dart';
+import '../services/api_services.dart';
 
+
+// 하드 코딩용 class
 class Company {
   final int companyId;
   final String name;
@@ -17,6 +20,73 @@ class Company {
     required this.industry,
   });
 }
+
+class OneRowModel {
+  final String name;
+  final int industry, score, pages_number;
+  final List<String> esg_insts;
+
+  OneRowModel({
+    required this.name,
+    required this.industry,
+    required this.score,
+    required this.pages_number,
+    required this.esg_insts,
+  });
+}
+
+class PrismScoreModel {
+  final int prismScoreId, evalYear,
+  overallScore, EScore, SScore, GScore, overallRank, Erank, Srank, Grank, indOverallRank, indERank, indSRank, indGRank,
+  WOverallScore, WEScore, WSScore, WGScore, WOverallRank, WERank, WSRank, WGRank,
+  companyId, prismIndAvgId, indWeightId, kcgsScoreId, esglabScoreId;
+
+  PrismScoreModel({
+    required this.prismScoreId, required this.evalYear,
+    required this.overallScore, required this.EScore, required this.SScore, required this.GScore,
+    required this.overallRank, required this.Erank, required this.Srank, required this.Grank,
+    required this.indOverallRank, required this.indERank, required this.indSRank, required this.indGRank,
+    required this.WOverallScore, required this.WEScore, required this.WSScore, required this.WGScore,
+    required this.WOverallRank, required this.WERank, required this.WSRank, required this.WGRank,
+    required this.companyId, required this.prismIndAvgId, required this.indWeightId, required this.kcgsScoreId, required this.esglabScoreId
+  });
+}
+
+class PrismIndAvgScoreModel {
+  final int prismIndAvgId, year,
+      overallScore, EScore, SScore, GScore,
+      wOverallScore, wEScore, wSScore, wGScore;
+  final String industry;
+  final double wieght;
+
+  PrismIndAvgScoreModel({
+    required this.prismIndAvgId, required this.year,
+    required this.overallScore, required this.EScore, required this.SScore, required this.GScore,
+    required this.wOverallScore, required this.wEScore, required this.wSScore, required this.wGScore, required this.industry, required this.wieght
+  });
+}
+
+class KcgsScoreModel {
+  final String overallScore, EScore, SScore, GScore;
+  final int kcgsScoreId, evalYear, companyId, kcgsIndAvgId;
+
+  KcgsScoreModel({
+    required this.overallScore, required this.EScore, required this.SScore, required this.GScore,
+    required this.kcgsScoreId, required this.evalYear, required this.companyId, required this.kcgsIndAvgId
+  });
+}
+
+class EsglabScoreModel {
+  final String overallScore, EScore, SScore, GScore;
+  final int esglabScoreId, evalYear, companyId, esglabIndAvgId;
+
+  EsglabScoreModel({
+    required this.overallScore, required this.EScore, required this.SScore, required this.GScore,
+    required this.esglabScoreId, required this.evalYear, required this.companyId, required this.esglabIndAvgId
+  });
+}
+
+
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -62,6 +132,11 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     Company(companyId: 10, name: 'Company I', industry: '복합기업'),
     Company(companyId: 11, name: 'Company J', industry: '복합기업'),
   ];
+  late List<OneRowModel> one_row_list;
+  late List<PrismScoreModel> prism_scores;
+  late List<PrismIndAvgScoreModel> prism_ind_avg_scores;
+  late List<KcgsScoreModel> kcgs_scores;
+  late List<EsglabScoreModel> esglab_scores;
 
   // 업종 리스트
   List<String> industries = [
@@ -341,6 +416,19 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     super.dispose();
   }
 
+  // api test
+  List<int> companyYears = [];
+  void fetchData() async {
+  try {
+    companyYears = await ApiService.outCompanyYears('exampleCompany');
+    // 반환된 데이터를 사용하여 원하는 동작 수행
+    print(companyYears);
+  } catch (e) {
+    // 에러 처리
+    print('Error: $e');
+  }
+}
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -587,99 +675,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                           SingleChildScrollView(
                             scrollDirection: Axis.horizontal,
                             child: Column(
-                              children: List.generate(comparing_items.length,
-                                  (index) {
-                                String item = comparing_items[index];
-                                List<String> splitText = item.split("\n");
-                                String companyName = splitText[0];
-                                String companyYear = splitText[1];
-                                // TODO: 내용 불러오기
-                                return Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    // 기업명 & 연도
-                                    SizedBox(
-                                      width: 200,
-                                      height:
-                                          MediaQuery.of(context).size.height /
-                                              4,
-                                      child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            companyName,
-                                            style:
-                                                const TextStyle(fontSize: 20),
-                                          ),
-                                          Text(companyYear),
-                                        ],
-                                      ),
-                                    ),
-                                    // PRISM 스코어
-                                    Row(
-                                      children: [
-                                        _buildDChart(companyName, "PRISM 스코어"),
-                                        _buildDChart(companyName, "E"),
-                                        _buildDChart(companyName, "S"),
-                                        _buildDChart(companyName, "G"),
-                                      ],
-                                    ),
-                                    // wPRISM 스코어
-                                    Row(
-                                      children: [
-                                        _buildDChart(companyName, "wPRISM 스코어"),
-                                        _buildDChart(companyName, "E"),
-                                        _buildDChart(companyName, "S"),
-                                        _buildDChart(companyName, "G"),
-                                      ],
-                                    ),
-                                    // KCGS
-                                    _buildAssociationRakingTable("KCGS"),
-                                    // 한국ESG연구소
-                                    _buildAssociationRakingTable("한국ESG연구소"),
-                                    // GRI info
-                                    if (comparing_gris.isEmpty)
-                                      SizedBox(
-                                          height: MediaQuery.of(context)
-                                                  .size
-                                                  .height /
-                                              4,
-                                          child: const Text(
-                                              "GRI index를 선택해주세요 (최대 5개)"))
-                                    else
-                                      for (var comparing_gri in comparing_gris)
-                                        Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: SizedBox(
-                                              height: MediaQuery.of(context)
-                                                      .size
-                                                      .height /
-                                                  4,
-                                              child: Row(
-                                                children: [
-                                                    Column(
-                                                      mainAxisAlignment: MainAxisAlignment.center,
-                                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                                      children: [
-                                                        Text("[$comparing_gri]", style: TextStyle(fontWeight: FontWeight.bold),),
-                                                        Text(gri_subs.indexOf(comparing_gri) != -1 ? gri_subs_name[gri_subs.indexOf(comparing_gri)] : "" , style: TextStyle(fontWeight: FontWeight.bold),),
-                                                      ],
-                                                    ),
-                                                    // 텍스트
-                                                    extractSentences(),
-                                                    extractSentences(),
-                                                    extractSentences(),
-                                                    // 표
-                                                    extractTable(),
-                                                    extractTable(),
-                                                    extractTable(),
-                                                ],
-                                              ),
-                                            ),
-                                        ),
-                                  ],
-                                );
-                              }),
+                              children: ComparingIndustriesInfo(context),
                             ),
                           ),
                       ],
@@ -692,6 +688,134 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         ],
       ),
     );
+  }
+
+  List<Widget> ComparingIndustriesInfo(BuildContext context) {
+    // TODO: 내용 불러오기
+    prism_scores = [
+      PrismScoreModel(
+        prismScoreId: 1, evalYear: 2022,
+        overallScore: 90, EScore: 91, SScore: 89, GScore: 90, overallRank: 1, Erank: 1, Srank: 1, Grank: 1, indOverallRank: 1, indERank: 1, indSRank: 1, indGRank: 1,
+        WOverallScore: 90, WEScore: 90, WSScore: 90, WGScore: 90, WOverallRank: 1, WERank: 1, WSRank: 1, WGRank :1,
+        companyId: 1, prismIndAvgId: 1, indWeightId: 1, kcgsScoreId: 1, esglabScoreId: 1
+      ),
+    ];
+
+    prism_ind_avg_scores = [
+      PrismIndAvgScoreModel(
+        prismIndAvgId: 1, year: 2022,
+        overallScore: 65, EScore: 64, SScore: 65, GScore: 66,
+        wOverallScore: 66, wEScore: 66, wSScore: 66, wGScore: 66,
+        industry: "건축자재", wieght: 0.6,
+      )
+    ];
+
+    kcgs_scores = [
+      KcgsScoreModel(
+        overallScore: "A+", EScore: "S", SScore: "A+", GScore: "A",
+        kcgsScoreId: 1, evalYear: 2022, companyId: 1, kcgsIndAvgId: 1,
+      ),
+    ];
+
+    esglab_scores = [
+      EsglabScoreModel(
+        overallScore: "A+", EScore: "A+", SScore: "A+", GScore: "A",
+        esglabScoreId: 1, evalYear: 2022, companyId: 1, esglabIndAvgId: 1,
+      ),
+    ];
+
+    return List.generate(comparing_items.length, (index) {
+      String item = comparing_items[index];
+      List<String> splitText = item.split("\n");
+      String companyName = splitText[0];
+      String companyYear = splitText[1];
+      
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          // 기업명 & 연도
+          SizedBox(
+            width: 200,
+            height:
+                MediaQuery.of(context).size.height /
+                    4,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  companyName,
+                  style:
+                      const TextStyle(fontSize: 20),
+                ),
+                Text(companyYear),
+              ],
+            ),
+          ),
+          // PRISM 스코어
+          Row(
+            children: [
+              _buildDChart(companyName, "PRISM 스코어", prism_scores[index], prism_ind_avg_scores[index]),
+              _buildDChart(companyName, "E", prism_scores[index], prism_ind_avg_scores[index]),
+              _buildDChart(companyName, "S", prism_scores[index], prism_ind_avg_scores[index]),
+              _buildDChart(companyName, "G", prism_scores[index], prism_ind_avg_scores[index]),
+            ],
+          ),
+          // wPRISM 스코어
+          Row(
+            children: [
+              _buildDChart(companyName, "wPRISM 스코어", prism_scores[index], prism_ind_avg_scores[index]),
+              _buildDChart(companyName, "wE", prism_scores[index], prism_ind_avg_scores[index]),
+              _buildDChart(companyName, "wS", prism_scores[index], prism_ind_avg_scores[index]),
+              _buildDChart(companyName, "wG", prism_scores[index], prism_ind_avg_scores[index]),
+            ],
+          ),
+          // KCGS
+          _buildAssociationRakingTable("KCGS", kcgs_scores[index]),
+          // 한국ESG연구소
+          _buildAssociationRakingTable("한국ESG연구소", esglab_scores[index]),
+          // GRI info
+          if (comparing_gris.isEmpty)
+            SizedBox(
+                height: MediaQuery.of(context)
+                        .size
+                        .height /
+                    4,
+                child: const Text(
+                    "GRI index를 선택해주세요 (최대 5개)"))
+          else
+            for (var comparing_gri in comparing_gris)
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: SizedBox(
+                    height: MediaQuery.of(context)
+                            .size
+                            .height /
+                        4,
+                    child: Row(
+                      children: [
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text("[$comparing_gri]", style: TextStyle(fontWeight: FontWeight.bold),),
+                              Text(gri_subs.indexOf(comparing_gri) != -1 ? gri_subs_name[gri_subs.indexOf(comparing_gri)] : "" , style: TextStyle(fontWeight: FontWeight.bold),),
+                            ],
+                          ),
+                          // 텍스트
+                          extractSentences(),
+                          extractSentences(),
+                          extractSentences(),
+                          // 표
+                          extractTable(),
+                          extractTable(),
+                          extractTable(),
+                      ],
+                    ),
+                  ),
+              ),
+        ],
+      );
+    });
   }
 
   Padding extractTable() {
@@ -757,7 +881,21 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     );
   }
 
-  SizedBox _buildAssociationRakingTable(String association) {
+  SizedBox _buildAssociationRakingTable(String association, var score) {
+    String overall = "Error", e = "Error", s = "Error", g = "Error";
+    if (score is KcgsScoreModel) {
+      overall = score.overallScore;
+      e = score.EScore;
+      s = score.SScore;
+      g = score.GScore;
+    }
+    else if(score is EsglabScoreModel) {
+      overall = score.overallScore;
+      e = score.EScore;
+      s = score.SScore;
+      g = score.GScore;
+    }
+
     return SizedBox(
       height: MediaQuery.of(context).size.height / 4,
       width: 300,
@@ -766,31 +904,31 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(association, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-            SizedBox(height: 15),
+            const SizedBox(height: 15),
             Table(
-              children: const [
+              children: [
                 TableRow(
                   children: [
-                    TableCell(child: Text("종합점수", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15,), textAlign: TextAlign.center,)),
-                    TableCell(child: Text("A", style: TextStyle(fontSize: 15,), textAlign: TextAlign.center,)), // TODO: 점수 받아오기
+                    const TableCell(child: Text("종합점수", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15,), textAlign: TextAlign.center,)),
+                    TableCell(child: Text(overall, style: TextStyle(fontSize: 15,), textAlign: TextAlign.center,)), // TODO: 점수 받아오기
                   ],
                 ),
                 TableRow(
                   children: [
-                    TableCell(child: Text("E", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15,), textAlign: TextAlign.center,)),
-                    TableCell(child: Text("A", style: TextStyle(fontSize: 15,), textAlign: TextAlign.center,)), // TODO: 점수 받아오기
+                    const TableCell(child: Text("E", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15,), textAlign: TextAlign.center,)),
+                    TableCell(child: Text(e, style: TextStyle(fontSize: 15,), textAlign: TextAlign.center,)), // TODO: 점수 받아오기
                   ],
                 ),
                 TableRow(
                   children: [
-                    TableCell(child: Text("S", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15,), textAlign: TextAlign.center,)),
-                    TableCell(child: Text("A", style: TextStyle(fontSize: 15,), textAlign: TextAlign.center,)), // TODO: 점수 받아오기
+                    const TableCell(child: Text("S", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15,), textAlign: TextAlign.center,)),
+                    TableCell(child: Text(s, style: TextStyle(fontSize: 15,), textAlign: TextAlign.center,)), // TODO: 점수 받아오기
                   ],
                 ),
                 TableRow(
                   children: [
-                    TableCell(child: Text("G", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15,), textAlign: TextAlign.center,)),
-                    TableCell(child: Text("A", style: TextStyle(fontSize: 15,), textAlign: TextAlign.center,)), // TODO: 점수 받아오기
+                    const TableCell(child: Text("G", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15,), textAlign: TextAlign.center,)),
+                    TableCell(child: Text(g, style: TextStyle(fontSize: 15,), textAlign: TextAlign.center,)), // TODO: 점수 받아오기
                   ],
                 ),
               ],
@@ -801,7 +939,53 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     );
   }
 
-  Column _buildDChart(String companyName, String title) {
+  Column _buildDChart(String companyName, String title, PrismScoreModel prism_score, PrismIndAvgScoreModel prism_ind_avg_score) {
+
+    int score = -1, ind_score = -1, rank = -1, ind_rank = -1;
+    switch(title) {
+      case "PRISM 스코어":
+        score = prism_score.overallScore;
+        ind_score = prism_ind_avg_score.overallScore;
+        rank = prism_score.overallRank;
+        ind_rank = prism_score.indOverallRank;
+      case "E":
+        score = prism_score.EScore;
+        ind_score = prism_ind_avg_score.EScore;
+        rank = prism_score.Erank;
+        ind_rank = prism_score.indERank;
+      case "S":
+        score = prism_score.SScore;
+        ind_score = prism_ind_avg_score.SScore;
+        rank = prism_score.Srank;
+        ind_rank = prism_score.indSRank;
+      case "G":
+        score = prism_score.GScore;
+        ind_score = prism_ind_avg_score.GScore;
+        rank = prism_score.Grank;
+        ind_rank = prism_score.indGRank;
+      case "wPRISM 스코어":
+        score = prism_score.WOverallScore;
+        ind_score = prism_ind_avg_score.wOverallScore;
+        rank = prism_score.WOverallRank;
+        ind_rank = prism_score.indWeightId;
+      case "wE":
+        score = prism_score.WEScore;
+        ind_score = prism_ind_avg_score.wEScore;
+        rank = prism_score.Erank;
+        ind_rank = prism_score.indERank;
+      case "wS":
+        score = prism_score.WSScore;
+        ind_score = prism_ind_avg_score.wSScore;
+        rank = prism_score.Srank;
+        ind_rank = prism_score.indSRank;
+      case "wG":
+        score = prism_score.WGScore;
+        ind_score = prism_ind_avg_score.wGScore;
+        rank = prism_score.Grank;
+        ind_rank = prism_score.indGRank;
+    }
+    
+
     return Column(
       children: [
         SizedBox(
@@ -811,8 +995,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             series: <CircularSeries>[
               RadialBarSeries<ChartData, String>(
                 dataSource: <ChartData>[
-                  ChartData(companyName, 40),
-                  ChartData("업종", 65),
+                  ChartData(companyName, score),
+                  ChartData("업종", ind_score),
                 ],
                 xValueMapper: (ChartData data, _) => data.category,
                 yValueMapper: (ChartData data, _) => data.value,
@@ -830,22 +1014,31 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             margin: const EdgeInsets.all(1),
           ),
         ),
-        const Text("40",
-            style: TextStyle(
+        Text(score.toString(),
+            style: const TextStyle(
               fontSize: 25,
               fontWeight: FontWeight.bold,
             )),
-        const Text("업계 평균 65",
-            style: TextStyle(fontSize: 10, color: Color(0xff667085))),
-        const Text("업계 152위",
-            style: TextStyle(fontSize: 10, color: Color(0xff667085))),
-        const Text("전체 152위",
-            style: TextStyle(fontSize: 10, color: Color(0xff667085))),
+        Text("업계 평균 ${ind_score}",
+            style: const TextStyle(fontSize: 10, color: Color(0xff667085))),
+        Text("업계 ${ind_rank}위",
+            style: const TextStyle(fontSize: 10, color: Color(0xff667085))),
+        Text("전체 ${rank}위",
+            style: const TextStyle(fontSize: 10, color: Color(0xff667085))),
       ],
     );
   }
 
   Container rankingTab(BuildContext context, String scoreName) {
+    // comparing_industries, search_name, scoreName 이용해서 불러오기
+    one_row_list = [
+      OneRowModel(name: "Example Company 1", industry: 1, score: 90, esg_insts: ["KCGS", "한국ESG연구소"], pages_number: 1),
+      OneRowModel(name: "Example Company 2", industry: 1, score: 89, esg_insts: ["KCGS"], pages_number: 1),
+    ];
+    setState(() {
+      
+    });
+
     return Container(
       color: Colors.white,
       child: SingleChildScrollView(
@@ -1006,7 +1199,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 10, // 한 페이지에 표시할 행의 개수
                 (index) {
                   final rowIndex = (_current_page * 10) + index;
-                  if (rowIndex >= company_list.length) {
+                  // if (rowIndex >= company_list.length) {
+                  if (rowIndex >= one_row_list.length) {
                     return const DataRow(cells: [
                       DataCell(Text("")),
                       DataCell(Text("")),
@@ -1022,113 +1216,159 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                         DataCell(
                           IconButton(
                             onPressed: () {
+                              fetchData();
                               showDialog<String>(
                                 context: context,
                                 barrierDismissible: true,
-                                builder: (BuildContext context) => AlertDialog(
-                                  content: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      TextButton(
-                                        onPressed: () {
-                                          if (comparing_items.contains(
-                                              '${company_list[rowIndex].name}\n2020')) {
-                                            comparing_items.remove(
-                                                '${company_list[rowIndex].name}\n2020');
-                                          } else {
-                                            if (comparing_items.length < 3) {
-                                              comparing_items.add(
-                                                  '${company_list[rowIndex].name}\n2020');
+                                builder: (BuildContext context) {
+                                  // 연도 받아오기
+                                  List<int> year = [2022, 2021, 2020];
+                                  
+                                  return AlertDialog(
+                                    content: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: List.generate(year.length, (idx) {
+                                        int currentYear = year[idx];
+                                        return TextButton(
+                                          onPressed: () {
+                                            if (comparing_items.contains('${one_row_list[index].name}\n$currentYear')) {
+                                              comparing_items.remove('${one_row_list[index].name}\n$currentYear');
+                                            } else {
+                                              if (comparing_items.length < 3) {
+                                                comparing_items.add('${one_row_list[index].name}\n$currentYear');
+                                              }
                                             }
-                                          }
-                                          Navigator.pop(
-                                            context,
-                                          );
-                                          setState(() {});
-                                        },
-                                        child: Text(
-                                          "2020",
-                                          style: TextStyle(
-                                            fontWeight: comparing_items.contains(
-                                                    '${company_list[rowIndex].name}\n2020')
-                                                ? FontWeight.bold
-                                                : FontWeight.normal,
+                                            Navigator.pop(context);
+                                            setState(() {});
+                                          },
+                                          child: Text(
+                                            currentYear.toString(),
+                                            style: TextStyle(
+                                              fontWeight: comparing_items.contains('${one_row_list[index].name}\n$currentYear')
+                                                  ? FontWeight.bold
+                                                  : FontWeight.normal,
+                                            ),
                                           ),
-                                        ),
-                                      ),
-                                      TextButton(
-                                        onPressed: () {
-                                          if (comparing_items.contains(
-                                              '${company_list[rowIndex].name}\n2021')) {
-                                            // 수정: 기업명\n연도 로 수정할 것
-                                            comparing_items.remove(
-                                                '${company_list[rowIndex].name}\n2021'); // 수정: 기업명\n연도 로 수정할 것
-                                          } else {
-                                            if (comparing_items.length < 3) {
-                                              comparing_items.add(
-                                                  '${company_list[rowIndex].name}\n2021'); // 수정: 기업명\n연도 로 수정할 것
-                                            }
-                                          }
-                                          Navigator.pop(
-                                            context,
-                                          );
-                                          setState(() {});
-                                        },
-                                        child: Text(
-                                          "2021",
-                                          style: TextStyle(
-                                            fontWeight: comparing_items.contains(
-                                                    '${company_list[rowIndex].name}\n2021')
-                                                ? FontWeight.bold
-                                                : FontWeight.normal,
-                                          ),
-                                        ),
-                                      ),
-                                      TextButton(
-                                        onPressed: () {
-                                          if (comparing_items.contains(
-                                              '${company_list[rowIndex].name}\n2022')) {
-                                            // 수정: 기업명\n연도 로 수정할 것
-                                            comparing_items.remove(
-                                                '${company_list[rowIndex].name}\n2022'); // 수정: 기업명\n연도 로 수정할 것
-                                          } else {
-                                            if (comparing_items.length < 3) {
-                                              comparing_items.add(
-                                                  '${company_list[rowIndex].name}\n2022'); // 수정: 기업명\n연도 로 수정할 것
-                                            }
-                                          }
-                                          Navigator.pop(
-                                            context,
-                                          );
-                                          setState(() {});
-                                        },
-                                        child: Text(
-                                          "2022",
-                                          style: TextStyle(
-                                            fontWeight: comparing_items.contains(
-                                                    '${company_list[rowIndex].name}\n2022')
-                                                ? FontWeight.bold
-                                                : FontWeight.normal,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
+                                        );
+                                      }),
+                                    ),
+                                  );
+                                }
+                                // builder: (BuildContext context) => AlertDialog(
+                                //   content: Row(
+                                //     mainAxisSize: MainAxisSize.min,
+                                //     children: [
+                                //       TextButton(
+                                //         onPressed: () {
+                                //           if (comparing_items.contains(
+                                //               '${one_row_list[index].name}\n2020')) {
+                                //             comparing_items.remove(
+                                //                 '${one_row_list[index].name}\n2020');
+                                //           } else {
+                                //             if (comparing_items.length < 3) {
+                                //               comparing_items.add(
+                                //                   '${one_row_list[index].name}\n2020');
+                                //             }
+                                //           }
+                                //           Navigator.pop(
+                                //             context,
+                                //           );
+                                //           setState(() {});
+                                //         },
+                                //         child: Text(
+                                //           "2020",
+                                //           style: TextStyle(
+                                //             fontWeight: comparing_items.contains(
+                                //                     '${one_row_list[index].name}\n2020')
+                                //                 ? FontWeight.bold
+                                //                 : FontWeight.normal,
+                                //           ),
+                                //         ),
+                                //       ),
+                                //       TextButton(
+                                //         onPressed: () {
+                                //           if (comparing_items.contains(
+                                //               '${one_row_list[index].name}\n2021')) {
+                                //             // 수정: 기업명\n연도 로 수정할 것
+                                //             comparing_items.remove(
+                                //                 '${one_row_list[index].name}\n2021'); // 수정: 기업명\n연도 로 수정할 것
+                                //           } else {
+                                //             if (comparing_items.length < 3) {
+                                //               comparing_items.add(
+                                //                   '${one_row_list[index].name}\n2021'); // 수정: 기업명\n연도 로 수정할 것
+                                //             }
+                                //           }
+                                //           Navigator.pop(
+                                //             context,
+                                //           );
+                                //           setState(() {});
+                                //         },
+                                //         child: Text(
+                                //           "2021",
+                                //           style: TextStyle(
+                                //             fontWeight: comparing_items.contains(
+                                //                     '${one_row_list[index].name}\n2021')
+                                //                 ? FontWeight.bold
+                                //                 : FontWeight.normal,
+                                //           ),
+                                //         ),
+                                //       ),
+                                //       TextButton(
+                                //         onPressed: () {
+                                //           if (comparing_items.contains(
+                                //               '${one_row_list[index].name}\n2022')) {
+                                //             // 수정: 기업명\n연도 로 수정할 것
+                                //             comparing_items.remove(
+                                //                 '${one_row_list[index].name}\n2022'); // 수정: 기업명\n연도 로 수정할 것
+                                //           } else {
+                                //             if (comparing_items.length < 3) {
+                                //               comparing_items.add(
+                                //                   '${one_row_list[index].name}\n2022'); // 수정: 기업명\n연도 로 수정할 것
+                                //             }
+                                //           }
+                                //           Navigator.pop(
+                                //             context,
+                                //           );
+                                //           setState(() {});
+                                //         },
+                                //         child: Text(
+                                //           "2022",
+                                //           style: TextStyle(
+                                //             fontWeight: comparing_items.contains(
+                                //                     '${one_row_list[index].name}\n2022')
+                                //                 ? FontWeight.bold
+                                //                 : FontWeight.normal,
+                                //           ),
+                                //         ),
+                                //       ),
+                                //     ],
+                                //   ),
+                                // ),
                               );
                             },
                             icon: const Icon(Icons.add),
                           ),
                         ),
                         DataCell(Text((rowIndex + 1).toString())),
-                        DataCell(Text(company_list[rowIndex].name)), // 수정
-                        DataCell(Text(company_list[rowIndex].industry)), // 수정
-                        const DataCell(Text("100")),
-                        const DataCell(
+                        // DataCell(Text(company_list[rowIndex].name)), // 수정
+                        // DataCell(Text(company_list[rowIndex].industry)),
+                        // const DataCell(Text("100")),
+                        // const DataCell(
+                        //   Row(
+                        //     children: [
+                        //       Text(" KCGS "),
+                        //       Text(" 한국ESG연구소 "),
+                        //     ],
+                        //   ),
+                        // ),
+                        DataCell(Text(one_row_list[index].name)), // 수정
+                        DataCell(Text(industries[one_row_list[index].industry])), // 수정
+                        DataCell(Text(one_row_list[index].score.toString())),
+                        DataCell(
                           Row(
                             children: [
-                              Text(" KCGS "),
-                              Text(" 한국ESG연구소 "),
+                              for (var tmp in one_row_list[index].esg_insts)
+                                Text(" $tmp "),  
                             ],
                           ),
                         ),
@@ -1152,7 +1392,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             ),
             NumberPaginator(
               // by default, the paginator shows numbers as center content
-              numberPages: (company_list.length / 10).ceil(),
+              //numberPages: (company_list.length / 10).ceil(),
+              numberPages: one_row_list[0].pages_number,
               onPageChange: (int index) {
                 setState(() {
                   _current_page =

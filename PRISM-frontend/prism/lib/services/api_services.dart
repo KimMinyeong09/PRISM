@@ -58,13 +58,24 @@ class ApiService {
       'company': company,
     };
     
-    final response = await http.post(url, body: requestData); 
+    final response = await http.post(url, body: requestData);
+
+    List<int> years_instance = [];
+
+    // if (response.statusCode == 200) {
+    //   final responseData = jsonDecode(response.body);
+    //   if (responseData is List) {
+    //     return List<int>.from(responseData);
+    //   }
+    // }
 
     if (response.statusCode == 200) {
-      final responseData = jsonDecode(response.body);
-      if (responseData is List) {
-        return List<int>.from(responseData);
+      final years = jsonDecode(response.body);
+      for (var year in years) {
+        final instance = int.parse(year);
+        years_instance.add(instance);
       }
+      return years_instance;
     }
     // 에러 처리
     throw Exception('Failed to fetch company years');
