@@ -15,9 +15,12 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from .views import IndustryAPIView
-
+from .views import *
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/industry/', IndustryAPIView.as_view(), name='industry-api'),
+
+    #아래는 https://www.notion.so/API-url-JSON-4dda3eaa812740a685547801e6d49f4a?pvs=4 참조
+    path("rank/page", page),
+    path("rank/oneCompany/years", yearsOfCompany)
 ]
