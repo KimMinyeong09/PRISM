@@ -54,38 +54,38 @@ class ApiService {
     
     for (var row in rows) {
       if (page <= row['pages_number']) {
-        if (filter_score == "prism-ALL") {
-          if (filter_industries.isNotEmpty){
-            for (var industry in filter_industries) {
-              if (row['industry'] == industry) {
-                if (filter_name == "") {
+      if (filter_score == "prism-ALL") {
+        if (filter_industries.isNotEmpty){
+          for (var industry in filter_industries) {
+            if (row['industry'] == industry) {
+              if (filter_name == "") {
+                final instance = OneRowModel.fromJson(row);
+                rows_instances.add(instance);
+              }
+              else {
+                if (row['name'].toString().contains(filter_name)) {
                   final instance = OneRowModel.fromJson(row);
                   rows_instances.add(instance);
-                }
-                else {
-                  if (row['name'].toString().contains(filter_name)) {
-                    final instance = OneRowModel.fromJson(row);
-                    rows_instances.add(instance);
-                  }
                 }
               }
             }
-            
           }
-          else
-          {
-            if (filter_name == "") {
+          
+        }
+        else
+        {
+          if (filter_name == "") {
+                final instance = OneRowModel.fromJson(row);
+                rows_instances.add(instance);
+              }
+              else {
+                if (row['name'].toString().contains(filter_name)) {
                   final instance = OneRowModel.fromJson(row);
                   rows_instances.add(instance);
                 }
-                else {
-                  if (row['name'].toString().contains(filter_name)) {
-                    final instance = OneRowModel.fromJson(row);
-                    rows_instances.add(instance);
-                  }
-                }
-          }
+              }
         }
+      }
       }
     }
     
