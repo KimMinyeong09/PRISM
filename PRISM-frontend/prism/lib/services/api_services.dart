@@ -19,7 +19,7 @@ import '../models/report_sentences_model.dart';
 
 
 class ApiService {
-  static const String base_url = 'http://127.0.0.1:8000/';
+  static const String base_url = 'http://127.0.0.1:8000';
 
   // 한 페이지를 불러와야할 때
   // 필터결과에 해당하는 행 최대 10개
