@@ -445,9 +445,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     }
   }
   List<OneRowModel> one_pages = [];
-  void fetchOnePageData(String filter_score) async {
+  void fetchOnePageData(String filter_score, int page) async {
     try {
-      one_pages = await ApiService.outOnePage(_current_page + 1, filter_score, comparing_industries, search_name);
+      one_pages = await ApiService.outOnePage(page, filter_score, comparing_industries, search_name);
       print(one_pages);
     } catch (e) {
       print('Error: $e');
@@ -1109,7 +1109,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   // 랭킹 페이지 - 탭
   Container rankingTab(BuildContext context, String scoreName) {
     // comparing_industries, search_name, scoreName 이용해서 불러오기
-    fetchOnePageData(scoreName);
+    fetchOnePageData(scoreName, 1);
     one_row_list = [
       OneRow(name: "Example Company 1", industry: 1, score: 90, esg_insts: ["KCGS", "한국ESG연구소"], pages_number: 1),
       OneRow(name: "Example Company 2", industry: 1, score: 89, esg_insts: ["KCGS"], pages_number: 1),
@@ -1147,13 +1147,16 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                       onChanged: (value) {
                         search_name = value;
                       },
+                      onSubmitted: (value) {
+                        fetchOnePageData(scoreName, 1);
+                      },
                     ),
                   ),
                   // 업종 필터링
                   SizedBox(
                     child: OutlinedButton.icon(
                       onPressed: () {
-                        chooseIndustries(context);
+                        chooseIndustries(context, scoreName);
                       },
                       icon: const Icon(
                         Icons.filter_list,
@@ -1331,113 +1334,12 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                                     ),
                                   );
                                 }
-                                // builder: (BuildContext context) => AlertDialog(
-                                //   content: Row(
-                                //     mainAxisSize: MainAxisSize.min,
-                                //     children: [
-                                //       TextButton(
-                                //         onPressed: () {
-                                //           if (comparing_items.contains(
-                                //               '${one_row_list[index].name}\n2020')) {
-                                //             comparing_items.remove(
-                                //                 '${one_row_list[index].name}\n2020');
-                                //           } else {
-                                //             if (comparing_items.length < 3) {
-                                //               comparing_items.add(
-                                //                   '${one_row_list[index].name}\n2020');
-                                //             }
-                                //           }
-                                //           Navigator.pop(
-                                //             context,
-                                //           );
-                                //           setState(() {});
-                                //         },
-                                //         child: Text(
-                                //           "2020",
-                                //           style: TextStyle(
-                                //             fontWeight: comparing_items.contains(
-                                //                     '${one_row_list[index].name}\n2020')
-                                //                 ? FontWeight.bold
-                                //                 : FontWeight.normal,
-                                //           ),
-                                //         ),
-                                //       ),
-                                //       TextButton(
-                                //         onPressed: () {
-                                //           if (comparing_items.contains(
-                                //               '${one_row_list[index].name}\n2021')) {
-                                //             // 수정: 기업명\n연도 로 수정할 것
-                                //             comparing_items.remove(
-                                //                 '${one_row_list[index].name}\n2021'); // 수정: 기업명\n연도 로 수정할 것
-                                //           } else {
-                                //             if (comparing_items.length < 3) {
-                                //               comparing_items.add(
-                                //                   '${one_row_list[index].name}\n2021'); // 수정: 기업명\n연도 로 수정할 것
-                                //             }
-                                //           }
-                                //           Navigator.pop(
-                                //             context,
-                                //           );
-                                //           setState(() {});
-                                //         },
-                                //         child: Text(
-                                //           "2021",
-                                //           style: TextStyle(
-                                //             fontWeight: comparing_items.contains(
-                                //                     '${one_row_list[index].name}\n2021')
-                                //                 ? FontWeight.bold
-                                //                 : FontWeight.normal,
-                                //           ),
-                                //         ),
-                                //       ),
-                                //       TextButton(
-                                //         onPressed: () {
-                                //           if (comparing_items.contains(
-                                //               '${one_row_list[index].name}\n2022')) {
-                                //             // 수정: 기업명\n연도 로 수정할 것
-                                //             comparing_items.remove(
-                                //                 '${one_row_list[index].name}\n2022'); // 수정: 기업명\n연도 로 수정할 것
-                                //           } else {
-                                //             if (comparing_items.length < 3) {
-                                //               comparing_items.add(
-                                //                   '${one_row_list[index].name}\n2022'); // 수정: 기업명\n연도 로 수정할 것
-                                //             }
-                                //           }
-                                //           Navigator.pop(
-                                //             context,
-                                //           );
-                                //           setState(() {});
-                                //         },
-                                //         child: Text(
-                                //           "2022",
-                                //           style: TextStyle(
-                                //             fontWeight: comparing_items.contains(
-                                //                     '${one_row_list[index].name}\n2022')
-                                //                 ? FontWeight.bold
-                                //                 : FontWeight.normal,
-                                //           ),
-                                //         ),
-                                //       ),
-                                //     ],
-                                //   ),
-                                // ),
                               );
                             },
                             icon: const Icon(Icons.add),
                           ),
                         ),
                         DataCell(Text((rowIndex + 1).toString())),
-                        // DataCell(Text(company_list[rowIndex].name)), // 수정
-                        // DataCell(Text(company_list[rowIndex].industry)),
-                        // const DataCell(Text("100")),
-                        // const DataCell(
-                        //   Row(
-                        //     children: [
-                        //       Text(" KCGS "),
-                        //       Text(" 한국ESG연구소 "),
-                        //     ],
-                        //   ),
-                        // ),
                         DataCell(Text(one_row_list[index].name)), // 수정
                         DataCell(Text(industries[one_row_list[index].industry])), // 수정
                         DataCell(Text(one_row_list[index].score.toString())),
@@ -1469,9 +1371,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             ),
             NumberPaginator(
               // by default, the paginator shows numbers as center content
-              //numberPages: (company_list.length / 10).ceil(),
               numberPages: one_row_list[0].pages_number,
               onPageChange: (int index) {
+                fetchOnePageData(scoreName, index + 1);
                 setState(() {
                   _current_page =
                       index; // _current_page is a variable within State of StatefulWidget
@@ -1490,10 +1392,10 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     );
   }
 
-  Future<String?> chooseIndustries(BuildContext context) {
+  Future<String?> chooseIndustries(BuildContext context, String scoreName) {
     return showDialog<String>(
       context: context,
-      barrierDismissible: true, // 바깥 영역 터치시 닫을지 여부: 닫음
+      barrierDismissible: false, // 바깥 영역 터치시 닫을지 여부: 닫지 않음
       builder: (BuildContext context) => AlertDialog(
         content: Column(
           mainAxisSize: MainAxisSize.min,
@@ -1536,7 +1438,10 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         ),
         actions: <Widget>[
           TextButton(
-            onPressed: () => Navigator.pop(context, 'OK'),
+            onPressed: () {
+              fetchOnePageData(scoreName, _current_page);
+              Navigator.pop(context, 'OK');
+            },
             child: const Text('OK'),
           ),
         ],
@@ -1553,26 +1458,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              // Container(
-              //   padding: const EdgeInsets.symmetric(horizontal: 16),
-              //   child: TextField(
-              //     decoration: const InputDecoration(
-              //       hintText: 'GRI index 검색..',
-              //       prefixIcon: Icon(Icons.search),
-              //       border: OutlineInputBorder(
-              //         borderRadius: BorderRadius.all(
-              //           Radius.circular(10.0),
-              //         ),
-              //       ),
-              //     ),
-              //     onChanged: (value) {
-              //       setState(() {
-                      
-              //       });
-              //       // 검색한 거 찾는 로직을 생각해보자..
-              //     },
-              //   ),
-              // ),
               for (int i = 0; i < gri_mains.length; i++)
                 ExpansionTile(
                   title: Text(gri_mains[i]),
