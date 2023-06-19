@@ -19,12 +19,12 @@ import '../models/report_sentences_model.dart';
 
 
 class ApiService {
-  static const String base_url = 'http://127.0.0.1:8000/';
+  static const String base_url = 'http://127.0.0.1:8000';
 
   // 한 페이지를 불러와야할 때
   // 필터결과에 해당하는 행 최대 10개
   static Future<List<OneRowModel>> outOnePage(int page, String filter_score, List<String> filter_industries, String filter_name) async {
-    final url = Uri.parse('$base_url/rank/page');
+    final url = Uri.parse('$base_url/rank/page/');
     
     final requestData = {
       'page': page,
@@ -33,7 +33,8 @@ class ApiService {
       'filter_name': filter_name,
     };
     
-    final response = await http.post(url, body: jsonEncode(requestData));
+    // final response = await http.post(url, body: jsonEncode(requestData));
+    final response = await http.post(url, headers: {"Content-Type": "application/json"}, body: jsonEncode(requestData));
 
     List<OneRowModel> rows_instances = [];
     
