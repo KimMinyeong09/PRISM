@@ -53,29 +53,24 @@ class ApiService {
   // 선택한 회사에 해당하는 년도 - 이렇게 하는게 맞을까요?
   static Future<List<int>> outCompanyYears(String company) async {
     final url = Uri.parse('$base_url/rank/oneCompany/years');
-  
+
     final requestData = {
       'company': company,
     };
-    
+
     final response = await http.post(url, body: requestData);
 
-    List<int> years_instance = [];
-
-    // if (response.statusCode == 200) {
-    //   final responseData = jsonDecode(response.body);
-    //   if (responseData is List) {
-    //     return List<int>.from(responseData);
-    //   }
-    // }
+    List<int> yearsInstance = [];
 
     if (response.statusCode == 200) {
-      final years = jsonDecode(response.body);
-      for (var year in years) {
-        final instance = int.parse(year);
-        years_instance.add(instance);
+      final jsonData = jsonDecode(response.body); // 예: [{years: [2022, 2021]}]
+      //years : List<int>
+      var yearsDict = jsonData[0]; // {years: [2022, 2021]}
+      for (var year in yearsDict["years"]) {
+        final instance = year;
+        yearsInstance.add(instance);
       }
-      return years_instance;
+      return yearsInstance;
     }
     // 에러 처리
     throw Exception('Failed to fetch company years');
@@ -102,7 +97,7 @@ class ApiService {
       }
       return prism_scores;
     }
-    // 예외 처리
+    // 에러 처리
     throw Exception('Failed to fetch company Prism scores');
   }
   //특정 업종의 prism스코어, 존재하는 년도 개수 만큼
@@ -125,7 +120,8 @@ class ApiService {
       }
       return prism_ind_avg_scores;
     }
-    throw Error();
+    // 에러 처리
+    throw Exception('Failed to fetch industry Prism scores');
   }
   //kcgs스코어, 존재하는 년도 개수만큼
   static Future<List<KcgsScoreModel>> outKcgsScores(String company) async {
@@ -147,7 +143,8 @@ class ApiService {
       }
       return kcgs_scores;
     }
-    throw Error();
+    // 에러 처리
+    throw Exception('Failed to fetch company KCGS scores');
   }
   //esg연구소 스코어, 존재하는 년도 개수만큼
   static Future<List<EsglabScoreModel>> outEsglabScores(String company) async {
@@ -169,7 +166,8 @@ class ApiService {
       }
       return esglab_scores;
     }
-    throw Error();
+    // 에러 처리
+    throw Exception('Failed to fetch company ESGlab scores');
   }
   //kcgs 평균스코어, 존재하는 년도 개수만큼
   static Future<List<KcgsIndAvgScoreModel>> outKcgsIndAvgScores(String company) async {
@@ -191,7 +189,8 @@ class ApiService {
       }
       return kcgs_ind_avg_scores;
     }
-    throw Error();
+    // 에러 처리
+    throw Exception('Failed to fetch industry KCGS average scores');
   }
   //esg연구소 평균 스코어, 존재하는 년도 개수만큼
   static Future<List<EsglabIndAvgScoreModel>> outEsglabIndAvgScores(String company) async {
@@ -213,7 +212,8 @@ class ApiService {
       }
       return esglab_scores;
     }
-    throw Error();
+    // 에러 처리
+    throw Exception('Failed to fetch industry ESGlab average scores');
   }
   // 클릭한 회사 보고서 테이블, 존재하는 년도 개수만큼
   static Future<List<SustainReportModel>> outSustainReports(String company) async {
@@ -235,7 +235,8 @@ class ApiService {
       }
       return esglab_scores;
     }
-    throw Error();
+    // 에러 처리
+    throw Exception('Failed to fetch sustain reports');
   }
   //클릭한 회사 보고서가 사용한 gri정보, 최신년도만
   static Future<GriInfoModel> outGriInfos(String company) async {
@@ -251,7 +252,8 @@ class ApiService {
       final gri_info = jsonDecode(response.body);
       return GriInfoModel.fromJson(gri_info);
     }
-    throw Error();
+    // 에러 처리
+    throw Exception('Failed to fetch gri info of sustain report');
   }
   //클릭한 회사 보고서내 gri유사 문장, 최신년도만
   static Future<ReportSentencesModel> outReportSentencess(String company) async {
@@ -267,7 +269,8 @@ class ApiService {
       final gri_info = jsonDecode(response.body);
       return ReportSentencesModel.fromJson(gri_info);
     }
-    throw Error();
+    // 에러 처리
+    throw Exception('Failed to fetch gri sentences of sustain report');
   }
   //클릭한 회사 보고서내 gri유사 테이블, 최신년도만
   static Future<ReportTableModel> outReportTables(String company) async {
@@ -283,7 +286,8 @@ class ApiService {
       final report_table = jsonDecode(response.body);
       return ReportTableModel.fromJson(report_table);
     }
-    throw Error();
+    // 에러 처리
+    throw Exception('Failed to fetch gri table of sustain report');
   }
   //gri index사용 비율 업종 평균점수, 최신년도만
   static Future<GriUsageIndAvgScoreModel> outGriUsageIndAvgScores(String company) async {
@@ -299,7 +303,8 @@ class ApiService {
       final gri_usage_ind_avg_score = jsonDecode(response.body);
       return GriUsageIndAvgScoreModel.fromJson(gri_usage_ind_avg_score);
     }
-    throw Error();
+    // 에러 처리
+    throw Exception('Failed to fetch gri rate of sustain report');
   }
 
   // 비교페이지 내용 필요
@@ -322,8 +327,8 @@ class ApiService {
       }
       return prism_scores;
     }
-    throw Error();
-
+    // 에러 처리
+    throw Exception('Failed to fetch company PRISM score');
   }
   //특정 업종의 prism스코어, 존재하는 년도 개수 만큼
   static Future<List<PrismIndAvgScoreModel>> outPrismIndAvgScore(List<Map<String, int>> company_and_year) async {
@@ -344,7 +349,8 @@ class ApiService {
       }
       return prism_ind_avg_scores;
     }
-    throw Error();
+    // 에러 처리
+    throw Exception('Failed to fetch industry PRISM score');
   }
   // kcgs스코어, 해당하는 회사_년도 만큼
   static Future<List<KcgsScoreModel>> outKcgsScore(List<Map<String, int>> company_and_year) async {
@@ -365,7 +371,8 @@ class ApiService {
       }
       return kcgs_scores;
     }
-    throw Error();
+    // 에러 처리
+    throw Exception('Failed to fetch company KCGS score');
   }
   //esg연구소 스코어,해당하는 회사_년도 만큼
   static Future<List<EsglabScoreModel>> outEsglabScore(List<Map<String, int>> company_and_year) async {
@@ -386,7 +393,8 @@ class ApiService {
       }
       return esglab_scores;
     }
-    throw Error();
+    // 에러 처리
+    throw Exception('Failed to fetch company esglab score');
   }
   //kcgs 평균스코어, 해당하는 회사_년도 만큼
   static Future<List<KcgsIndAvgScoreModel>> outKcgsIndAvgScore(List<Map<String, int>> company_and_year) async {
@@ -407,7 +415,8 @@ class ApiService {
       }
       return kcgs_ind_avg_scores;
     }
-    throw Error();
+    // 에러 처리
+    throw Exception('Failed to fetch industry KCGS average score');
   }
   //esg연구소 평균 스코어, 해당하는 회사_년도 만큼
   static Future<List<EsglabIndAvgScoreModel>> outEsglabIndAvgScore(List<Map<String, int>> company_and_year) async {
@@ -428,7 +437,8 @@ class ApiService {
       }
       return esglab_scores;
     }
-    throw Error();
+    // 에러 처리
+    throw Exception('Failed to fetch industry esglab average score');
   }
   //회사 보고서 테이블 내용, 해당하는 회사_년도 만큼
   static Future<List<SustainReportModel>> outSustainReport(List<Map<String, int>> company_and_year) async {
@@ -439,17 +449,18 @@ class ApiService {
     
     final response = await http.post(url, body: requestData); 
 
-    List<SustainReportModel> esglab_scores = [];
+    List<SustainReportModel> report_instances = [];
 
     if (response.statusCode == 200) {
       final reports = jsonDecode(response.body);
       for (var report in reports) {
         final instance = SustainReportModel.fromJson(report);
-        esglab_scores.add(instance);
+        report_instances.add(instance);
       }
-      return esglab_scores;
+      return report_instances;
     }
-    throw Error();
+    // 에러 처리
+    throw Exception('Failed to fetch company sustain reports');
   }
 
   // 비교대상의 gri유사 문장 및 표 필요
@@ -467,7 +478,8 @@ class ApiService {
       final gri_info = jsonDecode(response.body);
       return ReportSentencesModel.fromJson(gri_info);
     }
-    throw Error();
+    // 에러 처리
+    throw Exception('Failed to fetch sentences of company sustain reports');
   }
   //클릭한 회사 보고서내 gri유사 테이블, 해당하는 회사_년도 만큼
   static Future<ReportTableModel> outReportTable(List<Map<String, int>> reports, List<String> gri_indexes) async {
@@ -483,7 +495,8 @@ class ApiService {
       final report_table = jsonDecode(response.body);
       return ReportTableModel.fromJson(report_table);
     }
-    throw Error();
+    // 에러 처리
+    throw Exception('Failed to fetch table of company sustain reports');
   }
   //gri index사용 비율 업종 평균점수, 최신년도만
   static Future<GriUsageIndAvgScoreModel> outGriUsageIndAvgScore(List<Map<String, int>> reports, List<String> gri_indexes) async {
@@ -499,6 +512,7 @@ class ApiService {
       final gri_usage_ind_avg_score = jsonDecode(response.body);
       return GriUsageIndAvgScoreModel.fromJson(gri_usage_ind_avg_score);
     }
-    throw Error();
+    // 에러 처리
+    throw Exception('Failed to fetch gri rate of company sustain reports');
   }
 }
