@@ -454,7 +454,7 @@ class ApiService {
 
   // 비교대상의 gri유사 문장 및 표 필요
   //클릭한 회사 보고서내 gri유사 문장, 해당하는 회사_년도 만큼
-  static Future<ReportSentencesModel> outReportSentences(List<Map<int, int>> reports, List<String> gri_indexes) async {
+  static Future<ReportSentencesModel> outReportSentences(List<Map<String, int>> reports, List<String> gri_indexes) async {
     final url = Uri.parse('$base_url/comparing/context');
     final requestData = {
       'reports': reports,
@@ -470,7 +470,7 @@ class ApiService {
     throw Error();
   }
   //클릭한 회사 보고서내 gri유사 테이블, 해당하는 회사_년도 만큼
-  static Future<ReportTableModel> outReportTable(List<Map<int, int>> reports, List<String> gri_indexes) async {
+  static Future<ReportTableModel> outReportTable(List<Map<String, int>> reports, List<String> gri_indexes) async {
     final url = Uri.parse('$base_url/comparing/context');
     final requestData = {
       'reports': reports,
@@ -486,7 +486,7 @@ class ApiService {
     throw Error();
   }
   //gri index사용 비율 업종 평균점수, 최신년도만
-  static Future<GriUsageIndAvgScoreModel> outGriUsageIndAvgScore(List<Map<int, int>> reports, List<String> gri_indexes) async {
+  static Future<GriUsageIndAvgScoreModel> outGriUsageIndAvgScore(List<Map<String, int>> reports, List<String> gri_indexes) async {
     final url = Uri.parse('$base_url/comparing/context');
     final requestData = {
       'reports': reports,

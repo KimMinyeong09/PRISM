@@ -9,18 +9,6 @@ import '../services/api_services.dart';
 
 
 // 하드 코딩용 class
-class Company {
-  final int companyId;
-  final String name;
-  final String industry;
-
-  Company({
-    required this.companyId,
-    required this.name,
-    required this.industry,
-  });
-}
-
 class OneRowModel {
   final String name;
   final int industry, score, pages_number;
@@ -86,6 +74,43 @@ class EsglabScoreModel {
   });
 }
 
+class SustainReportModel {
+  final int sustain_report_id, year,
+  e_score, s_score, g_score, ind_e_score, ind_s_score, ind_g_score,
+  company_id, gri_usage_score_id, gri_usage_ind_avg_id;
+  final String download_link, industry;
+      
+
+  SustainReportModel({
+    required this.sustain_report_id, required this.year,
+    required this.download_link, required this.industry,
+    required this.e_score, required this.s_score, required this.g_score, required this.ind_e_score, required this.ind_s_score, required this.ind_g_score,
+    required this.company_id, required this.gri_usage_score_id, required this.gri_usage_ind_avg_id
+  });
+}
+
+class ReportSentencesModel {
+  final int sustain_report_id, gri_info_id,report_senetences_id, sim_rank, page;
+  final String most_sentence, preced_sentences, back_sentences;
+
+  ReportSentencesModel({
+    required this.sustain_report_id, required this.gri_info_id, required this.report_senetences_id, required this.sim_rank, required this.page,
+    required this.most_sentence, required this.preced_sentences, required this.back_sentences
+  });
+}
+
+class ReportTableModel {
+  final int sustain_report_id, gri_info_id, report_table_id, sim_rank, page;
+  final String title, Html_code;
+
+  ReportTableModel({
+    required this.sustain_report_id, required this.gri_info_id, required this.report_table_id, required this.sim_rank, required this.page,
+    required this.title, required this.Html_code
+  });
+}
+
+
+
 
 
 class HomeScreen extends StatefulWidget {
@@ -119,24 +144,14 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   bool remove_comparing_items = true;
 
   // API- 회사 정보 저장
-  List<Company> company_list = [
-    Company(companyId: 1, name: 'Company A', industry: '에너지장비및서비스'),
-    Company(companyId: 2, name: 'Company B', industry: '석유와가스'),
-    Company(companyId: 3, name: 'Company C', industry: '에너지장비및서비스'),
-    Company(companyId: 4, name: 'Company D', industry: '에너지장비및서비스'),
-    Company(companyId: 5, name: 'Company E', industry: '건축자재'),
-    Company(companyId: 6, name: 'Company F', industry: '에너지장비및서비스'),
-    Company(companyId: 7, name: 'Company C', industry: '복합기업'),
-    Company(companyId: 8, name: 'Company G', industry: '에너지장비및서비스'),
-    Company(companyId: 9, name: 'Company H', industry: '석유와가스'),
-    Company(companyId: 10, name: 'Company I', industry: '복합기업'),
-    Company(companyId: 11, name: 'Company J', industry: '복합기업'),
-  ];
   late List<OneRowModel> one_row_list;
   late List<PrismScoreModel> prism_scores;
   late List<PrismIndAvgScoreModel> prism_ind_avg_scores;
   late List<KcgsScoreModel> kcgs_scores;
   late List<EsglabScoreModel> esglab_scores;
+  late List<SustainReportModel> sustain_reports;
+  late List<ReportSentencesModel> gri_infos;
+  late List<ReportTableModel> report_tables;
 
   // 업종 리스트
   List<String> industries = [
@@ -724,6 +739,30 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       ),
     ];
 
+    sustain_reports = [
+      SustainReportModel(
+        sustain_report_id: 1, year: 2022,
+        download_link: "www.", industry: "건축자재",
+        e_score: 90, s_score: 86, g_score: 70,
+        ind_e_score: 1, ind_s_score: 1, ind_g_score: 1,
+        company_id: 1, gri_usage_score_id: 1, gri_usage_ind_avg_id:1 
+      ),
+    ];
+
+    gri_infos = [
+      ReportSentencesModel(
+        sustain_report_id: 1, gri_info_id: 1, report_senetences_id: 1, sim_rank: 1, page: 50,
+        most_sentence: "중요 문장!!", preced_sentences: "이전문장", back_sentences: "이후문장",
+      )
+    ];
+
+    report_tables = [
+      ReportTableModel(
+        sustain_report_id: 1, gri_info_id: 1, report_table_id: 1, sim_rank: 1, page: 60,
+        title: "제목", Html_code: "String",
+      )
+    ];
+
     return List.generate(comparing_items.length, (index) {
       String item = comparing_items[index];
       List<String> splitText = item.split("\n");
@@ -802,13 +841,13 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                             ],
                           ),
                           // 텍스트
-                          extractSentences(),
-                          extractSentences(),
-                          extractSentences(),
+                          extractSentences(gri_infos[index]),
+                          extractSentences(gri_infos[index]),
+                          extractSentences(gri_infos[index]),
                           // 표
-                          extractTable(),
-                          extractTable(),
-                          extractTable(),
+                          extractTable(report_tables[index]),
+                          extractTable(report_tables[index]),
+                          extractTable(report_tables[index]),
                       ],
                     ),
                   ),
@@ -818,47 +857,52 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     });
   }
 
-  Padding extractTable() {
+  Padding extractTable(ReportTableModel report_table) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: DataTable(
-        columns: const <DataColumn>[
-          DataColumn(
-            label: Expanded(
-            child: Text('Name', style: TextStyle(fontStyle: FontStyle.italic)),
-          ),
-        ),
-        DataColumn(
-          label: Expanded(
-            child: Text('Age', style: TextStyle(fontStyle: FontStyle.italic)),
-          ),
-        ),
-        DataColumn(
-          label: Expanded(
-            child: Text('Role', style: TextStyle(fontStyle: FontStyle.italic)),
-          ),
-        ),
-      ],
-        rows: const <DataRow>[
-          DataRow(
-            cells: <DataCell>[
-              DataCell(Text('Sarah')),
-              DataCell(Text('19')),
-              DataCell(Text('Student')),
-            ],
-          ),
-          DataRow(
-            cells: <DataCell>[
-              DataCell(Text('Janine')),
-              DataCell(Text('43')),
-              DataCell(Text('Professor')),
-            ],
-          ),
-          DataRow(
-            cells: <DataCell>[
-              DataCell(Text('William')),
-              DataCell(Text('27')),
-              DataCell(Text('Associate Professor')),
+      child: Column(
+        children: [
+          Text(report_table.title),
+          DataTable(
+            columns: const <DataColumn>[
+              DataColumn(
+                label: Expanded(
+                child: Text('Name', style: TextStyle(fontStyle: FontStyle.italic)),
+              ),
+            ),
+            DataColumn(
+              label: Expanded(
+                child: Text('Age', style: TextStyle(fontStyle: FontStyle.italic)),
+              ),
+            ),
+            DataColumn(
+              label: Expanded(
+                child: Text('Role', style: TextStyle(fontStyle: FontStyle.italic)),
+              ),
+            ),
+          ],
+            rows: const <DataRow>[
+              DataRow(
+                cells: <DataCell>[
+                  DataCell(Text('Sarah')),
+                  DataCell(Text('19')),
+                  DataCell(Text('Student')),
+                ],
+              ),
+              DataRow(
+                cells: <DataCell>[
+                  DataCell(Text('Janine')),
+                  DataCell(Text('43')),
+                  DataCell(Text('Professor')),
+                ],
+              ),
+              DataRow(
+                cells: <DataCell>[
+                  DataCell(Text('William')),
+                  DataCell(Text('27')),
+                  DataCell(Text('Associate Professor')),
+                ],
+              ),
             ],
           ),
         ],
@@ -866,16 +910,17 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     );
   }
 
-  Padding extractSentences() {
-    return const Padding(
-      padding: EdgeInsets.all(8.0),
+  Padding extractSentences(ReportSentencesModel gri_info) {
+
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('한 문장, 두 문장입니다.', style: TextStyle(color: Colors.grey)),
-          Text('핵심 문장입니다.'),
-          Text('한 문장, 두 문장입니다.', style: TextStyle(color: Colors.grey)),
+          Text(gri_info.preced_sentences, style: const TextStyle(color: Colors.grey)),
+          Text(gri_info.most_sentence),
+          Text(gri_info.back_sentences, style: const TextStyle(color: Colors.grey)),
         ],
       ),
     );
@@ -1222,7 +1267,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                                 barrierDismissible: true,
                                 builder: (BuildContext context) {
                                   // 연도 받아오기
-                                  List<int> year = [2022, 2021, 2020];
+                                  // List<int> year = [2022, 2021, 2020];
+                                  List<int> year = companyYears;
                                   
                                   return AlertDialog(
                                     content: Row(
@@ -1379,7 +1425,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) =>
-                                          SecondPage(company_list[rowIndex])));
+                                          SecondPage(one_row_list[index].name, one_row_list[index].industry)));
                             },
                             icon: const Icon(Icons.arrow_right),
                           ),
