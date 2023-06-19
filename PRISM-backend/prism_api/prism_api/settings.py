@@ -141,3 +141,15 @@ STATIC_URL = '/static/'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+#프론트에서 보낸 json키와 db의 column name을 매핑시키기 위한 전역변수
+JSON_TO_COL = {
+    "prism-ALL" : "overall_score",
+    "prism-E" : "e_score",
+    "prism-S" : "s_score",
+    "prism-G" : "g_score",
+    "Wprism-ALL" : "w_overall_score",
+    "Wprism-E" : "w_e_score",
+    "Wprism-S" : "w_s_score",
+    "Wprism-G" : "w_g_score"
+}

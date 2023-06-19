@@ -11,3 +11,10 @@ class onePageSerializer(serializers.Serializer):
 
 class yearsOfCompanySerializer(serializers.Serializer):
     years = serializers.ListField(child = serializers.IntegerField())
+
+class oneOfPageSerializer(serializers.Serializer):
+    name = serializers.CharField()
+    industry = serializers.CharField()
+    score = serializers.IntegerField()
+    esg_insts = serializers.ListField(child = serializers.CharField())
+    pages_number = serializers.IntegerField()
