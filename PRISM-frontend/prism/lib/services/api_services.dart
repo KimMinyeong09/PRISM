@@ -97,7 +97,6 @@ class ApiService {
   }
 
   // 한 행(회사)의 년도를 선택해야할 때
-  // 선택한 회사에 해당하는 년도 - 이렇게 하는게 맞을까요?
   static Future<List<int>> outCompanyYears(String company) async {
     final url = Uri.parse('$base_url/rank/oneCompany/years');
 

@@ -37,9 +37,8 @@ class _SecondPageState extends State<SecondPage> with TickerProviderStateMixin {
   }
 
   // API- 회사 정보 저장 (하드코딩)
-  late List<OneRow> one_row_list;
-  late List<PrismScoreModel> prism_scores;
-  late List<PrismIndAvgScoreModel> prism_ind_avg_scores;
+  late List<PrismScore> prism_scores;
+  late List<PrismIndAvgScore> prism_ind_avg_scores;
   late List<KcgsScoreModel> kcgs_scores;
   late List<EsglabScoreModel> esglab_scores;
   late List<SustainReportModel> sustain_reports;
@@ -299,13 +298,13 @@ class _SecondPageState extends State<SecondPage> with TickerProviderStateMixin {
                               ? const Color(0xff5EC1F7)
                               : id == '${company_name} - prismG'
                                   ? const Color(0xffCE67FD)
-                                  : id == '${company_name} - prismALL'
+                                  : id == '${company_industry} - prismALL'
                                       ? const Color.fromARGB(150, 0, 0, 0)
-                                      : id == '${company_name} - prismE'
+                                      : id == '${company_industry} - prismE'
                                           ? const Color.fromARGB(
                                               150, 78, 167, 82)
                                           : id ==
-                                                  '${company_name} - prismS'
+                                                  '${company_industry} - prismS'
                                               ? const Color.fromARGB(
                                                   150, 94, 193, 247)
                                               : const Color.fromARGB(
