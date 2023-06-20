@@ -303,271 +303,271 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     }
   }
 
-  // 세부페이지에서 사용할 해당 기업의 지속가능경영보고서 발행 연도들 - 상단바 / PRISM스코어 탭 / 평가기관등급 탭에 사용
-  late List<int> detail_info_years = [];
-  // 세부페이지 - PRISM스코어 탭에서 사용할 정보
-  late Map<int, Map<String, dynamic>> detail_prism_info = {};
-  // 세부페이지 - 평가기관등급 탭에서 사용할 정보
-  late Map<int, Map<String, dynamic>> detail_association_info = {};
-  // 세부페이지 - ESG 정보 탭에서 사용할 정보 (ESG 비율)
-  late Map<String, dynamic> detail_esg_info = {};
-  // 세부페이지 - ESG 정보 탭: gri_index 목록
-  late List<String> detail_gri_index = [];
-  // 세부페이지 - 상단바 : 지속가능경영보고서 다운로드 링크
-  late Map<int, String> detail_download_links = {};
-  // 세부페이지 - ESG 정보 탭: gri_index에 따른 문장들
-  late Map<String, List<Map<int, dynamic>>> detail_gri_sentences = {};
+  // // 세부페이지에서 사용할 해당 기업의 지속가능경영보고서 발행 연도들 - 상단바 / PRISM스코어 탭 / 평가기관등급 탭에 사용
+  // late List<int> detail_info_years = [];
+  // // 세부페이지 - PRISM스코어 탭에서 사용할 정보
+  // late Map<int, Map<String, dynamic>> detail_prism_info = {};
+  // // 세부페이지 - 평가기관등급 탭에서 사용할 정보
+  // late Map<int, Map<String, dynamic>> detail_association_info = {};
+  // // 세부페이지 - ESG 정보 탭에서 사용할 정보 (ESG 비율)
+  // late Map<String, dynamic> detail_esg_info = {};
+  // // 세부페이지 - ESG 정보 탭: gri_index 목록
+  // late List<String> detail_gri_index = [];
+  // // 세부페이지 - 상단바 : 지속가능경영보고서 다운로드 링크
+  // late Map<int, String> detail_download_links = {};
+  // // 세부페이지 - ESG 정보 탭: gri_index에 따른 문장들
+  // late Map<String, List<Map<int, dynamic>>> detail_gri_sentences = {};
 
-  List<int> years = [];
-  Map<int, Map<String, dynamic>> b_prism_info = {};
-  Map<int, Map<String, dynamic>> i_prism_info = {};
-  Map<int, Map<String, dynamic>> k_association_info = {};
-  Map<int, Map<String, dynamic>> el_association_info = {};
-  Map<int, Map<String, dynamic>> k_a_association_info = {};
-  Map<int, Map<String, dynamic>> el_a_association_info = {};
-  Map<int, String> download_links = {};
-  Map<String, dynamic> esg_info = {};
-  Map<String, dynamic> ind_esg_info = {};
-  List<String> gri_index = [];
-  Map<String, List<Map<int, dynamic>>> gri_sentences = {};
-  void fetchCompanyDetailData(String company_name) async {
-    try {
-      years = [];
-      b_prism_info = {};
-      i_prism_info = {};
-      el_association_info = {};
-      k_a_association_info = {};
-      el_a_association_info = {};
-      download_links = {};
-      esg_info = {};
-      ind_esg_info = {};
-      gri_index = [];
+  // List<int> years = [];
+  // Map<int, Map<String, dynamic>> b_prism_info = {};
+  // Map<int, Map<String, dynamic>> i_prism_info = {};
+  // Map<int, Map<String, dynamic>> k_association_info = {};
+  // Map<int, Map<String, dynamic>> el_association_info = {};
+  // Map<int, Map<String, dynamic>> k_a_association_info = {};
+  // Map<int, Map<String, dynamic>> el_a_association_info = {};
+  // Map<int, String> download_links = {};
+  // Map<String, dynamic> esg_info = {};
+  // Map<String, dynamic> ind_esg_info = {};
+  // List<String> gri_index = [];
+  // Map<String, List<Map<int, dynamic>>> gri_sentences = {};
+  // void fetchCompanyDetailData(String company_name) async {
+  //   try {
+  //     years = [];
+  //     b_prism_info = {};
+  //     i_prism_info = {};
+  //     el_association_info = {};
+  //     k_a_association_info = {};
+  //     el_a_association_info = {};
+  //     download_links = {};
+  //     esg_info = {};
+  //     ind_esg_info = {};
+  //     gri_index = [];
 
-      // SecondPage로 보내는 데이터 처음에 초기화
-      detail_info_years = [];
-      detail_prism_info = {};
-      detail_association_info = {};
-      detail_esg_info = {};
-      detail_gri_index = [];
-      detail_download_links = {};
-      detail_gri_sentences = {};
+  //     // SecondPage로 보내는 데이터 처음에 초기화
+  //     detail_info_years = [];
+  //     detail_prism_info = {};
+  //     detail_association_info = {};
+  //     detail_esg_info = {};
+  //     detail_gri_index = [];
+  //     detail_download_links = {};
+  //     detail_gri_sentences = {};
 
-      List<PrismScoreModel> prism_scores = await ApiService.outPrismScores(company_name);
-      for (var prism_score in prism_scores) {
-        years.add(prism_score.evalYear);
-        b_prism_info[prism_score.evalYear] = {
-          'overallScore': prism_score.overallScore,
-          'EScore': prism_score.EScore,
-          'SScore': prism_score.SScore,
-          'GScore': prism_score.GScore,
-          'WOverallScore': prism_score.WOverallScore,
-          'WEScore': prism_score.WEScore,
-          'WSScore': prism_score.WSScore,
-          'WGScore': prism_score.WGScore,
-          'overallRank': prism_score.overallRank,
-          'Erank': prism_score.Erank,
-          'Srank': prism_score.Srank,
-          'Grank': prism_score.Grank, 
-          'indOverallRank': prism_score.indOverallRank,
-          'indERank': prism_score.indERank,
-          'indSRank': prism_score.indSRank,
-          'indGRank': prism_score.indGRank
-        };
-      }
-      years.sort((a, b) => b.compareTo(a));
+  //     List<PrismScoreModel> prism_scores = await ApiService.outPrismScores(company_name);
+  //     for (var prism_score in prism_scores) {
+  //       years.add(prism_score.evalYear);
+  //       b_prism_info[prism_score.evalYear] = {
+  //         'overallScore': prism_score.overallScore,
+  //         'EScore': prism_score.EScore,
+  //         'SScore': prism_score.SScore,
+  //         'GScore': prism_score.GScore,
+  //         'WOverallScore': prism_score.WOverallScore,
+  //         'WEScore': prism_score.WEScore,
+  //         'WSScore': prism_score.WSScore,
+  //         'WGScore': prism_score.WGScore,
+  //         'overallRank': prism_score.overallRank,
+  //         'Erank': prism_score.Erank,
+  //         'Srank': prism_score.Srank,
+  //         'Grank': prism_score.Grank, 
+  //         'indOverallRank': prism_score.indOverallRank,
+  //         'indERank': prism_score.indERank,
+  //         'indSRank': prism_score.indSRank,
+  //         'indGRank': prism_score.indGRank
+  //       };
+  //     }
+  //     years.sort((a, b) => b.compareTo(a));
       
-      List<PrismIndAvgScoreModel> prism_ind_avg_scores = await ApiService.outPrismIndAvgScores(company_name);
-      for (var prism_ind_avg_score in prism_ind_avg_scores) {
-        i_prism_info[prism_ind_avg_score.year] = {
-          'indOverallScore': prism_ind_avg_score.overallScore,
-          'indEScore': prism_ind_avg_score.EScore,
-          'indSScore': prism_ind_avg_score.SScore,
-          'indGScore': prism_ind_avg_score.GScore,
-          'indWOverallScore': prism_ind_avg_score.wOverallScore,
-          'indWEScore': prism_ind_avg_score.wEScore, 
-          'indWSScore': prism_ind_avg_score.wSScore,
-          'indWGScore': prism_ind_avg_score.wGScore,
-        };
-      }
-      print("----------------------------------------");
-      print(years);
-      print(b_prism_info);
-      print(i_prism_info);
-      print("----------------------------------------");
+  //     List<PrismIndAvgScoreModel> prism_ind_avg_scores = await ApiService.outPrismIndAvgScores(company_name);
+  //     for (var prism_ind_avg_score in prism_ind_avg_scores) {
+  //       i_prism_info[prism_ind_avg_score.year] = {
+  //         'indOverallScore': prism_ind_avg_score.overallScore,
+  //         'indEScore': prism_ind_avg_score.EScore,
+  //         'indSScore': prism_ind_avg_score.SScore,
+  //         'indGScore': prism_ind_avg_score.GScore,
+  //         'indWOverallScore': prism_ind_avg_score.wOverallScore,
+  //         'indWEScore': prism_ind_avg_score.wEScore, 
+  //         'indWSScore': prism_ind_avg_score.wSScore,
+  //         'indWGScore': prism_ind_avg_score.wGScore,
+  //       };
+  //     }
+  //     print("----------------------------------------");
+  //     print(years);
+  //     print(b_prism_info);
+  //     print(i_prism_info);
+  //     print("----------------------------------------");
 
-      Map<int, Map<String, dynamic>> prism_info = {};
-      b_prism_info.forEach((key, value) {
-        prism_info[key] = value;
-      });
-      i_prism_info.forEach((key, value) {
-        if (prism_info.containsKey(key)) {
-          if (prism_info[key] != null) {
-            prism_info[key]!.addAll(value);
-          } else {
-            prism_info[key] = {}..addAll(value);
-          }
-        } else {
-          prism_info[key] = value;
-        }
-      });
+  //     Map<int, Map<String, dynamic>> prism_info = {};
+  //     b_prism_info.forEach((key, value) {
+  //       prism_info[key] = value;
+  //     });
+  //     i_prism_info.forEach((key, value) {
+  //       if (prism_info.containsKey(key)) {
+  //         if (prism_info[key] != null) {
+  //           prism_info[key]!.addAll(value);
+  //         } else {
+  //           prism_info[key] = {}..addAll(value);
+  //         }
+  //       } else {
+  //         prism_info[key] = value;
+  //       }
+  //     });
 
-      List<KcgsScoreModel> kcgs_scores = await ApiService.outKcgsScores(company_name);
-      for (var kcgs_score in kcgs_scores) {
-        k_association_info[kcgs_score.evalYear] = {
-          'kcgsOverallScore': kcgs_score.overallScore,
-          'kcgsEScore': kcgs_score.EScore,
-          'kcgsSScore': kcgs_score.SScore,
-          'kcgsGScore': kcgs_score.GScore,
-        };
-      }
+  //     List<KcgsScoreModel> kcgs_scores = await ApiService.outKcgsScores(company_name);
+  //     for (var kcgs_score in kcgs_scores) {
+  //       k_association_info[kcgs_score.evalYear] = {
+  //         'kcgsOverallScore': kcgs_score.overallScore,
+  //         'kcgsEScore': kcgs_score.EScore,
+  //         'kcgsSScore': kcgs_score.SScore,
+  //         'kcgsGScore': kcgs_score.GScore,
+  //       };
+  //     }
       
-      List<EsglabScoreModel> esglab_scores = await ApiService.outEsglabScores(company_name);
-      for(var esglab_score in esglab_scores) {
-        el_association_info[esglab_score.evalYear] = {
-          'esglabOverallScore': esglab_score.overallScore,
-          'esglabEScore': esglab_score.EScore,
-          'esglabSScore': esglab_score.SScore,
-          'esglabGScore': esglab_score.GScore,
-        };
-      }
-      List<KcgsIndAvgScoreModel> kcgs_ind_avg_scores = await ApiService.outKcgsIndAvgScores(company_name);
-      for (var kcgs_ind_avg_score in kcgs_ind_avg_scores) {
-        k_a_association_info[kcgs_ind_avg_score.year] = {
-          'kcsgAvgOverallScore': kcgs_ind_avg_score.overallScore,
-          'kcsgAvgEScore': kcgs_ind_avg_score.EScore,
-          'kcsgAvgSScore': kcgs_ind_avg_score.SScore,
-          'kcsgAvgGScore': kcgs_ind_avg_score.GScore,
-        };
-      }
-      List<EsglabIndAvgScoreModel> esglab_ind_avg_scores = await ApiService.outEsglabIndAvgScores(company_name);
-      for (var esglab_ind_avg_score in esglab_ind_avg_scores) {
-        el_a_association_info[esglab_ind_avg_score.year] = {
-          'esglabAvgOverallScore': esglab_ind_avg_score.overallScore,
-          'esglabAvgEScore': esglab_ind_avg_score.EScore,
-          'esglabAvgSScore': esglab_ind_avg_score.SScore,
-          'esglabAvgGScore': esglab_ind_avg_score.GScore,
-        };
-      }
+  //     List<EsglabScoreModel> esglab_scores = await ApiService.outEsglabScores(company_name);
+  //     for(var esglab_score in esglab_scores) {
+  //       el_association_info[esglab_score.evalYear] = {
+  //         'esglabOverallScore': esglab_score.overallScore,
+  //         'esglabEScore': esglab_score.EScore,
+  //         'esglabSScore': esglab_score.SScore,
+  //         'esglabGScore': esglab_score.GScore,
+  //       };
+  //     }
+  //     List<KcgsIndAvgScoreModel> kcgs_ind_avg_scores = await ApiService.outKcgsIndAvgScores(company_name);
+  //     for (var kcgs_ind_avg_score in kcgs_ind_avg_scores) {
+  //       k_a_association_info[kcgs_ind_avg_score.year] = {
+  //         'kcsgAvgOverallScore': kcgs_ind_avg_score.overallScore,
+  //         'kcsgAvgEScore': kcgs_ind_avg_score.EScore,
+  //         'kcsgAvgSScore': kcgs_ind_avg_score.SScore,
+  //         'kcsgAvgGScore': kcgs_ind_avg_score.GScore,
+  //       };
+  //     }
+  //     List<EsglabIndAvgScoreModel> esglab_ind_avg_scores = await ApiService.outEsglabIndAvgScores(company_name);
+  //     for (var esglab_ind_avg_score in esglab_ind_avg_scores) {
+  //       el_a_association_info[esglab_ind_avg_score.year] = {
+  //         'esglabAvgOverallScore': esglab_ind_avg_score.overallScore,
+  //         'esglabAvgEScore': esglab_ind_avg_score.EScore,
+  //         'esglabAvgSScore': esglab_ind_avg_score.SScore,
+  //         'esglabAvgGScore': esglab_ind_avg_score.GScore,
+  //       };
+  //     }
 
-      Map<int, Map<String, dynamic>> association_info = {};
-      k_association_info.forEach((key, value) {
-        association_info[key] = value;
-      });
-      el_association_info.forEach((key, value) {
-        if (association_info.containsKey(key)) {
-          if (association_info[key] != null) {
-            association_info[key]!.addAll(value);
-          } else {
-            association_info[key] = {}..addAll(value);
-          }
-        } else {
-          association_info[key] = value;
-        }
-      });
-      k_a_association_info.forEach((key, value) {
-        if (association_info.containsKey(key)) {
-          if (association_info[key] != null) {
-            association_info[key]!.addAll(value);
-          } else {
-            association_info[key] = {}..addAll(value);
-          }
-        } else {
-          association_info[key] = value;
-        }
-      });
-      el_a_association_info.forEach((key, value) {
-        if (association_info.containsKey(key)) {
-          if (association_info[key] != null) {
-            association_info[key]!.addAll(value);
-          } else {
-            association_info[key] = {}..addAll(value);
-          }
-        } else {
-          association_info[key] = value;
-        }
-      });
+  //     Map<int, Map<String, dynamic>> association_info = {};
+  //     k_association_info.forEach((key, value) {
+  //       association_info[key] = value;
+  //     });
+  //     el_association_info.forEach((key, value) {
+  //       if (association_info.containsKey(key)) {
+  //         if (association_info[key] != null) {
+  //           association_info[key]!.addAll(value);
+  //         } else {
+  //           association_info[key] = {}..addAll(value);
+  //         }
+  //       } else {
+  //         association_info[key] = value;
+  //       }
+  //     });
+  //     k_a_association_info.forEach((key, value) {
+  //       if (association_info.containsKey(key)) {
+  //         if (association_info[key] != null) {
+  //           association_info[key]!.addAll(value);
+  //         } else {
+  //           association_info[key] = {}..addAll(value);
+  //         }
+  //       } else {
+  //         association_info[key] = value;
+  //       }
+  //     });
+  //     el_a_association_info.forEach((key, value) {
+  //       if (association_info.containsKey(key)) {
+  //         if (association_info[key] != null) {
+  //           association_info[key]!.addAll(value);
+  //         } else {
+  //           association_info[key] = {}..addAll(value);
+  //         }
+  //       } else {
+  //         association_info[key] = value;
+  //       }
+  //     });
 
-      List<SustainReportModel> sustain_reports = await ApiService.outSustainReports(company_name);
-      for(var sustain_report in sustain_reports) {
-        // print(sustain_report.year);
-        // print(sustain_report.download_link);
-        download_links[sustain_report.year] = sustain_report.download_link;
-        if (years[0] == sustain_report.year){
-          esg_info = {
-            'Escore': sustain_report.e_score,
-            'Sscore': sustain_report.s_score,
-            'Gscore': sustain_report.g_score,
-          };
-        }
+  //     List<SustainReportModel> sustain_reports = await ApiService.outSustainReports(company_name);
+  //     for(var sustain_report in sustain_reports) {
+  //       // print(sustain_report.year);
+  //       // print(sustain_report.download_link);
+  //       download_links[sustain_report.year] = sustain_report.download_link;
+  //       if (years[0] == sustain_report.year){
+  //         esg_info = {
+  //           'Escore': sustain_report.e_score,
+  //           'Sscore': sustain_report.s_score,
+  //           'Gscore': sustain_report.g_score,
+  //         };
+  //       }
         
-      }
-      // print(download_links);
+  //     }
+  //     // print(download_links);
       
-      List<GriUsageIndAvgScoreModel> gri_usage_ind_avg_scores = await ApiService.outGriUsageIndAvgScores(company_name);
-      for(var gri_usage_ind_avg_score in gri_usage_ind_avg_scores) {
-        if (years[0] == gri_usage_ind_avg_score.year){
-          ind_esg_info = {
-            'indEscore': gri_usage_ind_avg_score.E_score,
-            'indSscore': gri_usage_ind_avg_score.S_score,
-            'indGscore': gri_usage_ind_avg_score.G_score,
-          };
-        }
-      }
+  //     List<GriUsageIndAvgScoreModel> gri_usage_ind_avg_scores = await ApiService.outGriUsageIndAvgScores(company_name);
+  //     for(var gri_usage_ind_avg_score in gri_usage_ind_avg_scores) {
+  //       if (years[0] == gri_usage_ind_avg_score.year){
+  //         ind_esg_info = {
+  //           'indEscore': gri_usage_ind_avg_score.E_score,
+  //           'indSscore': gri_usage_ind_avg_score.S_score,
+  //           'indGscore': gri_usage_ind_avg_score.G_score,
+  //         };
+  //       }
+  //     }
 
-      Map<String, dynamic> esg_rates = {...esg_info, ...ind_esg_info};
+  //     Map<String, dynamic> esg_rates = {...esg_info, ...ind_esg_info};
 
-      List<GriInfoModel> gri_infos = await ApiService.outGriInfos(company_name);
-      for (var gri_info in gri_infos) {
-        gri_index.add(gri_info.gri_index);
-      }
+  //     List<GriInfoModel> gri_infos = await ApiService.outGriInfos(company_name);
+  //     for (var gri_info in gri_infos) {
+  //       gri_index.add(gri_info.gri_index);
+  //     }
 
-      List<ReportSentencesModel> report_sentences = await ApiService.outReportSentencess(company_name);
-      for (var report_sentence in report_sentences) {
-        if (gri_sentences.containsKey(report_sentence.gri_index)) {
-          gri_sentences[report_sentence.gri_index]!.add({
-            report_sentence.sim_rank: [
-              report_sentence.preced_sentences,
-              report_sentence.most_sentences,
-              report_sentence.back_sentences
-            ]
-          });
-        } else {
-          gri_sentences[report_sentence.gri_index] = [
-            {
-              report_sentence.sim_rank: [
-                report_sentence.preced_sentences,
-                report_sentence.most_sentences,
-                report_sentence.back_sentences
-              ]
-            }
-          ];
-        }
-      }
-      
-
-      print(gri_sentences);
-      // await ApiService.outReportTables(company_name);
+  //     List<ReportSentencesModel> report_sentences = await ApiService.outReportSentencess(company_name);
+  //     for (var report_sentence in report_sentences) {
+  //       if (gri_sentences.containsKey(report_sentence.gri_index)) {
+  //         gri_sentences[report_sentence.gri_index]!.add({
+  //           report_sentence.sim_rank: [
+  //             report_sentence.preced_sentences,
+  //             report_sentence.most_sentences,
+  //             report_sentence.back_sentences
+  //           ]
+  //         });
+  //       } else {
+  //         gri_sentences[report_sentence.gri_index] = [
+  //           {
+  //             report_sentence.sim_rank: [
+  //               report_sentence.preced_sentences,
+  //               report_sentence.most_sentences,
+  //               report_sentence.back_sentences
+  //             ]
+  //           }
+  //         ];
+  //       }
+  //     }
       
 
-      setState(() {
-        detail_info_years = years;
-        detail_prism_info = prism_info;
-        detail_association_info = association_info;
-        detail_download_links = download_links;
-        detail_esg_info = esg_rates;
-        detail_gri_index = gri_index;
-        detail_gri_sentences = gri_sentences;
-        print(detail_info_years);
-        print(detail_prism_info);
-        print(detail_association_info);
-        print(detail_download_links);
-        print(detail_esg_info);
-        print("---------------");
-      });
-    } catch (e) {
-      print('Error: $e');
-    }
-  }
+  //     print(gri_sentences);
+  //     // await ApiService.outReportTables(company_name);
+      
+
+  //     setState(() {
+  //       detail_info_years = years;
+  //       detail_prism_info = prism_info;
+  //       detail_association_info = association_info;
+  //       detail_download_links = download_links;
+  //       detail_esg_info = esg_rates;
+  //       detail_gri_index = gri_index;
+  //       detail_gri_sentences = gri_sentences;
+  //       print(detail_info_years);
+  //       print(detail_prism_info);
+  //       print(detail_association_info);
+  //       print(detail_download_links);
+  //       print(detail_esg_info);
+  //       print("---------------");
+  //     });
+  //   } catch (e) {
+  //     print('Error: $e');
+  //   }
+  // }
 
   late List<Map<String, dynamic>> fetch_comparing_datas = [];
   void fetchComparingData(List<Map<String, int>> company_and_year) async {
@@ -1555,20 +1555,20 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                         ),
                         DataCell(
                           IconButton(
-                            onPressed: () async {
-                              fetchCompanyDetailData(one_row_list[index].name);
+                            onPressed: () { // async {
+                              // fetchCompanyDetailData(one_row_list[index].name);
 
-                              await Future.delayed(Duration(seconds: 5)); // 5초 동안 지연: 데이터 불러오는 시간
+                              // await Future.delayed(Duration(seconds: 5)); // 5초 동안 지연: 데이터 불러오는 시간
 
                               print(one_row_list[index].name);
                               print(one_row_list[index].industry);
-                              print(detail_info_years);
-                              print(detail_download_links);
-                              print(detail_prism_info);
-                              print(detail_association_info);
-                              print(detail_esg_info);
-                              print(detail_gri_index);
-                              print(detail_gri_sentences);
+                              // print(detail_info_years);
+                              // print(detail_download_links);
+                              // print(detail_prism_info);
+                              // print(detail_association_info);
+                              // print(detail_esg_info);
+                              // print(detail_gri_index);
+                              // print(detail_gri_sentences);
                               print("---------in");
 
 
@@ -1579,13 +1579,13 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                                           SecondPage(
                                             one_row_list[index].name,
                                             one_row_list[index].industry,
-                                            detail_info_years,
-                                            detail_prism_info,
-                                            detail_association_info,
-                                            detail_download_links,
-                                            detail_esg_info,
-                                            detail_gri_index,
-                                            detail_gri_sentences
+                                            // detail_info_years,
+                                            // detail_prism_info,
+                                            // detail_association_info,
+                                            // detail_download_links,
+                                            // detail_esg_info,
+                                            // detail_gri_index,
+                                            // detail_gri_sentences
                                             )));
                             },
                             icon: const Icon(Icons.arrow_right),
