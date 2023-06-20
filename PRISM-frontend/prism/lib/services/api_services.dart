@@ -17,6 +17,10 @@ import '../models/kcgs_score_model.dart';
 import '../models/one_row_model.dart';
 import '../models/report_sentences_model.dart';
 
+class PrismScore {
+  
+}
+
 
 class ApiService {
   static const String base_url = 'http://127.0.0.1:8000';
@@ -26,11 +30,11 @@ class ApiService {
   static Future<List<OneRowModel>> outOnePage(int page, String filter_score, List<String> filter_industries, String filter_name) async {
     // final url = Uri.parse('$base_url/rank/page/');
     
-    final requestData = {
-      'filter_score': filter_score,
-      'filter_industries': filter_industries,
-      'filter_name': filter_name,
-    };
+    // final requestData = {
+    //   'filter_score': filter_score,
+    //   'filter_industries': filter_industries,
+    //   'filter_name': filter_name,
+    // };
     
     // final response = await http.post(url, headers: {"Content-Type": "application/json"}, body: jsonEncode(requestData));
 
@@ -45,11 +49,13 @@ class ApiService {
     //   return rows_instances;
     // }
     
-    final jsonString = await rootBundle.loadString("../../assets/dummyJson/one_row.json");
+    final jsonString = await rootBundle.loadString("../../assets/dummyJSON/one_row.json");
+    // final jsonString = await Future.wait([rootBundle.loadString("../../assets/dummyJSON/one_row.json"), rootBundle.loadString("../../assets/dummyJSON/prism_score.json"), rootBundle.loadString("../../assets/dummyJSON/prism_ind_avg_score.json")]);
 
     List<OneRowModel> rows_instances = [];
 
     final jsonData = jsonDecode(jsonString);
+    // final jsonData = jsonDecode(jsonString[0]);
     final List<Map<String, dynamic>> rows = List<Map<String, dynamic>>.from(jsonData);
     
     for (var row in rows) {
@@ -146,11 +152,13 @@ class ApiService {
     // // 에러 처리
     // throw Exception('Failed to fetch company Prism scores');
 
-    final jsonString = await rootBundle.loadString("../../assets/dummyJson/prism_score.json");
+    final jsonString = await rootBundle.loadString("../../assets/dummyJSON/prism_score.json");
+    // final jsonString = await Future.wait([rootBundle.loadString("../../assets/dummyJSON/one_row.json"), rootBundle.loadString("../../assets/dummyJSON/prism_score.json"), rootBundle.loadString("../../assets/dummyJSON/prism_ind_avg_score.json")]);
 
     List<PrismScoreModel> prism_scores_instances = [];
 
     final jsonData = jsonDecode(jsonString);
+    // final jsonData = jsonDecode(jsonString[1]);
     final List<Map<String, dynamic>> prism_scores = List<Map<String, dynamic>>.from(jsonData);
 
     for (var prism_score in prism_scores) {
@@ -182,7 +190,7 @@ class ApiService {
     // // 에러 처리
     // throw Exception('Failed to fetch industry Prism scores');
 
-    final jsonString = await rootBundle.loadString("../../assets/dummyJson/prism_ind_avg_score.json");
+    final jsonString = await rootBundle.loadString("../../assets/dummyJSON/prism_ind_avg_score.json");
 
     List<PrismIndAvgScoreModel> prism_ind_avg_scores_instances = [];
 

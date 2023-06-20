@@ -447,21 +447,29 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     }
   }
 
+  // bool ok = false;
   // 세부페이지에서 사용할 해당 기업의 지속가능경영보고서 발행 연도들 - 상단바 / PRISM스코어 탭 / 평가기관등급 탭에 사용
   List<int> detail_info_years = [];
   // 세부페이지 - PRISM스코어 탭에서 사용할 정보
   Map<int, Map<String, dynamic>> detail_prism_info = {};
+
+  List<int> years = [];
+  Map<int, Map<String, dynamic>> b_prism_info = {};
+  Map<int, Map<String, dynamic>> i_prism_info = {};
   void fetchCompanyDetailData(String company_name) async {
     try {
-      List<int> years = [];
-      Map<int, Map<String, dynamic>> prism_info = {};
+      years = [];
+      b_prism_info = {};
+      i_prism_info = {};
+
       List<PrismScoreModel> prism_scores = await ApiService.outPrismScores(company_name);
       for (var prism_score in prism_scores) {
         years.add(prism_score.evalYear);
-        prism_info[prism_score.evalYear] = {
+        b_prism_info[prism_score.evalYear] = {
           'overallScore': prism_score.overallScore,
           'EScore': prism_score.EScore,
           'SScore': prism_score.SScore,
+          'GScore': prism_score.GScore,
           'WOverallScore': prism_score.WOverallScore,
           'WEScore': prism_score.WEScore,
           'WSScore': prism_score.WSScore,
@@ -476,10 +484,11 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           'indGRank': prism_score.indGRank
         };
       }
+      years.sort((a, b) => b.compareTo(a));
       
       List<PrismIndAvgScoreModel> prism_ind_avg_scores = await ApiService.outPrismIndAvgScores(company_name);
       for (var prism_ind_avg_score in prism_ind_avg_scores) {
-        prism_info[prism_ind_avg_score.year] = {
+        i_prism_info[prism_ind_avg_score.year] = {
           'indOverallScore': prism_ind_avg_score.overallScore,
           'indEScore': prism_ind_avg_score.EScore,
           'indSScore': prism_ind_avg_score.SScore,
@@ -491,10 +500,26 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         };
       }
       print("----------------------------------------");
-      print(detail_info_years);
-      print(detail_prism_info);
+      print(years);
+      print(b_prism_info);
+      print(i_prism_info);
       print("----------------------------------------");
-    
+
+      Map<int, Map<String, dynamic>> prism_info = {};
+      b_prism_info.forEach((key, value) {
+        prism_info[key] = value;
+      });
+      i_prism_info.forEach((key, value) {
+        if (prism_info.containsKey(key)) {
+          if (prism_info[key] != null) {
+            prism_info[key]!.addAll(value);
+          } else {
+            prism_info[key] = {}..addAll(value);
+          }
+        } else {
+          prism_info[key] = value;
+        }
+      });
 
       // await ApiService.outKcgsScores(company_name);
       // await ApiService.outEsglabScores(company_name);
@@ -509,6 +534,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       setState(() {
         detail_info_years = years;
         detail_prism_info = prism_info;
+        print(detail_info_years);
+        print(detail_prism_info);
+        print("---------------");
       });
     } catch (e) {
       print('Error: $e');
@@ -1482,6 +1510,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                           IconButton(
                             onPressed: () {
                               fetchCompanyDetailData(one_row_list[index].name);
+                              // while (ok == false) {}
                               print(detail_info_years);
                               Navigator.push(
                                   context,

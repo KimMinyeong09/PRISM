@@ -84,32 +84,21 @@ class _SecondPageState extends State<SecondPage> with TickerProviderStateMixin {
                   Text(company_industry),
                   const SizedBox(width: 20),
                   // 보고서 다운 버튼
-                  Column(
-                    children: [
-                      IconButton(
-                        onPressed: (() {}),
-                        icon: const Icon(Icons.book),
+                  Row(
+                    children: List.generate(
+                      detail_info_years.length,
+                      (index) => Column(
+                        children: [
+                          IconButton(
+                            onPressed: () {
+                              // 원하는 동작 수행
+                            },
+                            icon: const Icon(Icons.book),
+                          ),
+                          Text(detail_info_years[index].toString()),
+                        ],
                       ),
-                      Text(detail_info_years[0].toString()),
-                    ],
-                  ),
-                  Column(
-                    children: [
-                      IconButton(
-                        onPressed: (() {}),
-                        icon: const Icon(Icons.book),
-                      ),
-                      const Text("2021"),
-                    ],
-                  ),
-                  Column(
-                    children: [
-                      IconButton(
-                        onPressed: (() {}),
-                        icon: const Icon(Icons.book),
-                      ),
-                      const Text("2022"),
-                    ],
+                    ),
                   ),
                 ],
               ),
@@ -147,19 +136,13 @@ class _SecondPageState extends State<SecondPage> with TickerProviderStateMixin {
   
   // PRISM 스코어 탭
   Widget _buildDetailScoreTab() {
-    List<int> years = [2022, 2021, 2020];
+    // List<int> years = [2022, 2021, 2020];
+    List<int> years = detail_info_years;
 
     return SingleChildScrollView(
       child: Column(
         children: [
-          // const Text(
-          //   "스코어 추이 그래프",
-          //   style: TextStyle(
-          //     fontSize: 20,
-          //     fontWeight: FontWeight.bold,
-          //   ),
-          // ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 20),
           // bar 그래프
           // - 그래프 색상 정보
           Row(
@@ -205,10 +188,73 @@ class _SecondPageState extends State<SecondPage> with TickerProviderStateMixin {
     List<Map<String, dynamic>> dataPrismALL = [];
     for (int i = 0; i < years.length; i++) {
       Map<String, dynamic> item = {
-        'domain': years[i],
-        'measure': years[i] * years[i],
+        'domain': years[i].toString(),
+        'measure': detail_prism_info?[years[i]]?['overallScore'] != null ? detail_prism_info?[years[i]]?['overallScore']: 0,
       };
       dataPrismALL.add(item);
+    }
+
+    List<Map<String, dynamic>> dataPrismE = [];
+    for (int i = 0; i < years.length; i++) {
+      Map<String, dynamic> item = {
+        'domain': years[i].toString(),
+        'measure': detail_prism_info?[years[i]]?['EScore'] != null ? detail_prism_info?[years[i]]?['EScore']: 0,
+      };
+      dataPrismE.add(item);
+    }
+
+    List<Map<String, dynamic>> dataPrismS = [];
+    for (int i = 0; i < years.length; i++) {
+      Map<String, dynamic> item = {
+        'domain': years[i].toString(),
+        'measure': detail_prism_info?[years[i]]?['SScore'] != null ? detail_prism_info?[years[i]]?['SScore']: 0,
+      };
+      dataPrismS.add(item);
+    }
+
+    List<Map<String, dynamic>> dataPrismG = [];
+    for (int i = 0; i < years.length; i++) {
+      Map<String, dynamic> item = {
+        'domain': years[i].toString(),
+        'measure': detail_prism_info?[years[i]]?['GScore'] != null ? detail_prism_info?[years[i]]?['GScore']: 0,
+      };
+      dataPrismG.add(item);
+    }
+
+    List<Map<String, dynamic>> dataIndPrismALL = [];
+    for (int i = 0; i < years.length; i++) {
+      Map<String, dynamic> item = {
+        'domain': years[i].toString(),
+        'measure': detail_prism_info?[years[i]]?['indOverallScore'] != null ? detail_prism_info?[years[i]]?['indOverallScore']: 0,
+      };
+      dataIndPrismALL.add(item);
+    }
+
+    List<Map<String, dynamic>> dataIndPrismE = [];
+    for (int i = 0; i < years.length; i++) {
+      Map<String, dynamic> item = {
+        'domain': years[i].toString(),
+        'measure': detail_prism_info?[years[i]]?['indEScore'] != null ? detail_prism_info?[years[i]]?['indEScore']: 0,
+      };
+      dataIndPrismE.add(item);
+    }
+
+    List<Map<String, dynamic>> dataIndPrismS = [];
+    for (int i = 0; i < years.length; i++) {
+      Map<String, dynamic> item = {
+        'domain': years[i].toString(),
+        'measure': detail_prism_info?[years[i]]?['indSScore'] != null ? detail_prism_info?[years[i]]?['indSScore']: 0,
+      };
+      dataIndPrismS.add(item);
+    }
+
+    List<Map<String, dynamic>> dataIndPrismG = [];
+    for (int i = 0; i < years.length; i++) {
+      Map<String, dynamic> item = {
+        'domain': years[i].toString(),
+        'measure': detail_prism_info?[years[i]]?['indGScore'] != null ? detail_prism_info?[years[i]]?['indGScore']: 0,
+      };
+      dataIndPrismG.add(item);
     }
 
     return Padding(
@@ -222,67 +268,35 @@ class _SecondPageState extends State<SecondPage> with TickerProviderStateMixin {
                   data: [
                     {
                       'id': '${company_name} - prismALL',
-                      'data': const [
-                        {'domain': '2020', 'measure': 32},
-                        {'domain': '2021', 'measure': 43},
-                        {'domain': '2022', 'measure': 29},
-                      ],
+                      'data': dataPrismALL,
                     },
                     {
                       'id': '${company_industry} - prismALL',
-                      'data': const [
-                        {'domain': '2020', 'measure': 57},
-                        {'domain': '2021', 'measure': 58},
-                        {'domain': '2022', 'measure': 52},
-                      ],
+                      'data': dataIndPrismALL,
                     },
                     {
                       'id': '${company_name} - prismE',
-                      'data': const [
-                        {'domain': '2020', 'measure': 24},
-                        {'domain': '2021', 'measure': 42},
-                        {'domain': '2022', 'measure': 9},
-                      ],
+                      'data': dataPrismE,
                     },
                     {
                       'id': '${company_industry} - prismE',
-                      'data': const [
-                        {'domain': '2020', 'measure': 87},
-                        {'domain': '2021', 'measure': 88},
-                        {'domain': '2022', 'measure': 82},
-                      ],
+                      'data': dataIndPrismE,
                     },
                     {
                       'id': '${company_name} - prismS',
-                      'data': const [
-                        {'domain': '2020', 'measure': 17},
-                        {'domain': '2021', 'measure': 28},
-                        {'domain': '2022', 'measure': 12},
-                      ],
+                      'data': dataPrismS,
                     },
                     {
                       'id': '${company_industry} - prismS',
-                      'data': const [
-                        {'domain': '2020', 'measure': 7},
-                        {'domain': '2021', 'measure': 8},
-                        {'domain': '2022', 'measure': 2},
-                      ],
+                      'data': dataIndPrismS,
                     },
                     {
                       'id': '${company_name} - prismG',
-                      'data': const [
-                        {'domain': '2020', 'measure': 17},
-                        {'domain': '2021', 'measure': 28},
-                        {'domain': '2022', 'measure': 12},
-                      ],
+                      'data': dataPrismG,
                     },
                     {
                       'id': '${company_industry} - prismG',
-                      'data': const [
-                        {'domain': '2020', 'measure': 17},
-                        {'domain': '2021', 'measure': 28},
-                        {'domain': '2022', 'measure': 12},
-                      ],
+                      'data': dataIndPrismG,
                     },
                   ],
                   minimumPaddingBetweenLabel: 1,
@@ -339,10 +353,26 @@ class _SecondPageState extends State<SecondPage> with TickerProviderStateMixin {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              Expanded(child: _buildDChartGauge("prism-ALL")),
-              Expanded(child: _buildDChartGauge("prism-E")),
-              Expanded(child: _buildDChartGauge("prism-S")),
-              Expanded(child: _buildDChartGauge("prism-G")),
+              Expanded(child: _buildDChartGauge("prism-ALL",
+              detail_prism_info[year]?['overallScore'],
+              detail_prism_info[year]?['indOverallScore'],
+              detail_prism_info[year]?['overallRank'],
+              detail_prism_info[year]?['indOverallRank'])),
+              Expanded(child: _buildDChartGauge("prism-E",
+              detail_prism_info[year]?['EScore'],
+              detail_prism_info[year]?['indEScore'],
+              detail_prism_info[year]?['Erank'],
+              detail_prism_info[year]?['indERank'])),
+              Expanded(child: _buildDChartGauge("prism-S",
+              detail_prism_info[year]?['SScore'],
+              detail_prism_info[year]?['indSScore'],
+              detail_prism_info[year]?['Srank'],
+              detail_prism_info[year]?['indSRank'])),
+              Expanded(child: _buildDChartGauge("prism-G",
+              detail_prism_info[year]?['GScore'],
+              detail_prism_info[year]?['indGScore'],
+              detail_prism_info[year]?['Grank'],
+              detail_prism_info[year]?['indGRank'])),
             ],
           ),
         ],
@@ -596,9 +626,9 @@ class _SecondPageState extends State<SecondPage> with TickerProviderStateMixin {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        Expanded(child: _buildDChartGauge("E 비율")),
-        Expanded(child: _buildDChartGauge("S 비율")),
-        Expanded(child: _buildDChartGauge("G 비율")),
+        Expanded(child: _buildDChartGauge("E 비율", 0, 0, 0, 0)),
+        Expanded(child: _buildDChartGauge("S 비율", 0, 0, 0, 0)),
+        Expanded(child: _buildDChartGauge("G 비율", 0, 0, 0, 0)),
       ],
     );
   }
@@ -801,7 +831,12 @@ class _SecondPageState extends State<SecondPage> with TickerProviderStateMixin {
   }
 
   // 도넛 차트 생성
-  Widget _buildDChartGauge(String title) {
+  Widget _buildDChartGauge(String title, int? company_score, int? industry_score, int? whole_rank, int? industry_rank) {
+    if (company_score == null) company_score = 0;
+    if (industry_score == null) industry_score = 0;
+    if (whole_rank == null) whole_rank = 0;
+    if (industry_rank == null) industry_rank = 0;
+
     return Expanded(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -812,8 +847,8 @@ class _SecondPageState extends State<SecondPage> with TickerProviderStateMixin {
               series: <CircularSeries>[
                 RadialBarSeries<ChartData, String>(
                   dataSource: <ChartData>[
-                    ChartData(company_name, 40),
-                    ChartData(company_industry.toString(), 65),
+                    ChartData(company_name, company_score),
+                    ChartData(company_industry, industry_score),
                   ],
                   xValueMapper: (ChartData data, _) => data.category,
                   yValueMapper: (ChartData data, _) => data.value,
@@ -825,10 +860,10 @@ class _SecondPageState extends State<SecondPage> with TickerProviderStateMixin {
               ],
             ),
             // 각 prism 스코어 값
-            const Text("40", style: TextStyle(color: Color(0xff101828), fontSize: 30, fontWeight: FontWeight.bold)),
-            const Text("업계 평균 65", style: TextStyle(color: Color(0xff667085))),
-            const Text("업계 152위", style: TextStyle(color: Color(0xff667085))),
-            const Text("전체 152위", style: TextStyle(color: Color(0xff667085))),
+            Text("$company_score", style: const TextStyle(color: Color(0xff101828), fontSize: 30, fontWeight: FontWeight.bold)),
+            Text("업계 평균 $industry_score", style: const TextStyle(color: Color(0xff667085))),
+            Text("업계 내 $industry_rank위", style: const TextStyle(color: Color(0xff667085))),
+            Text("전체 $whole_rank위", style: const TextStyle(color: Color(0xff667085))),
           ],
         ),
       ),
