@@ -205,95 +205,143 @@ class ApiService {
   }
   //kcgs스코어, 존재하는 년도 개수만큼
   static Future<List<KcgsScoreModel>> outKcgsScores(String company) async {
-    final url = Uri.parse('$base_url/rank/oneCompany/');
+    // final url = Uri.parse('$base_url/rank/oneCompany/');
   
-    final requestData = {
-      'company': company,
-    };
+    // final requestData = {
+    //   'company': company,
+    // };
     
-    final response = await http.post(url, body: requestData); 
+    // final response = await http.post(url, body: requestData); 
 
-    List<KcgsScoreModel> kcgs_scores = [];
+    // List<KcgsScoreModel> kcgs_scores = [];
 
-    if (response.statusCode == 200) {
-      final scores = jsonDecode(response.body);
-      for (var score in scores) {
-        final instance = KcgsScoreModel.fromJson(score);
-        kcgs_scores.add(instance);
-      }
-      return kcgs_scores;
+    // if (response.statusCode == 200) {
+    //   final scores = jsonDecode(response.body);
+    //   for (var score in scores) {
+    //     final instance = KcgsScoreModel.fromJson(score);
+    //     kcgs_scores.add(instance);
+    //   }
+    //   return kcgs_scores;
+    // }
+    // // 에러 처리
+    // throw Exception('Failed to fetch company KCGS scores');
+    final jsonString = await rootBundle.loadString("../../assets/dummyJSON/kcgs_score.json");
+
+    List<KcgsScoreModel> kcgs_scores_instances = [];
+
+    final jsonData = jsonDecode(jsonString);
+    final List<Map<String, dynamic>> kcgs_scores = List<Map<String, dynamic>>.from(jsonData);
+
+    for (var kcgs_score in kcgs_scores) {
+      final instance = KcgsScoreModel.fromJson(kcgs_score);
+      kcgs_scores_instances.add(instance);
     }
-    // 에러 처리
-    throw Exception('Failed to fetch company KCGS scores');
+    return kcgs_scores_instances;
   }
   //esg연구소 스코어, 존재하는 년도 개수만큼
   static Future<List<EsglabScoreModel>> outEsglabScores(String company) async {
-    final url = Uri.parse('$base_url/rank/oneCompany/');
+    // final url = Uri.parse('$base_url/rank/oneCompany/');
   
-    final requestData = {
-      'company': company,
-    };
+    // final requestData = {
+    //   'company': company,
+    // };
     
-    final response = await http.post(url, body: requestData); 
+    // final response = await http.post(url, body: requestData); 
 
-    List<EsglabScoreModel> esglab_scores = [];
+    // List<EsglabScoreModel> esglab_scores = [];
 
-    if (response.statusCode == 200) {
-      final scores = jsonDecode(response.body);
-      for (var score in scores) {
-        final instance = EsglabScoreModel.fromJson(score);
-        esglab_scores.add(instance);
-      }
-      return esglab_scores;
+    // if (response.statusCode == 200) {
+    //   final scores = jsonDecode(response.body);
+    //   for (var score in scores) {
+    //     final instance = EsglabScoreModel.fromJson(score);
+    //     esglab_scores.add(instance);
+    //   }
+    //   return esglab_scores;
+    // }
+    // // 에러 처리
+    // throw Exception('Failed to fetch company ESGlab scores');
+    final jsonString = await rootBundle.loadString("../../assets/dummyJSON/esglab_score.json");
+
+    List<EsglabScoreModel> esglab_scores_instances = [];
+
+    final jsonData = jsonDecode(jsonString);
+    final List<Map<String, dynamic>> esglab_scores = List<Map<String, dynamic>>.from(jsonData);
+
+    for (var esglab_score in esglab_scores) {
+      final instance = EsglabScoreModel.fromJson(esglab_score);
+      esglab_scores_instances.add(instance);
     }
-    // 에러 처리
-    throw Exception('Failed to fetch company ESGlab scores');
+    return esglab_scores_instances;
   }
   //kcgs 평균스코어, 존재하는 년도 개수만큼
   static Future<List<KcgsIndAvgScoreModel>> outKcgsIndAvgScores(String company) async {
-    final url = Uri.parse('$base_url/rank/oneCompany/');
+    // final url = Uri.parse('$base_url/rank/oneCompany/');
   
-    final requestData = {
-      'company': company,
-    };
+    // final requestData = {
+    //   'company': company,
+    // };
     
-    final response = await http.post(url, body: requestData); 
+    // final response = await http.post(url, body: requestData); 
 
-    List<KcgsIndAvgScoreModel> kcgs_ind_avg_scores = [];
+    // List<KcgsIndAvgScoreModel> kcgs_ind_avg_scores = [];
 
-    if (response.statusCode == 200) {
-      final scores = jsonDecode(response.body);
-      for (var score in scores) {
-        final instance = KcgsIndAvgScoreModel.fromJson(score);
-        kcgs_ind_avg_scores.add(instance);
-      }
-      return kcgs_ind_avg_scores;
+    // if (response.statusCode == 200) {
+    //   final scores = jsonDecode(response.body);
+    //   for (var score in scores) {
+    //     final instance = KcgsIndAvgScoreModel.fromJson(score);
+    //     kcgs_ind_avg_scores.add(instance);
+    //   }
+    //   return kcgs_ind_avg_scores;
+    // }
+    // // 에러 처리
+    // throw Exception('Failed to fetch industry KCGS average scores');
+    final jsonString = await rootBundle.loadString("../../assets/dummyJSON/kcgs_ind_avg_score.json");
+
+    List<KcgsIndAvgScoreModel> kcgs_ind_avg_scores_instances = [];
+
+    final jsonData = jsonDecode(jsonString);
+    final List<Map<String, dynamic>> kcgs_ind_avg_scores = List<Map<String, dynamic>>.from(jsonData);
+
+    for (var kcgs_id_avg_scores in kcgs_ind_avg_scores) {
+      final instance = KcgsIndAvgScoreModel.fromJson(kcgs_id_avg_scores);
+      kcgs_ind_avg_scores_instances.add(instance);
     }
-    // 에러 처리
-    throw Exception('Failed to fetch industry KCGS average scores');
+    return kcgs_ind_avg_scores_instances;
   }
   //esg연구소 평균 스코어, 존재하는 년도 개수만큼
   static Future<List<EsglabIndAvgScoreModel>> outEsglabIndAvgScores(String company) async {
-    final url = Uri.parse('$base_url/rank/oneCompany/');
+    // final url = Uri.parse('$base_url/rank/oneCompany/');
   
-    final requestData = {
-      'company': company,
-    };
+    // final requestData = {
+    //   'company': company,
+    // };
     
-    final response = await http.post(url, body: requestData); 
+    // final response = await http.post(url, body: requestData); 
 
-    List<EsglabIndAvgScoreModel> esglab_scores = [];
+    // List<EsglabIndAvgScoreModel> esglab_scores = [];
 
-    if (response.statusCode == 200) {
-      final scores = jsonDecode(response.body);
-      for (var score in scores) {
-        final instance = EsglabIndAvgScoreModel.fromJson(score);
-        esglab_scores.add(instance);
-      }
-      return esglab_scores;
+    // if (response.statusCode == 200) {
+    //   final scores = jsonDecode(response.body);
+    //   for (var score in scores) {
+    //     final instance = EsglabIndAvgScoreModel.fromJson(score);
+    //     esglab_scores.add(instance);
+    //   }
+    //   return esglab_scores;
+    // }
+    // // 에러 처리
+    // throw Exception('Failed to fetch industry ESGlab average scores');
+    final jsonString = await rootBundle.loadString("../../assets/dummyJSON/esglab_ind_avg_score.json");
+
+    List<EsglabIndAvgScoreModel> esglab_ind_avg_scores_instances = [];
+
+    final jsonData = jsonDecode(jsonString);
+    final List<Map<String, dynamic>> esglab_ind_avg_scores = List<Map<String, dynamic>>.from(jsonData);
+
+    for (var esglab_ind_avg_score in esglab_ind_avg_scores) {
+      final instance = EsglabIndAvgScoreModel.fromJson(esglab_ind_avg_score);
+      esglab_ind_avg_scores_instances.add(instance);
     }
-    // 에러 처리
-    throw Exception('Failed to fetch industry ESGlab average scores');
+    return esglab_ind_avg_scores_instances;
   }
   // 클릭한 회사 보고서 테이블, 존재하는 년도 개수만큼
   static Future<List<SustainReportModel>> outSustainReports(String company) async {

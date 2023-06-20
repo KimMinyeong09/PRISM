@@ -3,7 +3,7 @@ class EsglabScoreModel {
   final int esglabScoreId, evalYear, companyId, esglabIndAvgId;
 
   EsglabScoreModel.fromJson(Map<String, dynamic> json)
-      : esglabScoreId = json['Esglab_scroe_id'],
+      : esglabScoreId = json['Esglab_score_id'],
         evalYear = json['Eval_year'],
         overallScore = json['Overall_score'],
         EScore = json['E_score'],

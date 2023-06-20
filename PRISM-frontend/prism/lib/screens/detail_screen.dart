@@ -9,9 +9,9 @@ import 'home_screen.dart';
 class SecondPage extends StatefulWidget {
   final String company_name, company_industry;
   final List<int> detail_info_years;
-  final Map<int, Map<String, dynamic>> detail_prism_info;
+  final Map<int, Map<String, dynamic>> detail_prism_info, detail_association_info;
 
-  const SecondPage(this.company_name, this.company_industry, this.detail_info_years, this.detail_prism_info, {Key? key}) : super(key: key);
+  const SecondPage(this.company_name, this.company_industry, this.detail_info_years, this.detail_prism_info, this.detail_association_info, {Key? key}) : super(key: key);
 
   @override
   _SecondPageState createState() => _SecondPageState();
@@ -20,7 +20,7 @@ class SecondPage extends StatefulWidget {
 class _SecondPageState extends State<SecondPage> with TickerProviderStateMixin {
   late String company_name, company_industry;
   late List<int> detail_info_years;
-  late Map<int, Map<String, dynamic>> detail_prism_info;
+  late Map<int, Map<String, dynamic>> detail_prism_info, detail_association_info;
 
   late TabController _scoreTabController;
 
@@ -32,6 +32,7 @@ class _SecondPageState extends State<SecondPage> with TickerProviderStateMixin {
     company_industry = widget.company_industry;
     detail_info_years = widget.detail_info_years;
     detail_prism_info = widget.detail_prism_info;
+    detail_association_info = widget.detail_association_info;
 
     _scoreTabController = TabController(length: 3, vsync: this);
   }
@@ -45,8 +46,8 @@ class _SecondPageState extends State<SecondPage> with TickerProviderStateMixin {
   // API- 회사 정보 저장 (하드코딩)
   late List<PrismScore> prism_scores;
   late List<PrismIndAvgScore> prism_ind_avg_scores;
-  late List<KcgsScoreModel> kcgs_scores;
-  late List<EsglabScoreModel> esglab_scores;
+  late List<KcgsScore> kcgs_scores;
+  late List<EsglabScore> esglab_scores;
   late List<SustainReportModel> sustain_reports;
   late List<ReportSentencesModel> gri_infos;
   late List<ReportTableModel> report_tables;
@@ -383,18 +384,86 @@ class _SecondPageState extends State<SecondPage> with TickerProviderStateMixin {
 
   // 평가기관 등급 탭
   Widget _buildRatingTab() {
-    List<int> years = [2022, 2021, 2020];
+    // List<int> years = [2022, 2021, 2020];
+    List<int> years = detail_info_years;
+
+    detail_association_info;
+
+    List<Map<String, dynamic>> dataKcgs = [];
+    for (int i = 0; i < years.length; i++) {
+      var score = detail_association_info?[years[i]]?['kcgsOverallScore'];
+      Map<String, dynamic> item = {
+        'domain': years[i].toString(),
+        'measure': score != null
+                  ? score == 'S' ? 100
+                  : score == 'A+' ? 90
+                  : score == 'A' ? 80
+                  : score == 'B+' ? 70
+                  : score == 'B' ? 60
+                  : score == 'C' ? 50
+                  : 40
+                  : null, 
+      };
+      dataKcgs.add(item);
+    }
+
+    List<Map<String, dynamic>> dataEsglab = [];
+    for (int i = 0; i < years.length; i++) {
+      var score = detail_association_info?[years[i]]?['esglabOverallScore'];
+      Map<String, dynamic> item = {
+        'domain': years[i].toString(),
+        'measure': score != null
+                  ? score == 'S' ? 100
+                  : score == 'A+' ? 90
+                  : score == 'A' ? 80
+                  : score == 'B+' ? 70
+                  : score == 'B' ? 60
+                  : score == 'C' ? 50
+                  : 40
+                  : null, 
+      };
+      dataEsglab.add(item);
+    }
+
+    List<Map<String, dynamic>> dataIndKcgs = [];
+    for (int i = 0; i < years.length; i++) {
+      var score = detail_association_info?[years[i]]?['kcsgAvgOverallScore'];
+      Map<String, dynamic> item = {
+        'domain': years[i].toString(),
+        'measure': score != null
+                  ? score == 'S' ? 100
+                  : score == 'A+' ? 90
+                  : score == 'A' ? 80
+                  : score == 'B+' ? 70
+                  : score == 'B' ? 60
+                  : score == 'C' ? 50
+                  : 40
+                  : null, 
+      };
+      dataIndKcgs.add(item);
+    }
+
+    List<Map<String, dynamic>> dataIndEsglab = [];
+    for (int i = 0; i < years.length; i++) {
+      var score = detail_association_info?[years[i]]?['esglabAvgOverallScore'];
+      Map<String, dynamic> item = {
+        'domain': years[i].toString(),
+        'measure': score != null
+                  ? score == 'S' ? 100
+                  : score == 'A+' ? 90
+                  : score == 'A' ? 80
+                  : score == 'B+' ? 70
+                  : score == 'B' ? 60
+                  : score == 'C' ? 50
+                  : 40
+                  : null, 
+      };
+      dataIndEsglab.add(item);
+    }
 
     return SingleChildScrollView(
       child: Column(
         children: [
-          // const Text(
-          //   "스코어 추이 그래프",
-          //   style: TextStyle(
-          //     fontSize: 20,
-          //     fontWeight: FontWeight.bold,
-          //   ),
-          // ),
           const SizedBox(height: 16,),
           // bar 그래프
           // - 그래프 색상 정보
@@ -424,35 +493,19 @@ class _SecondPageState extends State<SecondPage> with TickerProviderStateMixin {
                     data: [
                       {
                         'id': '${company_name} - KCGS',
-                        'data': const [
-                          {'domain': '2020', 'measure': 100},
-                          {'domain': '2021', 'measure': 90},
-                          {'domain': '2022', 'measure': 90},
-                        ],
+                        'data': dataKcgs,
                       },
                       {
                         'id': '${company_industry} - KCGS',
-                        'data': const [
-                          {'domain': '2020', 'measure': 50},
-                          {'domain': '2021', 'measure': 60},
-                          {'domain': '2022', 'measure': 70},
-                        ],
+                        'data': dataIndKcgs,
                       },
                       {
                         'id': '${company_name} - 한국ESG연구소',
-                        'data': const [
-                          {'domain': '2020', 'measure': 80},
-                          {'domain': '2021', 'measure': 90},
-                          {'domain': '2022', 'measure': 70},
-                        ],
+                        'data': dataEsglab,
                       },
                       {
                         'id': '${company_industry} - 한국ESG연구소',
-                        'data': const [
-                          {'domain': '2020', 'measure': 50},
-                          {'domain': '2021', 'measure': 60},
-                          {'domain': '2022', 'measure': 70},
-                        ],
+                        'data': dataIndEsglab,
                       },
                     ],
                     minimumPaddingBetweenLabel: 1,
@@ -512,6 +565,9 @@ class _SecondPageState extends State<SecondPage> with TickerProviderStateMixin {
 
   // - 표 생성
   Widget _rateAssociation(int year) {
+
+    detail_association_info[year]?['kcgsOverallScore'];
+
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Column(
@@ -549,23 +605,23 @@ class _SecondPageState extends State<SecondPage> with TickerProviderStateMixin {
                 ),
               ),
             ],
-            rows: const <DataRow>[
+            rows: <DataRow>[
               DataRow(
                 cells: <DataCell>[
-                  DataCell(Text('KCGS')),
-                  DataCell(Text('A+ / B+')),
-                  DataCell(Text('A+ / B+')),
-                  DataCell(Text('A / B')),
-                  DataCell(Text('A+ / B+')),
+                  const DataCell(Text('KCGS')),
+                  DataCell(Text('${detail_association_info[year]?['kcgsOverallScore']} / ${detail_association_info[year]?['kcsgAvgOverallScore']}')),
+                  DataCell(Text('${detail_association_info[year]?['kcgsEScore']} / ${detail_association_info[year]?['kcsgAvgEScore']}')),
+                  DataCell(Text('${detail_association_info[year]?['kcgsSScore']} / ${detail_association_info[year]?['kcsgAvgSScore']}')),
+                  DataCell(Text('${detail_association_info[year]?['kcgsGScore']} / ${detail_association_info[year]?['kcsgAvgGScore']}')),
                 ],
               ),
               DataRow(
                 cells: <DataCell>[
-                  DataCell(Text('한국ESG연구소')),
-                  DataCell(Text('B+ / B+')),
-                  DataCell(Text('A+ / B+')),
-                  DataCell(Text('A / B')),
-                  DataCell(Text('A+ / B+')),
+                  const DataCell(Text('한국ESG연구소')),
+                  DataCell(Text('${detail_association_info[year]?['esglabOverallScore']} / ${detail_association_info[year]?['esglabAvgOverallScore']}')),
+                  DataCell(Text('${detail_association_info[year]?['esglabEScore']} / ${detail_association_info[year]?['esglabAvgEScore']}')),
+                  DataCell(Text('${detail_association_info[year]?['esglabSScore']} / ${detail_association_info[year]?['esglabAvgSScore']}')),
+                  DataCell(Text('${detail_association_info[year]?['esglabGScore']} / ${detail_association_info[year]?['esglabAvgGScore']}')),
                 ],
               ),
             ],

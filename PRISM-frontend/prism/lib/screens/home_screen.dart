@@ -5,6 +5,10 @@ import 'package:prism/screens/detail_screen.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 import '../chart_data.dart';
+import '../models/esglab_ind_avg_score_model.dart';
+import '../models/esglab_score_model.dart';
+import '../models/kcgs_ind_avg_score_model.dart';
+import '../models/kcgs_score_model.dart';
 import '../models/one_row_model.dart';
 import '../models/prism_ind_avg_score_model.dart';
 import '../models/prism_score_model.dart';
@@ -43,21 +47,21 @@ class PrismIndAvgScore {
   });
 }
 
-class KcgsScoreModel {
+class KcgsScore {
   final String overallScore, EScore, SScore, GScore;
   final int kcgsScoreId, evalYear, companyId, kcgsIndAvgId;
 
-  KcgsScoreModel({
+  KcgsScore({
     required this.overallScore, required this.EScore, required this.SScore, required this.GScore,
     required this.kcgsScoreId, required this.evalYear, required this.companyId, required this.kcgsIndAvgId
   });
 }
 
-class EsglabScoreModel {
+class EsglabScore {
   final String overallScore, EScore, SScore, GScore;
   final int esglabScoreId, evalYear, companyId, esglabIndAvgId;
 
-  EsglabScoreModel({
+  EsglabScore({
     required this.overallScore, required this.EScore, required this.SScore, required this.GScore,
     required this.esglabScoreId, required this.evalYear, required this.companyId, required this.esglabIndAvgId
   });
@@ -135,8 +139,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   // API- 회사 정보 저장 (하드코딩)
   late List<PrismScore> h_prism_scores;
   late List<PrismIndAvgScore> h_prism_ind_avg_scores;
-  late List<KcgsScoreModel> kcgs_scores;
-  late List<EsglabScoreModel> esglab_scores;
+  late List<KcgsScore> h_kcgs_scores;
+  late List<EsglabScore> h_esglab_scores;
   late List<SustainReportModel> sustain_reports;
   late List<ReportSentencesModel> gri_infos;
   late List<ReportTableModel> report_tables;
@@ -452,15 +456,22 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   List<int> detail_info_years = [];
   // 세부페이지 - PRISM스코어 탭에서 사용할 정보
   Map<int, Map<String, dynamic>> detail_prism_info = {};
+  // 세부페이지 - 평가기관등급 탭에서 사용할 정보
+  Map<int, Map<String, dynamic>> detail_association_info = {};
 
   List<int> years = [];
   Map<int, Map<String, dynamic>> b_prism_info = {};
   Map<int, Map<String, dynamic>> i_prism_info = {};
+  Map<int, Map<String, dynamic>> k_association_info = {};
+  Map<int, Map<String, dynamic>> el_association_info = {};
+  Map<int, Map<String, dynamic>> k_a_association_info = {};
+  Map<int, Map<String, dynamic>> el_a_association_info = {};
   void fetchCompanyDetailData(String company_name) async {
     try {
       years = [];
       b_prism_info = {};
       i_prism_info = {};
+      detail_association_info = {};
 
       List<PrismScoreModel> prism_scores = await ApiService.outPrismScores(company_name);
       for (var prism_score in prism_scores) {
@@ -521,10 +532,81 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         }
       });
 
-      // await ApiService.outKcgsScores(company_name);
-      // await ApiService.outEsglabScores(company_name);
-      // await ApiService.outKcgsIndAvgScores(company_name);
-      // await ApiService.outEsglabIndAvgScores(company_name);
+      List<KcgsScoreModel> kcgs_scores = await ApiService.outKcgsScores(company_name);
+      for (var kcgs_score in kcgs_scores) {
+        k_association_info[kcgs_score.evalYear] = {
+          'kcgsOverallScore': kcgs_score.overallScore,
+          'kcgsEScore': kcgs_score.EScore,
+          'kcgsSScore': kcgs_score.SScore,
+          'kcgsGScore': kcgs_score.GScore,
+        };
+      }
+      
+      List<EsglabScoreModel> esglab_scores = await ApiService.outEsglabScores(company_name);
+      for(var esglab_score in esglab_scores) {
+        el_association_info[esglab_score.evalYear] = {
+          'esglabOverallScore': esglab_score.overallScore,
+          'esglabEScore': esglab_score.EScore,
+          'esglabSScore': esglab_score.SScore,
+          'esglabGScore': esglab_score.GScore,
+        };
+      }
+      List<KcgsIndAvgScoreModel> kcgs_ind_avg_scores = await ApiService.outKcgsIndAvgScores(company_name);
+      for (var kcgs_ind_avg_score in kcgs_ind_avg_scores) {
+        k_a_association_info[kcgs_ind_avg_score.year] = {
+          'kcsgAvgOverallScore': kcgs_ind_avg_score.overallScore,
+          'kcsgAvgEScore': kcgs_ind_avg_score.EScore,
+          'kcsgAvgSScore': kcgs_ind_avg_score.SScore,
+          'kcsgAvgGScore': kcgs_ind_avg_score.GScore,
+        };
+      }
+      List<EsglabIndAvgScoreModel> esglab_ind_avg_scores = await ApiService.outEsglabIndAvgScores(company_name);
+      for (var esglab_ind_avg_score in esglab_ind_avg_scores) {
+        el_a_association_info[esglab_ind_avg_score.year] = {
+          'esglabAvgOverallScore': esglab_ind_avg_score.overallScore,
+          'esglabAvgEScore': esglab_ind_avg_score.EScore,
+          'esglabAvgSScore': esglab_ind_avg_score.SScore,
+          'esglabAvgGScore': esglab_ind_avg_score.GScore,
+        };
+      }
+
+      Map<int, Map<String, dynamic>> association_info = {};
+      k_association_info.forEach((key, value) {
+        association_info[key] = value;
+      });
+      el_association_info.forEach((key, value) {
+        if (association_info.containsKey(key)) {
+          if (association_info[key] != null) {
+            association_info[key]!.addAll(value);
+          } else {
+            association_info[key] = {}..addAll(value);
+          }
+        } else {
+          association_info[key] = value;
+        }
+      });
+      k_a_association_info.forEach((key, value) {
+        if (association_info.containsKey(key)) {
+          if (association_info[key] != null) {
+            association_info[key]!.addAll(value);
+          } else {
+            association_info[key] = {}..addAll(value);
+          }
+        } else {
+          association_info[key] = value;
+        }
+      });
+      el_a_association_info.forEach((key, value) {
+        if (association_info.containsKey(key)) {
+          if (association_info[key] != null) {
+            association_info[key]!.addAll(value);
+          } else {
+            association_info[key] = {}..addAll(value);
+          }
+        } else {
+          association_info[key] = value;
+        }
+      });
       // await ApiService.outSustainReports(company_name);
       // await ApiService.outGriInfos(company_name);
       // await ApiService.outReportSentencess(company_name);
@@ -534,8 +616,10 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       setState(() {
         detail_info_years = years;
         detail_prism_info = prism_info;
+        detail_association_info = association_info;
         print(detail_info_years);
         print(detail_prism_info);
+        print(detail_association_info);
         print("---------------");
       });
     } catch (e) {
@@ -811,11 +895,11 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           wOverallScore: 66, wEScore: 66, wSScore: 66, wGScore: 66,
           industry: "건축자재", wieght: 0.6,
         );
-    var kcgsScoreModel = KcgsScoreModel(
+    var kcgsScore = KcgsScore(
         overallScore: "A+", EScore: "S", SScore: "A+", GScore: "A",
         kcgsScoreId: 1, evalYear: 2022, companyId: 1, kcgsIndAvgId: 1,
       );
-    var esglabScoreModel = EsglabScoreModel(
+    var esglabScore = EsglabScore(
         overallScore: "A+", EScore: "A+", SScore: "A+", GScore: "A",
         esglabScoreId: 1, evalYear: 2022, companyId: 1, esglabIndAvgId: 1,
       );
@@ -838,13 +922,13 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         for (var i = 0; i < comparing_items.length; i++)
           prism_ind_avg_score,
       ];
-      kcgs_scores = [
+      h_kcgs_scores = [
         for (var i = 0; i < comparing_items.length; i++)
-          kcgsScoreModel,
+          kcgsScore,
       ];
-      esglab_scores = [
+      h_esglab_scores = [
         for (var i = 0; i < comparing_items.length; i++)
-          esglabScoreModel,
+          esglabScore,
       ];
       sustain_reports = [
         for (var i = 0; i < comparing_items.length; i++)
@@ -1002,9 +1086,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             ],
           ),
           // KCGS
-          _buildAssociationRakingTable("KCGS", kcgs_scores[index]),
+          _buildAssociationRakingTable("KCGS", h_kcgs_scores[index]),
           // 한국ESG연구소
-          _buildAssociationRakingTable("한국ESG연구소", esglab_scores[index]),
+          _buildAssociationRakingTable("한국ESG연구소", h_esglab_scores[index]),
           // GRI info
           if (comparing_gris.isEmpty)
             SizedBox(
@@ -1121,13 +1205,13 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
   SizedBox _buildAssociationRakingTable(String association, var score) {
     String overall = "Error", e = "Error", s = "Error", g = "Error";
-    if (score is KcgsScoreModel) {
+    if (score is KcgsScore) {
       overall = score.overallScore;
       e = score.EScore;
       s = score.SScore;
       g = score.GScore;
     }
-    else if(score is EsglabScoreModel) {
+    else if(score is EsglabScore) {
       overall = score.overallScore;
       e = score.EScore;
       s = score.SScore;
@@ -1510,13 +1594,13 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                           IconButton(
                             onPressed: () {
                               fetchCompanyDetailData(one_row_list[index].name);
-                              // while (ok == false) {}
                               print(detail_info_years);
+                              print("---------in");
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) =>
-                                          SecondPage(one_row_list[index].name, one_row_list[index].industry, detail_info_years, detail_prism_info)));
+                                          SecondPage(one_row_list[index].name, one_row_list[index].industry, detail_info_years, detail_prism_info, detail_association_info)));
                             },
                             icon: const Icon(Icons.arrow_right),
                           ),
