@@ -30,11 +30,11 @@ class ReportSentences {
   });
 }
 
-class ReportTableModel {
+class ReportTable {
   final int sustain_report_id, gri_info_id, report_table_id, sim_rank, page;
   final String title, Html_code;
 
-  ReportTableModel({
+  ReportTable({
     required this.sustain_report_id, required this.gri_info_id, required this.report_table_id, required this.sim_rank, required this.page,
     required this.title, required this.Html_code
   });
@@ -73,7 +73,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
   // API- 회사 정보 저장 (하드코딩)
   late List<ReportSentences> gri_infos;
-  late List<ReportTableModel> report_tables;
+  late List<ReportTable> report_tables;
 
   // 업종 리스트
   List<String> industries = [
@@ -368,6 +368,11 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     });
 
     // await ApiService.outSustainReport(company_and_year);
+  }
+
+  void fetchComparingGRIData(List<Map<String, int>> reports, List<String> gri_indexes) async {
+    await ApiService.outReportSentences(reports, gri_indexes);
+    await ApiService.outReportTable(reports, gri_indexes);
   }
 
   @override
@@ -725,7 +730,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         sustain_report_id: 1, gri_info_id: 1, report_senetences_id: 1, sim_rank: 1, page: 50,
         most_sentence: "중요 문장!!", preced_sentences: "이전문장", back_sentences: "이후문장",
       );
-    var reportTableModel = ReportTableModel(
+    var reportTable = ReportTable(
         sustain_report_id: 1, gri_info_id: 1, report_table_id: 1, sim_rank: 1, page: 60,
         title: "제목", Html_code: "String",
       );
@@ -737,7 +742,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       ];
       report_tables = [
         for (var i = 0; i < comparing_items.length; i++)
-          reportTableModel,
+          reportTable,
       ];
     if (fetch_comparing_datas.isEmpty)
       return List.generate(comparing_items.length, (index) {
@@ -889,7 +894,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     });
   }
 
-  Padding extractTable(ReportTableModel report_table) {
+  Padding extractTable(ReportTable report_table) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Column(

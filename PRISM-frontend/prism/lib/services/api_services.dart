@@ -680,54 +680,91 @@ class ApiService {
 
   // 비교대상의 gri유사 문장 및 표 필요
   //클릭한 회사 보고서내 gri유사 문장, 해당하는 회사_년도 만큼
-  static Future<ReportSentencesModel> outReportSentences(List<Map<String, int>> reports, List<String> gri_indexes) async {
-    final url = Uri.parse('$base_url/comparing/context/');
-    final requestData = {
-      'reports': reports,
-      'gri_indexes': gri_indexes,
-    };
-    
-    final response = await http.post(url, headers: {"Content-Type": "application/json"}, body: jsonEncode(requestData));
+  static Future<List<ReportSentencesModel>> outReportSentences(List<Map<String, int>> reports, List<String> gri_indexes) async {
+    // final url = Uri.parse('$base_url/comparing/context/');
+    // final requestData = {
+    //   'reports': reports,
+    //   'gri_indexes': gri_indexes,
+    // };
 
-    if (response.statusCode == 200) {
-      final gri_info = jsonDecode(response.body);
-      return ReportSentencesModel.fromJson(gri_info);
+    // List<ReportSentencesModel> sentences_instances = [];
+    
+    // final response = await http.post(url, headers: {"Content-Type": "application/json"}, body: jsonEncode(requestData));
+
+    // if (response.statusCode == 200) {
+    //   final sentences = jsonDecode(response.body);
+    //   for (var sentence in sentences) {
+    //     final instance = ReportSentencesModel.fromJson(sentence);
+    //     sentences_instances.add(instance);
+    //   }
+    //   return sentences_instances;
+    // }
+    // // 에러 처리
+    // throw Exception('Failed to fetch sentences of company sustain reports');
+
+    final jsonString = await rootBundle.loadString("../../assets/dummyJSON/report_sentences.json");
+
+    List<ReportSentencesModel> sentences_instances = [];
+
+    final jsonData = jsonDecode(jsonString);
+    final List<Map<String, dynamic>> sentences = List<Map<String, dynamic>>.from(jsonData);
+
+    for (var sentence in sentences) {
+      final instance = ReportSentencesModel.fromJson(sentence);
+      sentences_instances.add(instance);
     }
-    // 에러 처리
-    throw Exception('Failed to fetch sentences of company sustain reports');
+    return sentences_instances;
   }
   //클릭한 회사 보고서내 gri유사 테이블, 해당하는 회사_년도 만큼
-  static Future<ReportTableModel> outReportTable(List<Map<String, int>> reports, List<String> gri_indexes) async {
-    final url = Uri.parse('$base_url/comparing/context/');
-    final requestData = {
-      'reports': reports,
-      'gri_indexes': gri_indexes,
-    };
+  static Future<List<ReportTableModel>> outReportTable(List<Map<String, int>> reports, List<String> gri_indexes) async {
+    // final url = Uri.parse('$base_url/comparing/context/');
+    // final requestData = {
+    //   'reports': reports,
+    //   'gri_indexes': gri_indexes,
+    // };
     
-    final response = await http.post(url, headers: {"Content-Type": "application/json"}, body: jsonEncode(requestData));
-
-    if (response.statusCode == 200) {
-      final report_table = jsonDecode(response.body);
-      return ReportTableModel.fromJson(report_table);
-    }
-    // 에러 처리
-    throw Exception('Failed to fetch table of company sustain reports');
-  }
-  //gri index사용 비율 업종 평균점수, 최신년도만
-  static Future<GriUsageIndAvgScoreModel> outGriUsageIndAvgScore(List<Map<String, int>> reports, List<String> gri_indexes) async {
-    final url = Uri.parse('$base_url/comparing/context/');
-    final requestData = {
-      'reports': reports,
-      'gri_indexes': gri_indexes,
-    };
+    // List<ReportTableModel> tables_instances = [];
     
-    final response = await http.post(url, headers: {"Content-Type": "application/json"}, body: jsonEncode(requestData));
+    // final response = await http.post(url, headers: {"Content-Type": "application/json"}, body: jsonEncode(requestData));
 
-    if (response.statusCode == 200) {
-      final gri_usage_ind_avg_score = jsonDecode(response.body);
-      return GriUsageIndAvgScoreModel.fromJson(gri_usage_ind_avg_score);
+    // if (response.statusCode == 200) {
+    //   final tables = jsonDecode(response.body);
+    //   for (var table in tables) {
+    //     final instance = ReportTableModel.fromJson(table);
+    //     tables_instances.add(instance);
+    //   }
+    //   return tables_instances;
+    // }
+    // // 에러 처리
+    // throw Exception('Failed to fetch table of company sustain reports');
+    final jsonString = await rootBundle.loadString("../../assets/dummyJSON/report_sentences.json");
+
+    List<ReportTableModel> tables_instances = [];
+
+    final jsonData = jsonDecode(jsonString);
+    final List<Map<String, dynamic>> tables = List<Map<String, dynamic>>.from(jsonData);
+
+    for (var table in tables) {
+      final instance = ReportTableModel.fromJson(table);
+      tables_instances.add(instance);
     }
-    // 에러 처리
-    throw Exception('Failed to fetch gri rate of company sustain reports');
+    return tables_instances;
   }
+  // //gri index사용 비율 업종 평균점수, 최신년도만
+  // static Future<GriUsageIndAvgScoreModel> outGriUsageIndAvgScore(List<Map<String, int>> reports, List<String> gri_indexes) async {
+  //   final url = Uri.parse('$base_url/comparing/context/');
+  //   final requestData = {
+  //     'reports': reports,
+  //     'gri_indexes': gri_indexes,
+  //   };
+    
+  //   final response = await http.post(url, headers: {"Content-Type": "application/json"}, body: jsonEncode(requestData));
+
+  //   if (response.statusCode == 200) {
+  //     final gri_usage_ind_avg_score = jsonDecode(response.body);
+  //     return GriUsageIndAvgScoreModel.fromJson(gri_usage_ind_avg_score);
+  //   }
+  //   // 에러 처리
+  //   throw Exception('Failed to fetch gri rate of company sustain reports');
+  // }
 }
