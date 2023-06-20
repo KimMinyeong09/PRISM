@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 import '../chart_data.dart';
-import 'home_screen.dart';
 
 
 class SecondPage extends StatefulWidget {
@@ -55,15 +54,6 @@ class _SecondPageState extends State<SecondPage> with TickerProviderStateMixin {
     _scoreTabController.dispose();
     super.dispose();
   }
-
-  // API- 회사 정보 저장 (하드코딩)
-  late List<PrismScore> prism_scores;
-  late List<PrismIndAvgScore> prism_ind_avg_scores;
-  late List<KcgsScore> kcgs_scores;
-  late List<EsglabScore> esglab_scores;
-  late List<SustainReport> sustain_reports;
-  late List<ReportSentencesModel> gri_infos;
-  late List<ReportTableModel> report_tables;
 
   @override
   Widget build(BuildContext context) {

@@ -18,37 +18,6 @@ import '../services/api_services.dart';
 
 
 // 하드 코딩용 class
-class PrismScore {
-  final int prismScoreId, evalYear,
-  overallScore, EScore, SScore, GScore, overallRank, Erank, Srank, Grank, indOverallRank, indERank, indSRank, indGRank,
-  WOverallScore, WEScore, WSScore, WGScore, WOverallRank, WERank, WSRank, WGRank,
-  companyId, prismIndAvgId, indWeightId, kcgsScoreId, esglabScoreId;
-
-  PrismScore({
-    required this.prismScoreId, required this.evalYear,
-    required this.overallScore, required this.EScore, required this.SScore, required this.GScore,
-    required this.overallRank, required this.Erank, required this.Srank, required this.Grank,
-    required this.indOverallRank, required this.indERank, required this.indSRank, required this.indGRank,
-    required this.WOverallScore, required this.WEScore, required this.WSScore, required this.WGScore,
-    required this.WOverallRank, required this.WERank, required this.WSRank, required this.WGRank,
-    required this.companyId, required this.prismIndAvgId, required this.indWeightId, required this.kcgsScoreId, required this.esglabScoreId
-  });
-}
-
-class PrismIndAvgScore {
-  final int prismIndAvgId, year,
-      overallScore, EScore, SScore, GScore,
-      wOverallScore, wEScore, wSScore, wGScore;
-  final String industry;
-  final double wieght;
-
-  PrismIndAvgScore({
-    required this.prismIndAvgId, required this.year,
-    required this.overallScore, required this.EScore, required this.SScore, required this.GScore,
-    required this.wOverallScore, required this.wEScore, required this.wSScore, required this.wGScore, required this.industry, required this.wieght
-  });
-}
-
 class KcgsScore {
   final String overallScore, EScore, SScore, GScore;
   final int kcgsScoreId, evalYear, companyId, kcgsIndAvgId;
@@ -105,9 +74,6 @@ class ReportTableModel {
 }
 
 
-
-
-
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -139,8 +105,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   bool remove_comparing_items = true;
 
   // API- 회사 정보 저장 (하드코딩)
-  late List<PrismScore> h_prism_scores;
-  late List<PrismIndAvgScore> h_prism_ind_avg_scores;
   late List<KcgsScore> h_kcgs_scores;
   late List<EsglabScore> h_esglab_scores;
   late List<SustainReport> sustain_reports;
@@ -454,15 +418,15 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   }
 
   // 세부페이지에서 사용할 해당 기업의 지속가능경영보고서 발행 연도들 - 상단바 / PRISM스코어 탭 / 평가기관등급 탭에 사용
-  List<int> detail_info_years = [];
+  late List<int> detail_info_years = [];
   // 세부페이지 - PRISM스코어 탭에서 사용할 정보
-  Map<int, Map<String, dynamic>> detail_prism_info = {};
+  late Map<int, Map<String, dynamic>> detail_prism_info = {};
   // 세부페이지 - 평가기관등급 탭에서 사용할 정보
-  Map<int, Map<String, dynamic>> detail_association_info = {};
+  late Map<int, Map<String, dynamic>> detail_association_info = {};
   // 세부페이지 - ESG 정보 탭에서 사용할 정보
-  Map<String, dynamic> detail_esg_info = {};
+  late Map<String, dynamic> detail_esg_info = {};
   // 세부페이지 - 상단바 : 지속가능경영보고서 다운로드 링크
-  Map<int, String> detail_download_links = {};
+  late Map<int, String> detail_download_links = {};
 
   List<int> years = [];
   Map<int, Map<String, dynamic>> b_prism_info = {};
@@ -677,6 +641,72 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     }
   }
 
+  late List<Map<String, dynamic>> fetch_comparing_datas = [];
+  void fetchComparingData(List<Map<String, int>> company_and_year) async {
+    
+    List<PrismScoreModel> prism_scores = await ApiService.outPrismScore(company_and_year);
+    List<PrismIndAvgScoreModel> prism_ind_avg_scores = await ApiService.outPrismIndAvgScore(company_and_year);
+    List<KcgsScoreModel> kcgs_scores = await ApiService.outKcgsScore(company_and_year);
+    List<EsglabScoreModel> esglab_scores = await ApiService.outEsglabScore(company_and_year);
+
+    for (var i = 0; i < company_and_year.length; i++) {
+      fetch_comparing_datas.add(
+        {
+          "overallScore" : prism_scores[i].overallScore,
+          "EScore" : prism_scores[i].EScore,
+          "SScore" : prism_scores[i].SScore,
+          "GScore" : prism_scores[i].GScore,
+
+          "overallRank" : prism_scores[i].overallRank,
+          "Erank" : prism_scores[i].Erank,
+          "Srank" : prism_scores[i].Srank,
+          "Grank" : prism_scores[i].Grank,
+
+          "indOverallRank" : prism_scores[i].indOverallRank,
+          "indERank" : prism_scores[i].indERank,
+          "indSRank" : prism_scores[i].indSRank,
+          "indGRank" : prism_scores[i].indGRank,
+
+          "WOverallScore" : prism_scores[i].WOverallScore, 
+          "WEScore" : prism_scores[i].WEScore,
+          "WSScore" : prism_scores[i].WSScore,
+          "WGScore" : prism_scores[i].WGScore,
+
+          "WOverallRank" : prism_scores[i].WOverallRank,
+          "WERank" : prism_scores[i].WERank,
+          "WSRank" : prism_scores[i].WSRank,
+          "WGRank" : prism_scores[i].WGRank, 
+
+          "indOverallScore" : prism_ind_avg_scores[i].overallScore,
+          "indEScore" : prism_ind_avg_scores[i].EScore,
+          "indSScore" : prism_ind_avg_scores[i].SScore,
+          "indGScore" : prism_ind_avg_scores[i].GScore,
+
+          "indWOverallScore" : prism_ind_avg_scores[i].wOverallScore,
+          "indWEScore" : prism_ind_avg_scores[i].wEScore,
+          "indWSScore" : prism_ind_avg_scores[i].wSScore,
+          "indWGScore" : prism_ind_avg_scores[i].wGScore,
+
+          "kcgsOverallScore" : kcgs_scores[i].overallScore,
+          "kcgsEScore" : kcgs_scores[i].EScore,
+          "kcgsSScore" : kcgs_scores[i].SScore,
+          "kcgsGScore" : kcgs_scores[i].GScore,
+
+          "esglabOverallScore" : esglab_scores[i].overallScore,
+          "esglabEScore" : esglab_scores[i].EScore,
+          "esglabSScore" : esglab_scores[i].SScore,
+          "esglabGScore" : esglab_scores[i].GScore
+        }
+      );
+    }
+
+    setState(() {
+      fetch_comparing_datas;
+      print(fetch_comparing_datas);
+    });
+
+    // await ApiService.outSustainReport(company_and_year);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -933,18 +963,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   // 비교 페이지
   List<Widget> comparingPage(BuildContext context) {
     // 하드코딩
-    var prsim_score = PrismScore(
-          prismScoreId: 1, evalYear: 2022,
-          overallScore: 90, EScore: 91, SScore: 89, GScore: 90, overallRank: 1, Erank: 1, Srank: 1, Grank: 1, indOverallRank: 1, indERank: 1, indSRank: 1, indGRank: 1,
-          WOverallScore: 90, WEScore: 90, WSScore: 90, WGScore: 90, WOverallRank: 1, WERank: 1, WSRank: 1, WGRank :1,
-          companyId: 1, prismIndAvgId: 1, indWeightId: 1, kcgsScoreId: 1, esglabScoreId: 1
-        );
-    var prism_ind_avg_score = PrismIndAvgScore(
-          prismIndAvgId: 1, year: 2022,
-          overallScore: 65, EScore: 64, SScore: 65, GScore: 66,
-          wOverallScore: 66, wEScore: 66, wSScore: 66, wGScore: 66,
-          industry: "건축자재", wieght: 0.6,
-        );
     var kcgsScore = KcgsScore(
         overallScore: "A+", EScore: "S", SScore: "A+", GScore: "A",
         kcgsScoreId: 1, evalYear: 2022, companyId: 1, kcgsIndAvgId: 1,
@@ -964,14 +982,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     // 데이터 불러오기
     if (comparing_items.isNotEmpty) {
       // 데이터 불러오기
-      h_prism_scores = [
-        for (var i = 0; i < comparing_items.length; i++)
-          prsim_score,
-      ];
-      h_prism_ind_avg_scores = [
-        for (var i = 0; i < comparing_items.length; i++)
-          prism_ind_avg_score,
-      ];
       h_kcgs_scores = [
         for (var i = 0; i < comparing_items.length; i++)
           kcgsScore,
@@ -1071,6 +1081,17 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
   // 비교 페이지 데이터 출력
   List<Widget> printComparingInfo(BuildContext context) {
+
+    List<Map<String, int>> company_and_year=[];
+                  for (var comparing_item in comparing_items) {
+                    String item = comparing_item;
+                    List<String> splitText = item.split("\n");
+                    String companyName = splitText[0];
+                    int companyYear = int.parse(splitText[1]);
+                    company_and_year.add({companyName: companyYear});
+                  }
+    fetchComparingData(company_and_year);
+
     var reportSentencesModel = ReportSentencesModel(
         sustain_report_id: 1, gri_info_id: 1, report_senetences_id: 1, sim_rank: 1, page: 50,
         most_sentence: "중요 문장!!", preced_sentences: "이전문장", back_sentences: "이후문장",
@@ -1089,12 +1110,23 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         for (var i = 0; i < comparing_items.length; i++)
           reportTableModel,
       ];
-    
-    return List.generate(comparing_items.length, (index) {
+    if (fetch_comparing_datas.isEmpty)
+      return List.generate(comparing_items.length, (index) {
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [],
+        );
+      });
+    return List.generate(
+      comparing_items.length, (index) {
       String item = comparing_items[index];
       List<String> splitText = item.split("\n");
       String companyName = splitText[0];
       String companyYear = splitText[1];
+
+      print("here!");
+      print(index);
+      print(fetch_comparing_datas[index]);
       
       return Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -1120,19 +1152,51 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           // PRISM 스코어
           Row(
             children: [
-              _buildDChart(companyName, "PRISM 스코어", h_prism_scores[index], h_prism_ind_avg_scores[index]),
-              _buildDChart(companyName, "E", h_prism_scores[index], h_prism_ind_avg_scores[index]),
-              _buildDChart(companyName, "S", h_prism_scores[index], h_prism_ind_avg_scores[index]),
-              _buildDChart(companyName, "G", h_prism_scores[index], h_prism_ind_avg_scores[index]),
+              _buildDChart(
+                companyName, "PRISM 스코어",
+                fetch_comparing_datas[index]['overallScore'], fetch_comparing_datas[index]['indOverallScore'],
+                fetch_comparing_datas[index]['overallRank'],fetch_comparing_datas[index]['indOverallRank']
+              ),
+              _buildDChart(
+                companyName, "E",
+                fetch_comparing_datas[index]['EScore'], fetch_comparing_datas[index]['indEScore'],
+                fetch_comparing_datas[index]['Erank'],fetch_comparing_datas[index]['indERank']
+              ),
+              _buildDChart(
+                companyName, "S",
+                fetch_comparing_datas[index]['SScore'], fetch_comparing_datas[index]['indSScore'],
+                fetch_comparing_datas[index]['Srank'],fetch_comparing_datas[index]['indSRank']
+              ),
+              _buildDChart(
+                companyName, "G",
+                fetch_comparing_datas[index]['GScore'], fetch_comparing_datas[index]['indGScore'],
+                fetch_comparing_datas[index]['Grank'],fetch_comparing_datas[index]['indGRank']
+              ),
             ],
           ),
           // wPRISM 스코어
           Row(
             children: [
-              _buildDChart(companyName, "wPRISM 스코어", h_prism_scores[index], h_prism_ind_avg_scores[index]),
-              _buildDChart(companyName, "wE", h_prism_scores[index], h_prism_ind_avg_scores[index]),
-              _buildDChart(companyName, "wS", h_prism_scores[index], h_prism_ind_avg_scores[index]),
-              _buildDChart(companyName, "wG", h_prism_scores[index], h_prism_ind_avg_scores[index]),
+              _buildDChart(
+                companyName, "wPRISM 스코어",
+                fetch_comparing_datas[index]['WOverallScore'], fetch_comparing_datas[index]['indWOverallScore'],
+                fetch_comparing_datas[index]['WOverallRank'],fetch_comparing_datas[index]['WOverallRank']
+              ),
+              _buildDChart(
+                companyName, "wE",
+                fetch_comparing_datas[index]['WEScore'], fetch_comparing_datas[index]['indWEScore'],
+                fetch_comparing_datas[index]['WERank'],fetch_comparing_datas[index]['WERank']
+              ),
+              _buildDChart(
+                companyName, "wS",
+                fetch_comparing_datas[index]['WSScore'], fetch_comparing_datas[index]['indWSScore'],
+                fetch_comparing_datas[index]['WSRank'],fetch_comparing_datas[index]['WSRank']
+              ),
+              _buildDChart(
+                companyName, "wG",
+                fetch_comparing_datas[index]['WGScore'], fetch_comparing_datas[index]['indWGScore'],
+                fetch_comparing_datas[index]['WGRank'],fetch_comparing_datas[index]['WGRank']
+              ),
             ],
           ),
           // KCGS
@@ -1311,53 +1375,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     );
   }
 
-  Column _buildDChart(String companyName, String title, PrismScore prism_score, PrismIndAvgScore prism_ind_avg_score) {
-
-    int score = -1, ind_score = -1, rank = -1, ind_rank = -1;
-    switch(title) {
-      case "PRISM 스코어":
-        score = prism_score.overallScore;
-        ind_score = prism_ind_avg_score.overallScore;
-        rank = prism_score.overallRank;
-        ind_rank = prism_score.indOverallRank;
-      case "E":
-        score = prism_score.EScore;
-        ind_score = prism_ind_avg_score.EScore;
-        rank = prism_score.Erank;
-        ind_rank = prism_score.indERank;
-      case "S":
-        score = prism_score.SScore;
-        ind_score = prism_ind_avg_score.SScore;
-        rank = prism_score.Srank;
-        ind_rank = prism_score.indSRank;
-      case "G":
-        score = prism_score.GScore;
-        ind_score = prism_ind_avg_score.GScore;
-        rank = prism_score.Grank;
-        ind_rank = prism_score.indGRank;
-      case "wPRISM 스코어":
-        score = prism_score.WOverallScore;
-        ind_score = prism_ind_avg_score.wOverallScore;
-        rank = prism_score.WOverallRank;
-        ind_rank = prism_score.indWeightId;
-      case "wE":
-        score = prism_score.WEScore;
-        ind_score = prism_ind_avg_score.wEScore;
-        rank = prism_score.Erank;
-        ind_rank = prism_score.indERank;
-      case "wS":
-        score = prism_score.WSScore;
-        ind_score = prism_ind_avg_score.wSScore;
-        rank = prism_score.Srank;
-        ind_rank = prism_score.indSRank;
-      case "wG":
-        score = prism_score.WGScore;
-        ind_score = prism_ind_avg_score.wGScore;
-        rank = prism_score.Grank;
-        ind_rank = prism_score.indGRank;
-    }
+  Column _buildDChart(String companyName, String title, int score, int ind_score, int rank, int ind_rank) {
     
-
     return Column(
       children: [
         SizedBox(
@@ -1647,9 +1666,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                               print(detail_info_years);
                               print("---------in");
 
-                              await Future.delayed(Duration(seconds: 1)); // 1초 동안 지연
+                              await Future.delayed(Duration(seconds: 1)); // 1초 동안 지연: 데이터 불러오는 시간
 
-                              
+
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(

@@ -468,158 +468,162 @@ class ApiService {
   // 비교페이지 내용 필요
   // prism스코어, 해당하는 회사_년도 만큼
   static Future<List<PrismScoreModel>> outPrismScore(List<Map<String, int>> company_and_year) async {
-    final url = Uri.parse('$base_url/comparing/');
-    final requestData = {
-      'company_and_year': company_and_year,
-    };
+    // final url = Uri.parse('$base_url/comparing/');
+    // final requestData = {
+    //   'company_and_year': company_and_year,
+    // };
     
-    final response = await http.post(url, headers: {"Content-Type": "application/json"}, body: jsonEncode(requestData));
+    // final response = await http.post(url, headers: {"Content-Type": "application/json"}, body: jsonEncode(requestData));
 
-    List<PrismScoreModel> prism_scores = [];
+    // List<PrismScoreModel> prism_scores = [];
 
-    if (response.statusCode == 200) {
-      final scores = jsonDecode(response.body);
-      for (var score in scores) {
-        final instance = PrismScoreModel.fromJson(score);
-        prism_scores.add(instance);
-      }
-      return prism_scores;
+    // if (response.statusCode == 200) {
+    //   final scores = jsonDecode(response.body);
+    //   for (var score in scores) {
+    //     final instance = PrismScoreModel.fromJson(score);
+    //     prism_scores.add(instance);
+    //   }
+    //   return prism_scores;
+    // }
+    // // 에러 처리
+    // throw Exception('Failed to fetch company PRISM score');
+    final jsonString = await rootBundle.loadString("../../assets/dummyJSON/prism_score.json");
+
+    List<PrismScoreModel> prism_scores_instances = [];
+
+    final jsonData = jsonDecode(jsonString);
+    final List<Map<String, dynamic>> prism_scores = List<Map<String, dynamic>>.from(jsonData);
+
+    for (var prism_score in prism_scores) {
+      final instance = PrismScoreModel.fromJson(prism_score);
+      prism_scores_instances.add(instance);
     }
-    // 에러 처리
-    throw Exception('Failed to fetch company PRISM score');
+    return prism_scores_instances;
   }
   //특정 업종의 prism스코어, 존재하는 년도 개수 만큼
   static Future<List<PrismIndAvgScoreModel>> outPrismIndAvgScore(List<Map<String, int>> company_and_year) async {
-    final url = Uri.parse('$base_url/comparing/');
-    final requestData = {
-      'company_and_year': company_and_year,
-    };
+    // final url = Uri.parse('$base_url/comparing/');
+    // final requestData = {
+    //   'company_and_year': company_and_year,
+    // };
     
-    final response = await http.post(url, headers: {"Content-Type": "application/json"}, body: jsonEncode(requestData));
+    // final response = await http.post(url, headers: {"Content-Type": "application/json"}, body: jsonEncode(requestData));
 
-    List<PrismIndAvgScoreModel> prism_ind_avg_scores = [];
+    // List<PrismIndAvgScoreModel> prism_ind_avg_scores = [];
 
-    if (response.statusCode == 200) {
-      final scores = jsonDecode(response.body);
-      for (var score in scores) {
-        final instance = PrismIndAvgScoreModel.fromJson(score);
-        prism_ind_avg_scores.add(instance);
-      }
-      return prism_ind_avg_scores;
+    // if (response.statusCode == 200) {
+    //   final scores = jsonDecode(response.body);
+    //   for (var score in scores) {
+    //     final instance = PrismIndAvgScoreModel.fromJson(score);
+    //     prism_ind_avg_scores.add(instance);
+    //   }
+    //   return prism_ind_avg_scores;
+    // }
+    // // 에러 처리
+    // throw Exception('Failed to fetch industry PRISM score');
+    final jsonString = await rootBundle.loadString("../../assets/dummyJSON/prism_ind_avg_score.json");
+
+    List<PrismIndAvgScoreModel> prism_ind_avg_scores_instances = [];
+
+    final jsonData = jsonDecode(jsonString);
+    final List<Map<String, dynamic>> prism_ind_avg_scores = List<Map<String, dynamic>>.from(jsonData);
+
+    for (var prism_ind_avg_score in prism_ind_avg_scores) {
+      final instance = PrismIndAvgScoreModel.fromJson(prism_ind_avg_score);
+      prism_ind_avg_scores_instances.add(instance);
     }
-    // 에러 처리
-    throw Exception('Failed to fetch industry PRISM score');
+    return prism_ind_avg_scores_instances;
   }
   // kcgs스코어, 해당하는 회사_년도 만큼
   static Future<List<KcgsScoreModel>> outKcgsScore(List<Map<String, int>> company_and_year) async {
-    final url = Uri.parse('$base_url/comparing/');
-    final requestData = {
-      'company_and_year': company_and_year,
-    };
+    // final url = Uri.parse('$base_url/comparing/');
+    // final requestData = {
+    //   'company_and_year': company_and_year,
+    // };
     
-    final response = await http.post(url, headers: {"Content-Type": "application/json"}, body: jsonEncode(requestData));
+    // final response = await http.post(url, headers: {"Content-Type": "application/json"}, body: jsonEncode(requestData));
 
-    List<KcgsScoreModel> kcgs_scores = [];
+    // List<KcgsScoreModel> kcgs_scores = [];
 
-    if (response.statusCode == 200) {
-      final scores = jsonDecode(response.body);
-      for (var score in scores) {
-        final instance = KcgsScoreModel.fromJson(score);
-        kcgs_scores.add(instance);
-      }
-      return kcgs_scores;
+    // if (response.statusCode == 200) {
+    //   final scores = jsonDecode(response.body);
+    //   for (var score in scores) {
+    //     final instance = KcgsScoreModel.fromJson(score);
+    //     kcgs_scores.add(instance);
+    //   }
+    //   return kcgs_scores;
+    // }
+    // // 에러 처리
+    // throw Exception('Failed to fetch company KCGS score');
+    final jsonString = await rootBundle.loadString("../../assets/dummyJSON/kcgs_score.json");
+
+    List<KcgsScoreModel> kcgs_scores_instances = [];
+
+    final jsonData = jsonDecode(jsonString);
+    final List<Map<String, dynamic>> kcgs_scores = List<Map<String, dynamic>>.from(jsonData);
+
+    for (var kcgs_score in kcgs_scores) {
+      final instance = KcgsScoreModel.fromJson(kcgs_score);
+      kcgs_scores_instances.add(instance);
     }
-    // 에러 처리
-    throw Exception('Failed to fetch company KCGS score');
+    return kcgs_scores_instances;
   }
   //esg연구소 스코어,해당하는 회사_년도 만큼
   static Future<List<EsglabScoreModel>> outEsglabScore(List<Map<String, int>> company_and_year) async {
-    final url = Uri.parse('$base_url/comparing/');
-    final requestData = {
-      'company_and_year': company_and_year,
-    };
+    // final url = Uri.parse('$base_url/comparing/');
+    // final requestData = {
+    //   'company_and_year': company_and_year,
+    // };
     
-    final response = await http.post(url, headers: {"Content-Type": "application/json"}, body: jsonEncode(requestData));
+    // final response = await http.post(url, headers: {"Content-Type": "application/json"}, body: jsonEncode(requestData));
 
-    List<EsglabScoreModel> esglab_scores = [];
+    // List<EsglabScoreModel> esglab_scores = [];
 
-    if (response.statusCode == 200) {
-      final scores = jsonDecode(response.body);
-      for (var score in scores) {
-        final instance = EsglabScoreModel.fromJson(score);
-        esglab_scores.add(instance);
-      }
-      return esglab_scores;
+    // if (response.statusCode == 200) {
+    //   final scores = jsonDecode(response.body);
+    //   for (var score in scores) {
+    //     final instance = EsglabScoreModel.fromJson(score);
+    //     esglab_scores.add(instance);
+    //   }
+    //   return esglab_scores;
+    // }
+    // // 에러 처리
+    // throw Exception('Failed to fetch company esglab score');
+    final jsonString = await rootBundle.loadString("../../assets/dummyJSON/esglab_score.json");
+
+    List<EsglabScoreModel> esglab_scores_instances = [];
+
+    final jsonData = jsonDecode(jsonString);
+    final List<Map<String, dynamic>> esglab_scores = List<Map<String, dynamic>>.from(jsonData);
+
+    for (var esglab_score in esglab_scores) {
+      final instance = EsglabScoreModel.fromJson(esglab_score);
+      esglab_scores_instances.add(instance);
     }
-    // 에러 처리
-    throw Exception('Failed to fetch company esglab score');
+    return esglab_scores_instances;
   }
-  //kcgs 평균스코어, 해당하는 회사_년도 만큼
-  static Future<List<KcgsIndAvgScoreModel>> outKcgsIndAvgScore(List<Map<String, int>> company_and_year) async {
-    final url = Uri.parse('$base_url/comparing/');
-    final requestData = {
-      'company_and_year': company_and_year,
-    };
+  // //회사 보고서 테이블 내용, 해당하는 회사_년도 만큼
+  // static Future<List<SustainReportModel>> outSustainReport(List<Map<String, int>> company_and_year) async {
+  //   final url = Uri.parse('$base_url/comparing/');
+  //   final requestData = {
+  //     'company_and_year': company_and_year,
+  //   };
     
-    final response = await http.post(url, headers: {"Content-Type": "application/json"}, body: jsonEncode(requestData));
+  //   final response = await http.post(url, headers: {"Content-Type": "application/json"}, body: jsonEncode(requestData));
 
-    List<KcgsIndAvgScoreModel> kcgs_ind_avg_scores = [];
+  //   List<SustainReportModel> report_instances = [];
 
-    if (response.statusCode == 200) {
-      final scores = jsonDecode(response.body);
-      for (var score in scores) {
-        final instance = KcgsIndAvgScoreModel.fromJson(score);
-        kcgs_ind_avg_scores.add(instance);
-      }
-      return kcgs_ind_avg_scores;
-    }
-    // 에러 처리
-    throw Exception('Failed to fetch industry KCGS average score');
-  }
-  //esg연구소 평균 스코어, 해당하는 회사_년도 만큼
-  static Future<List<EsglabIndAvgScoreModel>> outEsglabIndAvgScore(List<Map<String, int>> company_and_year) async {
-    final url = Uri.parse('$base_url/comparing/');
-    final requestData = {
-      'company_and_year': company_and_year,
-    };
-    
-    final response = await http.post(url, headers: {"Content-Type": "application/json"}, body: jsonEncode(requestData));
-
-    List<EsglabIndAvgScoreModel> esglab_scores = [];
-
-    if (response.statusCode == 200) {
-      final scores = jsonDecode(response.body);
-      for (var score in scores) {
-        final instance = EsglabIndAvgScoreModel.fromJson(score);
-        esglab_scores.add(instance);
-      }
-      return esglab_scores;
-    }
-    // 에러 처리
-    throw Exception('Failed to fetch industry esglab average score');
-  }
-  //회사 보고서 테이블 내용, 해당하는 회사_년도 만큼
-  static Future<List<SustainReportModel>> outSustainReport(List<Map<String, int>> company_and_year) async {
-    final url = Uri.parse('$base_url/comparing/');
-    final requestData = {
-      'company_and_year': company_and_year,
-    };
-    
-    final response = await http.post(url, headers: {"Content-Type": "application/json"}, body: jsonEncode(requestData));
-
-    List<SustainReportModel> report_instances = [];
-
-    if (response.statusCode == 200) {
-      final reports = jsonDecode(response.body);
-      for (var report in reports) {
-        final instance = SustainReportModel.fromJson(report);
-        report_instances.add(instance);
-      }
-      return report_instances;
-    }
-    // 에러 처리
-    throw Exception('Failed to fetch company sustain reports');
-  }
+  //   if (response.statusCode == 200) {
+  //     final reports = jsonDecode(response.body);
+  //     for (var report in reports) {
+  //       final instance = SustainReportModel.fromJson(report);
+  //       report_instances.add(instance);
+  //     }
+  //     return report_instances;
+  //   }
+  //   // 에러 처리
+  //   throw Exception('Failed to fetch company sustain reports');
+  // }
 
   // 비교대상의 gri유사 문장 및 표 필요
   //클릭한 회사 보고서내 gri유사 문장, 해당하는 회사_년도 만큼
