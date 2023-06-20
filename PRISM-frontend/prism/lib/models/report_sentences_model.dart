@@ -11,7 +11,7 @@ class ReportSentencesModel {
         gri_info_id = json['Gri_info_id'],
         report_senetences_id = json['Report_senetences_id'],
         sim_rank = json['Sim_rank'],
-        most_sentence = json['Most_sentence'],
+        most_sentence = json['Most_sentences'],
         preced_sentences = json['Preced_sentences'],
         back_sentences = json['Back_sentences'],
         page = json['Page'];

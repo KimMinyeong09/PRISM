@@ -10,8 +10,17 @@ class SecondPage extends StatefulWidget {
   final String company_name, company_industry;
   final List<int> detail_info_years;
   final Map<int, Map<String, dynamic>> detail_prism_info, detail_association_info;
+  final Map<int, String> detail_download_links;
+  final Map<String, dynamic> detail_esg_info ;
 
-  const SecondPage(this.company_name, this.company_industry, this.detail_info_years, this.detail_prism_info, this.detail_association_info, {Key? key}) : super(key: key);
+  const SecondPage(
+    this.company_name, this.company_industry,
+    this.detail_info_years,
+    this.detail_prism_info,
+    this.detail_association_info,
+    this.detail_download_links,
+    this.detail_esg_info,
+    {Key? key}) : super(key: key);
 
   @override
   _SecondPageState createState() => _SecondPageState();
@@ -21,6 +30,8 @@ class _SecondPageState extends State<SecondPage> with TickerProviderStateMixin {
   late String company_name, company_industry;
   late List<int> detail_info_years;
   late Map<int, Map<String, dynamic>> detail_prism_info, detail_association_info;
+  late Map<int, String> detail_download_links;
+  late Map<String, dynamic> detail_esg_info ;
 
   late TabController _scoreTabController;
 
@@ -33,6 +44,8 @@ class _SecondPageState extends State<SecondPage> with TickerProviderStateMixin {
     detail_info_years = widget.detail_info_years;
     detail_prism_info = widget.detail_prism_info;
     detail_association_info = widget.detail_association_info;
+    detail_download_links = widget.detail_download_links;
+    detail_esg_info = widget.detail_esg_info;
 
     _scoreTabController = TabController(length: 3, vsync: this);
   }
@@ -48,7 +61,7 @@ class _SecondPageState extends State<SecondPage> with TickerProviderStateMixin {
   late List<PrismIndAvgScore> prism_ind_avg_scores;
   late List<KcgsScore> kcgs_scores;
   late List<EsglabScore> esglab_scores;
-  late List<SustainReportModel> sustain_reports;
+  late List<SustainReport> sustain_reports;
   late List<ReportSentencesModel> gri_infos;
   late List<ReportTableModel> report_tables;
 
@@ -93,6 +106,7 @@ class _SecondPageState extends State<SecondPage> with TickerProviderStateMixin {
                           IconButton(
                             onPressed: () {
                               // 원하는 동작 수행
+                              // detail_download_links
                             },
                             icon: const Icon(Icons.book),
                           ),
@@ -123,7 +137,7 @@ class _SecondPageState extends State<SecondPage> with TickerProviderStateMixin {
                   children: [
                     _buildDetailScoreTab(),
                     _buildRatingTab(),
-                    _buildesgInfoTab(),
+                    detail_info_years.isNotEmpty ? _buildesgInfoTab() : Center(child: Text("No Data")),
                   ],
                 ),
               ),
@@ -638,9 +652,9 @@ class _SecondPageState extends State<SecondPage> with TickerProviderStateMixin {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            '지속가능경영보고서 내 ESG 비율 (2022)',
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          Text(
+            '지속가능경영보고서 내 ESG 비율 (${detail_info_years[0]})',
+            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
           // 도넛 차트
           // - 그래프 색상 정보
@@ -682,9 +696,9 @@ class _SecondPageState extends State<SecondPage> with TickerProviderStateMixin {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        Expanded(child: _buildDChartGauge("E 비율", 0, 0, 0, 0)),
-        Expanded(child: _buildDChartGauge("S 비율", 0, 0, 0, 0)),
-        Expanded(child: _buildDChartGauge("G 비율", 0, 0, 0, 0)),
+        Expanded(child: _buildDChartGauge("E 비율", detail_esg_info['Escore'], detail_esg_info['indEscore'], 0, 0)),
+        Expanded(child: _buildDChartGauge("S 비율", detail_esg_info['Sscore'], detail_esg_info['indSscore'], 0, 0)),
+        Expanded(child: _buildDChartGauge("G 비율", detail_esg_info['Gscore'], detail_esg_info['indGscore'], 0, 0)),
       ],
     );
   }
@@ -888,10 +902,10 @@ class _SecondPageState extends State<SecondPage> with TickerProviderStateMixin {
 
   // 도넛 차트 생성
   Widget _buildDChartGauge(String title, int? company_score, int? industry_score, int? whole_rank, int? industry_rank) {
-    if (company_score == null) company_score = 0;
-    if (industry_score == null) industry_score = 0;
-    if (whole_rank == null) whole_rank = 0;
-    if (industry_rank == null) industry_rank = 0;
+    if (company_score == null) company_score = -1;
+    if (industry_score == null) industry_score = -1;
+    if (whole_rank == null) whole_rank = -1;
+    if (industry_rank == null) industry_rank = -1;
 
     return Expanded(
       child: Padding(
@@ -918,8 +932,8 @@ class _SecondPageState extends State<SecondPage> with TickerProviderStateMixin {
             // 각 prism 스코어 값
             Text("$company_score", style: const TextStyle(color: Color(0xff101828), fontSize: 30, fontWeight: FontWeight.bold)),
             Text("업계 평균 $industry_score", style: const TextStyle(color: Color(0xff667085))),
-            Text("업계 내 $industry_rank위", style: const TextStyle(color: Color(0xff667085))),
-            Text("전체 $whole_rank위", style: const TextStyle(color: Color(0xff667085))),
+            if(industry_rank == 0) ...[Text("업계 내 $industry_rank위", style: const TextStyle(color: Color(0xff667085)))],
+            if(whole_rank == 0) ...[Text("전체 $whole_rank위", style: const TextStyle(color: Color(0xff667085)))],
           ],
         ),
       ),

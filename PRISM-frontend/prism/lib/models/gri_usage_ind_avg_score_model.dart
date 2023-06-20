@@ -1,6 +1,5 @@
 class GriUsageIndAvgScoreModel {
-  final int gri_usage_ind_avg_id, year, E_score, S_score, G_score;
-  final String industry;
+  final int gri_usage_ind_avg_id, year, E_score, S_score, G_score, industry;
 
   GriUsageIndAvgScoreModel.fromJson(Map<String, dynamic> json)
       : gri_usage_ind_avg_id = json['Gri_usage_ind_avg_id'],

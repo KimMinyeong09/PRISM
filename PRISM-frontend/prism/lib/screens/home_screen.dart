@@ -7,11 +7,13 @@ import 'package:syncfusion_flutter_charts/charts.dart';
 import '../chart_data.dart';
 import '../models/esglab_ind_avg_score_model.dart';
 import '../models/esglab_score_model.dart';
+import '../models/gri_usage_ind_avg_score_model.dart';
 import '../models/kcgs_ind_avg_score_model.dart';
 import '../models/kcgs_score_model.dart';
 import '../models/one_row_model.dart';
 import '../models/prism_ind_avg_score_model.dart';
 import '../models/prism_score_model.dart';
+import '../models/sustain_report_model.dart';
 import '../services/api_services.dart';
 
 
@@ -67,14 +69,14 @@ class EsglabScore {
   });
 }
 
-class SustainReportModel {
+class SustainReport {
   final int sustain_report_id, year,
   e_score, s_score, g_score, ind_e_score, ind_s_score, ind_g_score,
   company_id, gri_usage_score_id, gri_usage_ind_avg_id;
   final String download_link, industry;
       
 
-  SustainReportModel({
+  SustainReport({
     required this.sustain_report_id, required this.year,
     required this.download_link, required this.industry,
     required this.e_score, required this.s_score, required this.g_score, required this.ind_e_score, required this.ind_s_score, required this.ind_g_score,
@@ -141,7 +143,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   late List<PrismIndAvgScore> h_prism_ind_avg_scores;
   late List<KcgsScore> h_kcgs_scores;
   late List<EsglabScore> h_esglab_scores;
-  late List<SustainReportModel> sustain_reports;
+  late List<SustainReport> sustain_reports;
   late List<ReportSentencesModel> gri_infos;
   late List<ReportTableModel> report_tables;
 
@@ -451,13 +453,16 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     }
   }
 
-  // bool ok = false;
   // 세부페이지에서 사용할 해당 기업의 지속가능경영보고서 발행 연도들 - 상단바 / PRISM스코어 탭 / 평가기관등급 탭에 사용
   List<int> detail_info_years = [];
   // 세부페이지 - PRISM스코어 탭에서 사용할 정보
   Map<int, Map<String, dynamic>> detail_prism_info = {};
   // 세부페이지 - 평가기관등급 탭에서 사용할 정보
   Map<int, Map<String, dynamic>> detail_association_info = {};
+  // 세부페이지 - ESG 정보 탭에서 사용할 정보
+  Map<String, dynamic> detail_esg_info = {};
+  // 세부페이지 - 상단바 : 지속가능경영보고서 다운로드 링크
+  Map<int, String> detail_download_links = {};
 
   List<int> years = [];
   Map<int, Map<String, dynamic>> b_prism_info = {};
@@ -466,12 +471,27 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   Map<int, Map<String, dynamic>> el_association_info = {};
   Map<int, Map<String, dynamic>> k_a_association_info = {};
   Map<int, Map<String, dynamic>> el_a_association_info = {};
+  Map<int, String> download_links = {};
+  Map<String, dynamic> esg_info = {};
+  Map<String, dynamic> ind_esg_info = {};
   void fetchCompanyDetailData(String company_name) async {
     try {
       years = [];
       b_prism_info = {};
       i_prism_info = {};
+      el_association_info = {};
+      k_a_association_info = {};
+      el_a_association_info = {};
+      download_links = {};
+      esg_info = {};
+      ind_esg_info = {};
+
+      // SecondPage로 보내는 데이터 처음에 초기화
+      detail_info_years = [];
+      detail_prism_info = {};
       detail_association_info = {};
+      detail_esg_info = {};
+      detail_download_links = {};
 
       List<PrismScoreModel> prism_scores = await ApiService.outPrismScores(company_name);
       for (var prism_score in prism_scores) {
@@ -607,19 +627,49 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           association_info[key] = value;
         }
       });
-      // await ApiService.outSustainReports(company_name);
+
+      List<SustainReportModel> sustain_reports = await ApiService.outSustainReports(company_name);
+      for(var sustain_report in sustain_reports) {
+        download_links = {sustain_report.year: sustain_report.download_link};
+        if (years[0] == sustain_report.year){
+          esg_info = {
+            'Escore': sustain_report.e_score,
+            'Sscore': sustain_report.s_score,
+            'Gscore': sustain_report.g_score,
+          };
+        }
+        
+      }
+      
+      List<GriUsageIndAvgScoreModel> gri_usage_ind_avg_scores = await ApiService.outGriUsageIndAvgScores(company_name);
+      for(var gri_usage_ind_avg_score in gri_usage_ind_avg_scores) {
+        if (years[0] == gri_usage_ind_avg_score.year){
+          ind_esg_info = {
+            'indEscore': gri_usage_ind_avg_score.E_score,
+            'indSscore': gri_usage_ind_avg_score.S_score,
+            'indGscore': gri_usage_ind_avg_score.G_score,
+          };
+        }
+      }
+
+      Map<String, dynamic> esg_rates = {...esg_info, ...ind_esg_info};
+
       // await ApiService.outGriInfos(company_name);
       // await ApiService.outReportSentencess(company_name);
       // await ApiService.outReportTables(company_name);
-      // await ApiService.outGriUsageIndAvgScores(company_name);
+      
 
       setState(() {
         detail_info_years = years;
         detail_prism_info = prism_info;
         detail_association_info = association_info;
+        detail_download_links = download_links;
+        detail_esg_info = esg_rates;
         print(detail_info_years);
         print(detail_prism_info);
         print(detail_association_info);
+        print(detail_download_links);
+        print(detail_esg_info);
         print("---------------");
       });
     } catch (e) {
@@ -903,7 +953,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         overallScore: "A+", EScore: "A+", SScore: "A+", GScore: "A",
         esglabScoreId: 1, evalYear: 2022, companyId: 1, esglabIndAvgId: 1,
       );
-    var sustainReportModel = SustainReportModel(
+    var sustainReport = SustainReport(
         sustain_report_id: 1, year: 2022,
         download_link: "www.", industry: "건축자재",
         e_score: 90, s_score: 86, g_score: 70,
@@ -932,7 +982,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       ];
       sustain_reports = [
         for (var i = 0; i < comparing_items.length; i++)
-          sustainReportModel,
+          sustainReport,
       ];
     }
 
@@ -1600,7 +1650,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) =>
-                                          SecondPage(one_row_list[index].name, one_row_list[index].industry, detail_info_years, detail_prism_info, detail_association_info)));
+                                          SecondPage(one_row_list[index].name, one_row_list[index].industry, detail_info_years, detail_prism_info, detail_association_info, detail_download_links, detail_esg_info)));
                             },
                             icon: const Icon(Icons.arrow_right),
                           ),
