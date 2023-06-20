@@ -1,6 +1,7 @@
 import 'package:d_chart/d_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../chart_data.dart';
 
@@ -11,6 +12,7 @@ class SecondPage extends StatefulWidget {
   final Map<int, Map<String, dynamic>> detail_prism_info, detail_association_info;
   final Map<int, String> detail_download_links;
   final Map<String, dynamic> detail_esg_info ;
+  final List<String> detail_gri_index;
 
   const SecondPage(
     this.company_name, this.company_industry,
@@ -19,6 +21,7 @@ class SecondPage extends StatefulWidget {
     this.detail_association_info,
     this.detail_download_links,
     this.detail_esg_info,
+    this.detail_gri_index,
     {Key? key}) : super(key: key);
 
   @override
@@ -31,6 +34,7 @@ class _SecondPageState extends State<SecondPage> with TickerProviderStateMixin {
   late Map<int, Map<String, dynamic>> detail_prism_info, detail_association_info;
   late Map<int, String> detail_download_links;
   late Map<String, dynamic> detail_esg_info ;
+  late List<String> detail_gri_index;
 
   late TabController _scoreTabController;
 
@@ -45,6 +49,7 @@ class _SecondPageState extends State<SecondPage> with TickerProviderStateMixin {
     detail_association_info = widget.detail_association_info;
     detail_download_links = widget.detail_download_links;
     detail_esg_info = widget.detail_esg_info;
+    detail_gri_index = widget.detail_gri_index;
 
     _scoreTabController = TabController(length: 3, vsync: this);
   }
@@ -94,9 +99,20 @@ class _SecondPageState extends State<SecondPage> with TickerProviderStateMixin {
                       (index) => Column(
                         children: [
                           IconButton(
-                            onPressed: () {
+                            onPressed: () async {
                               // 원하는 동작 수행
                               // detail_download_links
+                              print(detail_download_links[detail_info_years[index]]);
+                              String link;
+                              if (detail_download_links[detail_info_years[index]] != null)
+                                link = detail_download_links[detail_info_years[index]].toString();
+                              else
+                                link = "";
+                              final Uri _url = Uri.parse(link);
+
+                              if (!await launchUrl(_url)) {
+                                throw Exception('Could not launch $_url');
+                              }
                             },
                             icon: const Icon(Icons.book),
                           ),
@@ -695,11 +711,30 @@ class _SecondPageState extends State<SecondPage> with TickerProviderStateMixin {
 
   // - GRI 정보
   Widget _buildESGTab(String tab) {
-    List<String> gris = ["301-1", "301-2"];
-    if (tab == "E") {
-      gris = ["201-1", "201-2"];
-    } else if (tab == "S") {
-      gris = ["401-1", "401-2"];
+    List<String> gris = [];
+
+    detail_gri_index;
+
+
+    for (var gri_index in detail_gri_index) {
+      if (tab == "E") {
+        // 200
+        if (gri_index[0] == '2') {
+          gris.add(gri_index);
+        }
+      }
+      else if (tab == "S") {
+        // 400
+        if (gri_index[0] == '4') {
+          gris.add(gri_index);
+        }
+      }
+      else { // G
+        // 300
+        if (gri_index[0] == '3') {
+          gris.add(gri_index);
+        }
+      }
     }
 
     return SingleChildScrollView(
@@ -732,134 +767,11 @@ class _SecondPageState extends State<SecondPage> with TickerProviderStateMixin {
                           const Divider(thickness: 1, height: 1, color: Colors.grey),
                           
                           // 표
-                          DataTable(
-                            columns: const <DataColumn>[
-                              DataColumn(
-                                label: Expanded(
-                                child: Text('Name', style: TextStyle(fontStyle: FontStyle.italic)),
-                              ),
-                            ),
-                            DataColumn(
-                              label: Expanded(
-                                child: Text('Age', style: TextStyle(fontStyle: FontStyle.italic)),
-                              ),
-                            ),
-                            DataColumn(
-                              label: Expanded(
-                                child: Text('Role', style: TextStyle(fontStyle: FontStyle.italic)),
-                              ),
-                            ),
-                          ],
-                            rows: const <DataRow>[
-                              DataRow(
-                                cells: <DataCell>[
-                                  DataCell(Text('Sarah')),
-                                  DataCell(Text('19')),
-                                  DataCell(Text('Student')),
-                                ],
-                              ),
-                              DataRow(
-                                cells: <DataCell>[
-                                  DataCell(Text('Janine')),
-                                  DataCell(Text('43')),
-                                  DataCell(Text('Professor')),
-                                ],
-                              ),
-                              DataRow(
-                                cells: <DataCell>[
-                                  DataCell(Text('William')),
-                                  DataCell(Text('27')),
-                                  DataCell(Text('Associate Professor')),
-                                ],
-                              ),
-                            ],
-                          ),
+                          // 이미지로 대체
                           const Divider(thickness: 1, height: 1, color: Colors.grey),
-                          DataTable(
-                            columns: const <DataColumn>[
-                              DataColumn(
-                                label: Expanded(
-                                child: Text('Name', style: TextStyle(fontStyle: FontStyle.italic)),
-                              ),
-                            ),
-                            DataColumn(
-                              label: Expanded(
-                                child: Text('Age', style: TextStyle(fontStyle: FontStyle.italic)),
-                              ),
-                            ),
-                            DataColumn(
-                              label: Expanded(
-                                child: Text('Role', style: TextStyle(fontStyle: FontStyle.italic)),
-                              ),
-                            ),
-                          ],
-                            rows: const <DataRow>[
-                              DataRow(
-                                cells: <DataCell>[
-                                  DataCell(Text('Sarah')),
-                                  DataCell(Text('19')),
-                                  DataCell(Text('Student')),
-                                ],
-                              ),
-                              DataRow(
-                                cells: <DataCell>[
-                                  DataCell(Text('Janine')),
-                                  DataCell(Text('43')),
-                                  DataCell(Text('Professor')),
-                                ],
-                              ),
-                              DataRow(
-                                cells: <DataCell>[
-                                  DataCell(Text('William')),
-                                  DataCell(Text('27')),
-                                  DataCell(Text('Associate Professor')),
-                                ],
-                              ),
-                            ],
-                          ),
+                          // 이미지로 대체
                           const Divider(thickness: 1, height: 1, color: Colors.grey),                      
-                          DataTable(
-                            columns: const <DataColumn>[
-                              DataColumn(
-                                label: Expanded(
-                                child: Text('Name', style: TextStyle(fontStyle: FontStyle.italic)),
-                              ),
-                            ),
-                            DataColumn(
-                              label: Expanded(
-                                child: Text('Age', style: TextStyle(fontStyle: FontStyle.italic)),
-                              ),
-                            ),
-                            DataColumn(
-                              label: Expanded(
-                                child: Text('Role', style: TextStyle(fontStyle: FontStyle.italic)),
-                              ),
-                            ),
-                          ],
-                            rows: const <DataRow>[
-                              DataRow(
-                                cells: <DataCell>[
-                                  DataCell(Text('Sarah')),
-                                  DataCell(Text('19')),
-                                  DataCell(Text('Student')),
-                                ],
-                              ),
-                              DataRow(
-                                cells: <DataCell>[
-                                  DataCell(Text('Janine')),
-                                  DataCell(Text('43')),
-                                  DataCell(Text('Professor')),
-                                ],
-                              ),
-                              DataRow(
-                                cells: <DataCell>[
-                                  DataCell(Text('William')),
-                                  DataCell(Text('27')),
-                                  DataCell(Text('Associate Professor')),
-                                ],
-                              ),
-                            ],
-                          ),
+                          // 이미지로 대체
                           const Divider(thickness: 1, height: 1, color: Colors.grey),
                         ],
                       ),
@@ -922,8 +834,8 @@ class _SecondPageState extends State<SecondPage> with TickerProviderStateMixin {
             // 각 prism 스코어 값
             Text("$company_score", style: const TextStyle(color: Color(0xff101828), fontSize: 30, fontWeight: FontWeight.bold)),
             Text("업계 평균 $industry_score", style: const TextStyle(color: Color(0xff667085))),
-            if(industry_rank == 0) ...[Text("업계 내 $industry_rank위", style: const TextStyle(color: Color(0xff667085)))],
-            if(whole_rank == 0) ...[Text("전체 $whole_rank위", style: const TextStyle(color: Color(0xff667085)))],
+            if(industry_rank != 0 && industry_rank != -1) ...[Text("업계 내 $industry_rank위", style: const TextStyle(color: Color(0xff667085)))],
+            if(whole_rank != 0 && whole_rank != -1) ...[Text("전체 $whole_rank위", style: const TextStyle(color: Color(0xff667085)))],
           ],
         ),
       ),

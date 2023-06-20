@@ -7,6 +7,7 @@ import 'package:syncfusion_flutter_charts/charts.dart';
 import '../chart_data.dart';
 import '../models/esglab_ind_avg_score_model.dart';
 import '../models/esglab_score_model.dart';
+import '../models/gri_info_model.dart';
 import '../models/gri_usage_ind_avg_score_model.dart';
 import '../models/kcgs_ind_avg_score_model.dart';
 import '../models/kcgs_score_model.dart';
@@ -18,41 +19,6 @@ import '../services/api_services.dart';
 
 
 // 하드 코딩용 class
-class KcgsScore {
-  final String overallScore, EScore, SScore, GScore;
-  final int kcgsScoreId, evalYear, companyId, kcgsIndAvgId;
-
-  KcgsScore({
-    required this.overallScore, required this.EScore, required this.SScore, required this.GScore,
-    required this.kcgsScoreId, required this.evalYear, required this.companyId, required this.kcgsIndAvgId
-  });
-}
-
-class EsglabScore {
-  final String overallScore, EScore, SScore, GScore;
-  final int esglabScoreId, evalYear, companyId, esglabIndAvgId;
-
-  EsglabScore({
-    required this.overallScore, required this.EScore, required this.SScore, required this.GScore,
-    required this.esglabScoreId, required this.evalYear, required this.companyId, required this.esglabIndAvgId
-  });
-}
-
-class SustainReport {
-  final int sustain_report_id, year,
-  e_score, s_score, g_score, ind_e_score, ind_s_score, ind_g_score,
-  company_id, gri_usage_score_id, gri_usage_ind_avg_id;
-  final String download_link, industry;
-      
-
-  SustainReport({
-    required this.sustain_report_id, required this.year,
-    required this.download_link, required this.industry,
-    required this.e_score, required this.s_score, required this.g_score, required this.ind_e_score, required this.ind_s_score, required this.ind_g_score,
-    required this.company_id, required this.gri_usage_score_id, required this.gri_usage_ind_avg_id
-  });
-}
-
 class ReportSentencesModel {
   final int sustain_report_id, gri_info_id,report_senetences_id, sim_rank, page;
   final String most_sentence, preced_sentences, back_sentences;
@@ -105,9 +71,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   bool remove_comparing_items = true;
 
   // API- 회사 정보 저장 (하드코딩)
-  late List<KcgsScore> h_kcgs_scores;
-  late List<EsglabScore> h_esglab_scores;
-  late List<SustainReport> sustain_reports;
   late List<ReportSentencesModel> gri_infos;
   late List<ReportTableModel> report_tables;
 
@@ -168,124 +131,47 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
   // GRI 리스트
   final List<String> gri_mains = ["200", "300", "400",];
-  final List<String> gri_mids = ["201", "202", "203", "204", "205" ,"206", "301", "302", "303", "304", "305", "306", "307", "308", "401", "402", "403", "404", "405", "406", "407", "408", "409", "410", "411", "412", "413", "414", "415", "416", "417", "418", "419"];
-  final List<String> gri_subs = ["201-1",
-"201-2",
-"201-3",
-"201-4",
-
-"202-1",
-"202-2",
-
-"203-1",
-"203-2",
-
-"204-1",
-
-"205-1",
-"205-2",
-"205-3",
-
-"206-1",
-
-"301-1",
-"301-2",
-"301-3",
-
-"302-1",
-"302-2",
-"302-3",
-"302-4",
-"302-5",
-
-"303-1",
-"303-2",
-"303-3",
-"303-4",
-"303-5",
-
-"304-1",
-"304-2",
-"304-3",
-"304-4",
-
-"305-1",
-"305-2",
-"305-3",
-"305-4",
-"305-5",
-"305-6",
-"305-7",
-
-"306-1",
-"306-2",
-"306-3",
-"306-4",
-"306-5",
-
-"307-1",
-
-"308-1",
-"308-2",
-
-"401-1",
-"401-2",
-"401-3",
-
-"402-1",
-
-"403-1",
-"403-2",
-"403-3",
-"403-4",
-"403-5",
-"403-6",
-"403-7",
-"403-8",
-"403-9",
-"403-10",
-
-"404-1",
-"404-2",
-"404-3",
-
-"405-1",
-"405-2",
-
-"406-1",
-
-"407-1",
-
-"408-1",
-
-"409-1",
-
-"410-1",
-
-"411-1",
-
-"412-1",
-"412-2",
-"412-3",
-
-"413-1",
-"413-2",
-
-"414-1",
-"414-2",
-
-"415-1",
-
-"416-1",
-"416-2",
-
-"417-1",
-"417-2",
-"417-3",
-
-"418-1",
-
-"419-1"];
+  final List<String> gri_mids = [
+    "201", "202", "203", "204", "205" ,"206",
+    "301", "302", "303", "304", "305", "306", "307", "308",
+    "401", "402", "403", "404", "405", "406", "407", "408", "409", "410", "411", "412", "413", "414", "415", "416", "417", "418", "419"];
+  final List<String> gri_subs = [
+    "201-1", "201-2", "201-3", "201-4",
+    "202-1", "202-2",
+    "203-1", "203-2",
+    "204-1",
+    "205-1", "205-2", "205-3",
+    "206-1",
+    
+    "301-1", "301-2", "301-3",
+    "302-1", "302-2", "302-3", "302-4", "302-5",
+    "303-1", "303-2", "303-3", "303-4", "303-5",
+    "304-1", "304-2", "304-3", "304-4",
+    "305-1", "305-2", "305-3", "305-4", "305-5", "305-6", "305-7",
+    "306-1", "306-2", "306-3", "306-4", "306-5",
+    "307-1",
+    "308-1", "308-2",
+    
+    "401-1", "401-2", "401-3",
+    "402-1",
+    "403-1", "403-2", "403-3", "403-4", "403-5", "403-6", "403-7", "403-8", "403-9", "403-10",
+    "404-1", "404-2", "404-3",
+    "405-1", "405-2",
+    "406-1",
+    "407-1",
+    "408-1",
+    "409-1",
+    "410-1",
+    "411-1",
+    "412-1", "412-2", "412-3",
+    "413-1", "413-2",
+    "414-1", "414-2",
+    "415-1",
+    "416-1", "416-2",
+    "417-1", "417-2", "417-3",
+    "418-1",
+    "419-1"
+  ];
   final List<String> gri_subs_name = ["직접적 경제가치 발생과 분배(EVG&D)", "기후변화에 따른 재무적 영향 및 기타 리스크와 기회", "확정급여형 연금 채무 및 기타 퇴직연금안", "정부 재정지원",
 "사업장 소재 지역의 최저 임금 대비 초임 임금의 비율 (성별에 따라 파악)",
 "사업장이 소재한 지역사회에서 고용된 고위 임원의 비율",
@@ -369,7 +255,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 "고객 개인정보보호 위반 및 고객정보 분실 관련해 입증된 민원",
 "사회적 및 경제적 분야의 법률 및 규정 위반",];
 
-
   @override
   void initState() {
     // 사이드 메뉴 페이지 이동
@@ -423,8 +308,10 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   late Map<int, Map<String, dynamic>> detail_prism_info = {};
   // 세부페이지 - 평가기관등급 탭에서 사용할 정보
   late Map<int, Map<String, dynamic>> detail_association_info = {};
-  // 세부페이지 - ESG 정보 탭에서 사용할 정보
+  // 세부페이지 - ESG 정보 탭에서 사용할 정보 (ESG 비율)
   late Map<String, dynamic> detail_esg_info = {};
+  // 세부페이지 - ESG 정보 탭: gri_index 목록
+  late List<String> detail_gri_index = [];
   // 세부페이지 - 상단바 : 지속가능경영보고서 다운로드 링크
   late Map<int, String> detail_download_links = {};
 
@@ -438,6 +325,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   Map<int, String> download_links = {};
   Map<String, dynamic> esg_info = {};
   Map<String, dynamic> ind_esg_info = {};
+  List<String> gri_index = [];
   void fetchCompanyDetailData(String company_name) async {
     try {
       years = [];
@@ -449,12 +337,14 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       download_links = {};
       esg_info = {};
       ind_esg_info = {};
+      gri_index = [];
 
       // SecondPage로 보내는 데이터 처음에 초기화
       detail_info_years = [];
       detail_prism_info = {};
       detail_association_info = {};
       detail_esg_info = {};
+      detail_gri_index = [];
       detail_download_links = {};
 
       List<PrismScoreModel> prism_scores = await ApiService.outPrismScores(company_name);
@@ -594,7 +484,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
       List<SustainReportModel> sustain_reports = await ApiService.outSustainReports(company_name);
       for(var sustain_report in sustain_reports) {
-        download_links = {sustain_report.year: sustain_report.download_link};
+        print(sustain_report.year);
+        print(sustain_report.download_link);
+        download_links[sustain_report.year] = sustain_report.download_link;
         if (years[0] == sustain_report.year){
           esg_info = {
             'Escore': sustain_report.e_score,
@@ -604,6 +496,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         }
         
       }
+      print(download_links);
       
       List<GriUsageIndAvgScoreModel> gri_usage_ind_avg_scores = await ApiService.outGriUsageIndAvgScores(company_name);
       for(var gri_usage_ind_avg_score in gri_usage_ind_avg_scores) {
@@ -618,7 +511,11 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
       Map<String, dynamic> esg_rates = {...esg_info, ...ind_esg_info};
 
-      // await ApiService.outGriInfos(company_name);
+      List<GriInfoModel> gri_infos = await ApiService.outGriInfos(company_name);
+      for (var gri_info in gri_infos) {
+        gri_index.add(gri_info.gri_index);
+      }
+
       // await ApiService.outReportSentencess(company_name);
       // await ApiService.outReportTables(company_name);
       
@@ -629,6 +526,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         detail_association_info = association_info;
         detail_download_links = download_links;
         detail_esg_info = esg_rates;
+        detail_gri_index = gri_index;
         print(detail_info_years);
         print(detail_prism_info);
         print(detail_association_info);
@@ -962,39 +860,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
   // 비교 페이지
   List<Widget> comparingPage(BuildContext context) {
-    // 하드코딩
-    var kcgsScore = KcgsScore(
-        overallScore: "A+", EScore: "S", SScore: "A+", GScore: "A",
-        kcgsScoreId: 1, evalYear: 2022, companyId: 1, kcgsIndAvgId: 1,
-      );
-    var esglabScore = EsglabScore(
-        overallScore: "A+", EScore: "A+", SScore: "A+", GScore: "A",
-        esglabScoreId: 1, evalYear: 2022, companyId: 1, esglabIndAvgId: 1,
-      );
-    var sustainReport = SustainReport(
-        sustain_report_id: 1, year: 2022,
-        download_link: "www.", industry: "건축자재",
-        e_score: 90, s_score: 86, g_score: 70,
-        ind_e_score: 1, ind_s_score: 1, ind_g_score: 1,
-        company_id: 1, gri_usage_score_id: 1, gri_usage_ind_avg_id:1 
-      );
-    
-    // 데이터 불러오기
-    if (comparing_items.isNotEmpty) {
-      // 데이터 불러오기
-      h_kcgs_scores = [
-        for (var i = 0; i < comparing_items.length; i++)
-          kcgsScore,
-      ];
-      h_esglab_scores = [
-        for (var i = 0; i < comparing_items.length; i++)
-          esglabScore,
-      ];
-      sustain_reports = [
-        for (var i = 0; i < comparing_items.length; i++)
-          sustainReport,
-      ];
-    }
 
     return [
       const Text(
@@ -1663,6 +1528,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                             onPressed: () async {
                               fetchCompanyDetailData(one_row_list[index].name);
                               print(detail_info_years);
+                              print(detail_download_links);
                               print("---------in");
 
                               await Future.delayed(Duration(seconds: 1)); // 1초 동안 지연: 데이터 불러오는 시간
@@ -1672,7 +1538,14 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) =>
-                                          SecondPage(one_row_list[index].name, one_row_list[index].industry, detail_info_years, detail_prism_info, detail_association_info, detail_download_links, detail_esg_info)));
+                                          SecondPage(
+                                            one_row_list[index].name, one_row_list[index].industry,
+                                            detail_info_years,
+                                            detail_prism_info,
+                                            detail_association_info,
+                                            detail_download_links,
+                                            detail_esg_info,
+                                            detail_gri_index)));
                             },
                             icon: const Icon(Icons.arrow_right),
                           ),
@@ -1768,7 +1641,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       builder: (BuildContext context) => AlertDialog(
         content: SingleChildScrollView(
           child: Column(
-            mainAxisSize: MainAxisSize.min,
+            // mainAxisSize: MainAxisSize.max,
             children: [
               for (int i = 0; i < gri_mains.length; i++)
                 ExpansionTile(

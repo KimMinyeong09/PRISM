@@ -378,23 +378,41 @@ class ApiService {
     }
     return sustain_reports_instances;
   }
-  // //클릭한 회사 보고서가 사용한 gri정보, 최신년도만
-  // static Future<GriInfoModel> outGriInfos(String company) async {
-  //   final url = Uri.parse('$base_url/rank/oneCompany/');
+  //클릭한 회사 보고서가 사용한 gri정보, 최신년도만
+  static Future<List<GriInfoModel>> outGriInfos(String company) async {
+    // final url = Uri.parse('$base_url/rank/oneCompany/');
   
-  //   final requestData = {
-  //     'company': company,
-  //   };
+    // final requestData = {
+    //   'company': company,
+    // };
     
-  //   final response = await http.post(url, body: requestData); 
+    // final response = await http.post(url, body: requestData); 
 
-  //   if (response.statusCode == 200) {
-  //     final gri_info = jsonDecode(response.body);
-  //     return GriInfoModel.fromJson(gri_info);
-  //   }
-  //   // 에러 처리
-  //   throw Exception('Failed to fetch gri info of sustain report');
-  // }
+    // List<GriInfoModel> gri_indexs = [];
+
+    // if (response.statusCode == 200) {
+    //   final gris = jsonDecode(response.body);
+    //   for (var gri in gris) {
+    //     final instance = GriInfoModel.fromJson(gri);
+    //     gri_indexs.add(instance);
+    //   }
+    //   return gri_indexs;
+    // }
+    // // 에러 처리
+    // throw Exception('Failed to fetch gri info of sustain report');
+    final jsonString = await rootBundle.loadString("../../assets/dummyJSON/gri_info.json");
+
+    List<GriInfoModel> gri_indexs_instances = [];
+
+    final jsonData = jsonDecode(jsonString);
+    final List<Map<String, dynamic>> gri_indexs = List<Map<String, dynamic>>.from(jsonData);
+
+    for (var gri_index in gri_indexs) {
+      final instance = GriInfoModel.fromJson(gri_index);
+      gri_indexs_instances.add(instance);
+    }
+    return gri_indexs_instances;
+  }
   // //클릭한 회사 보고서내 gri유사 문장, 최신년도만
   // static Future<ReportSentencesModel> outReportSentencess(String company) async {
   //   final url = Uri.parse('$base_url/rank/oneCompany');
