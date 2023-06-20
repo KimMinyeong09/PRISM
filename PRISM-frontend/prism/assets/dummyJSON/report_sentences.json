@@ -1,32 +1,34 @@
 [
     {
-        "Sustain_report_id":1,
-        "Gri_info_id":1,
-        "Report_senetences_id":1,
-        "Sim_rank":12,
-        "Most_sentences":"가장유사한문장1가장유사한문장1가장유사한문장1가장유사한문장1가장유사한문장1",
-        "Preced_sentences":"가장유사한문장기준 앞문장1가장유사한문장기준 앞문장1가장유사한문장기준 앞문장1가장유사한문장기준 앞문장1가장유사한문장기준 앞문장1가장유사한문장기준 앞문장1",
-        "Back_sentences":"가장 유사한 문장기준 뒷문장1가장 유사한 문장기준 뒷문장1가장 유사한 문장기준 뒷문장1가장 유사한 문장기준 뒷문장1가장 유사한 문장기준 뒷문장1",
-        "Page":12
+        "gri_index": "201-1",
+        "sim_rank":1,
+        "most_sentences": "201-1 가장 유사한 문장 1위",
+        "preced_sentences": "201-1 가장 유사한 문장 1위 앞문장",
+        "back_sentences":"뒷문장, 201-1 가장 유사한 문장 1위",
+        "page":12
     },
     {
-        "Sustain_report_id":2,
-        "Gri_info_id":2,
-        "Report_senetences_id":2,
-        "Sim_rank":12,
-        "Most_sentences":"가장유사한문장1가장유사한문장1가장유사한문장1가장유사한문장1가장유사한문장1",
-        "Preced_sentences":"가장유사한문장기준 앞문장1가장유사한문장기준 앞문장1가장유사한문장기준 앞문장1가장유사한문장기준 앞문장1가장유사한문장기준 앞문장1가장유사한문장기준 앞문장1",
-        "Back_sentences":"가장 유사한 문장기준 뒷문장1가장 유사한 문장기준 뒷문장1가장 유사한 문장기준 뒷문장1가장 유사한 문장기준 뒷문장1가장 유사한 문장기준 뒷문장1",
-        "Page":12
+        "gri_index": "201-1",
+        "sim_rank":2,
+        "most_sentences": "201-1 가장 유사한 문장 2위",
+        "preced_sentences": "201-1 가장 유사한 문장 2위 앞문장",
+        "back_sentences":"뒷문장, 201-1 가장 유사한 문장 2위",
+        "page":12
     },
     {
-        "Sustain_report_id":3,
-        "Gri_info_id":3,
-        "Report_senetences_id":3,
-        "Sim_rank":12,
-        "Most_sentences":"가장유사한문장1가장유사한문장1가장유사한문장1가장유사한문장1가장유사한문장1",
-        "Preced_sentences":"가장유사한문장기준 앞문장1가장유사한문장기준 앞문장1가장유사한문장기준 앞문장1가장유사한문장기준 앞문장1가장유사한문장기준 앞문장1가장유사한문장기준 앞문장1",
-        "Back_sentences":"가장 유사한 문장기준 뒷문장1가장 유사한 문장기준 뒷문장1가장 유사한 문장기준 뒷문장1가장 유사한 문장기준 뒷문장1가장 유사한 문장기준 뒷문장1",
-        "Page":12
+        "gri_index": "201-1",
+        "sim_rank":3,
+        "most_sentences": "201-1 가장 유사한 문장 3위",
+        "preced_sentences": "앞문장임!",
+        "back_sentences":"뒷문장임!",
+        "page":12
+    },
+    {
+        "gri_index": "301-1",
+        "sim_rank":1,
+        "most_sentences": "301-1 가장 유사한 문장",
+        "preced_sentences": "앞문장임!",
+        "back_sentences":"뒷문장임!",
+        "page":102
     }
 ]

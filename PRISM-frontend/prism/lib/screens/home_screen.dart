@@ -14,16 +14,17 @@ import '../models/kcgs_score_model.dart';
 import '../models/one_row_model.dart';
 import '../models/prism_ind_avg_score_model.dart';
 import '../models/prism_score_model.dart';
+import '../models/report_sentences_model.dart';
 import '../models/sustain_report_model.dart';
 import '../services/api_services.dart';
 
 
 // 하드 코딩용 class
-class ReportSentencesModel {
+class ReportSentences {
   final int sustain_report_id, gri_info_id,report_senetences_id, sim_rank, page;
   final String most_sentence, preced_sentences, back_sentences;
 
-  ReportSentencesModel({
+  ReportSentences({
     required this.sustain_report_id, required this.gri_info_id, required this.report_senetences_id, required this.sim_rank, required this.page,
     required this.most_sentence, required this.preced_sentences, required this.back_sentences
   });
@@ -71,7 +72,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   bool remove_comparing_items = true;
 
   // API- 회사 정보 저장 (하드코딩)
-  late List<ReportSentencesModel> gri_infos;
+  late List<ReportSentences> gri_infos;
   late List<ReportTableModel> report_tables;
 
   // 업종 리스트
@@ -314,6 +315,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   late List<String> detail_gri_index = [];
   // 세부페이지 - 상단바 : 지속가능경영보고서 다운로드 링크
   late Map<int, String> detail_download_links = {};
+  // 세부페이지 - ESG 정보 탭: gri_index에 따른 문장들
+  late Map<String, List<Map<int, dynamic>>> detail_gri_sentences = {};
 
   List<int> years = [];
   Map<int, Map<String, dynamic>> b_prism_info = {};
@@ -326,6 +329,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   Map<String, dynamic> esg_info = {};
   Map<String, dynamic> ind_esg_info = {};
   List<String> gri_index = [];
+  Map<String, List<Map<int, dynamic>>> gri_sentences = {};
   void fetchCompanyDetailData(String company_name) async {
     try {
       years = [];
@@ -346,6 +350,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       detail_esg_info = {};
       detail_gri_index = [];
       detail_download_links = {};
+      detail_gri_sentences = {};
 
       List<PrismScoreModel> prism_scores = await ApiService.outPrismScores(company_name);
       for (var prism_score in prism_scores) {
@@ -484,8 +489,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
       List<SustainReportModel> sustain_reports = await ApiService.outSustainReports(company_name);
       for(var sustain_report in sustain_reports) {
-        print(sustain_report.year);
-        print(sustain_report.download_link);
+        // print(sustain_report.year);
+        // print(sustain_report.download_link);
         download_links[sustain_report.year] = sustain_report.download_link;
         if (years[0] == sustain_report.year){
           esg_info = {
@@ -496,7 +501,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         }
         
       }
-      print(download_links);
+      // print(download_links);
       
       List<GriUsageIndAvgScoreModel> gri_usage_ind_avg_scores = await ApiService.outGriUsageIndAvgScores(company_name);
       for(var gri_usage_ind_avg_score in gri_usage_ind_avg_scores) {
@@ -516,7 +521,31 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         gri_index.add(gri_info.gri_index);
       }
 
-      // await ApiService.outReportSentencess(company_name);
+      List<ReportSentencesModel> report_sentences = await ApiService.outReportSentencess(company_name);
+      for (var report_sentence in report_sentences) {
+        if (gri_sentences.containsKey(report_sentence.gri_index)) {
+          gri_sentences[report_sentence.gri_index]!.add({
+            report_sentence.sim_rank: [
+              report_sentence.preced_sentences,
+              report_sentence.most_sentences,
+              report_sentence.back_sentences
+            ]
+          });
+        } else {
+          gri_sentences[report_sentence.gri_index] = [
+            {
+              report_sentence.sim_rank: [
+                report_sentence.preced_sentences,
+                report_sentence.most_sentences,
+                report_sentence.back_sentences
+              ]
+            }
+          ];
+        }
+      }
+      
+
+      print(gri_sentences);
       // await ApiService.outReportTables(company_name);
       
 
@@ -527,6 +556,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         detail_download_links = download_links;
         detail_esg_info = esg_rates;
         detail_gri_index = gri_index;
+        detail_gri_sentences = gri_sentences;
         print(detail_info_years);
         print(detail_prism_info);
         print(detail_association_info);
@@ -957,7 +987,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                   }
     fetchComparingData(company_and_year);
 
-    var reportSentencesModel = ReportSentencesModel(
+    var reportSentences = ReportSentences(
         sustain_report_id: 1, gri_info_id: 1, report_senetences_id: 1, sim_rank: 1, page: 50,
         most_sentence: "중요 문장!!", preced_sentences: "이전문장", back_sentences: "이후문장",
       );
@@ -969,7 +999,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     
     gri_infos = [
         for (var i = 0; i < comparing_items.length; i++)
-          reportSentencesModel,
+          reportSentences,
       ];
       report_tables = [
         for (var i = 0; i < comparing_items.length; i++)
@@ -1178,7 +1208,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     );
   }
 
-  Padding extractSentences(ReportSentencesModel gri_info) {
+  Padding extractSentences(ReportSentences gri_info) {
 
     return Padding(
       padding: const EdgeInsets.all(8.0),
@@ -1527,11 +1557,19 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                           IconButton(
                             onPressed: () async {
                               fetchCompanyDetailData(one_row_list[index].name);
+
+                              await Future.delayed(Duration(seconds: 5)); // 5초 동안 지연: 데이터 불러오는 시간
+
+                              print(one_row_list[index].name);
+                              print(one_row_list[index].industry);
                               print(detail_info_years);
                               print(detail_download_links);
+                              print(detail_prism_info);
+                              print(detail_association_info);
+                              print(detail_esg_info);
+                              print(detail_gri_index);
+                              print(detail_gri_sentences);
                               print("---------in");
-
-                              await Future.delayed(Duration(seconds: 1)); // 1초 동안 지연: 데이터 불러오는 시간
 
 
                               Navigator.push(
@@ -1539,13 +1577,16 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                                   MaterialPageRoute(
                                       builder: (context) =>
                                           SecondPage(
-                                            one_row_list[index].name, one_row_list[index].industry,
+                                            one_row_list[index].name,
+                                            one_row_list[index].industry,
                                             detail_info_years,
                                             detail_prism_info,
                                             detail_association_info,
                                             detail_download_links,
                                             detail_esg_info,
-                                            detail_gri_index)));
+                                            detail_gri_index,
+                                            detail_gri_sentences
+                                            )));
                             },
                             icon: const Icon(Icons.arrow_right),
                           ),

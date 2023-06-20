@@ -13,6 +13,7 @@ class SecondPage extends StatefulWidget {
   final Map<int, String> detail_download_links;
   final Map<String, dynamic> detail_esg_info ;
   final List<String> detail_gri_index;
+  final Map<String, List<Map<int, dynamic>>> detail_gri_sentences;
 
   const SecondPage(
     this.company_name, this.company_industry,
@@ -22,6 +23,7 @@ class SecondPage extends StatefulWidget {
     this.detail_download_links,
     this.detail_esg_info,
     this.detail_gri_index,
+    this.detail_gri_sentences,
     {Key? key}) : super(key: key);
 
   @override
@@ -35,6 +37,7 @@ class _SecondPageState extends State<SecondPage> with TickerProviderStateMixin {
   late Map<int, String> detail_download_links;
   late Map<String, dynamic> detail_esg_info ;
   late List<String> detail_gri_index;
+  late Map<String, List<Map<int, dynamic>>> detail_gri_sentences;
 
   late TabController _scoreTabController;
 
@@ -50,6 +53,7 @@ class _SecondPageState extends State<SecondPage> with TickerProviderStateMixin {
     detail_download_links = widget.detail_download_links;
     detail_esg_info = widget.detail_esg_info;
     detail_gri_index = widget.detail_gri_index;
+    detail_gri_sentences = widget.detail_gri_sentences;
 
     _scoreTabController = TabController(length: 3, vsync: this);
   }
@@ -62,6 +66,16 @@ class _SecondPageState extends State<SecondPage> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    print(company_name);
+                              print(company_industry);
+                              print(detail_info_years);
+                              print(detail_download_links);
+                              print(detail_prism_info);
+                              print(detail_association_info);
+                              print(detail_esg_info);
+                              print(detail_gri_index);
+                              print(detail_gri_sentences);
+
     return Scaffold(
       body: Center(
         child: Padding(
@@ -210,7 +224,7 @@ class _SecondPageState extends State<SecondPage> with TickerProviderStateMixin {
     for (int i = 0; i < years.length; i++) {
       Map<String, dynamic> item = {
         'domain': years[i].toString(),
-        'measure': detail_prism_info?[years[i]]?['overallScore'] != null ? detail_prism_info?[years[i]]?['overallScore']: 0,
+        'measure': detail_prism_info[years[i]]?['overallScore'] != null ? detail_prism_info[years[i]]!['overallScore']: 0,
       };
       dataPrismALL.add(item);
     }
@@ -219,7 +233,7 @@ class _SecondPageState extends State<SecondPage> with TickerProviderStateMixin {
     for (int i = 0; i < years.length; i++) {
       Map<String, dynamic> item = {
         'domain': years[i].toString(),
-        'measure': detail_prism_info?[years[i]]?['EScore'] != null ? detail_prism_info?[years[i]]?['EScore']: 0,
+        'measure': detail_prism_info[years[i]]?['EScore'] != null ? detail_prism_info[years[i]]!['EScore']: 0,
       };
       dataPrismE.add(item);
     }
@@ -228,7 +242,7 @@ class _SecondPageState extends State<SecondPage> with TickerProviderStateMixin {
     for (int i = 0; i < years.length; i++) {
       Map<String, dynamic> item = {
         'domain': years[i].toString(),
-        'measure': detail_prism_info?[years[i]]?['SScore'] != null ? detail_prism_info?[years[i]]?['SScore']: 0,
+        'measure': detail_prism_info[years[i]]?['SScore'] != null ? detail_prism_info[years[i]]!['SScore']: 0,
       };
       dataPrismS.add(item);
     }
@@ -237,7 +251,7 @@ class _SecondPageState extends State<SecondPage> with TickerProviderStateMixin {
     for (int i = 0; i < years.length; i++) {
       Map<String, dynamic> item = {
         'domain': years[i].toString(),
-        'measure': detail_prism_info?[years[i]]?['GScore'] != null ? detail_prism_info?[years[i]]?['GScore']: 0,
+        'measure': detail_prism_info[years[i]]?['GScore'] != null ? detail_prism_info[years[i]]!['GScore']: 0,
       };
       dataPrismG.add(item);
     }
@@ -246,7 +260,7 @@ class _SecondPageState extends State<SecondPage> with TickerProviderStateMixin {
     for (int i = 0; i < years.length; i++) {
       Map<String, dynamic> item = {
         'domain': years[i].toString(),
-        'measure': detail_prism_info?[years[i]]?['indOverallScore'] != null ? detail_prism_info?[years[i]]?['indOverallScore']: 0,
+        'measure': detail_prism_info[years[i]]?['indOverallScore'] != null ? detail_prism_info[years[i]]!['indOverallScore']: 0,
       };
       dataIndPrismALL.add(item);
     }
@@ -255,7 +269,7 @@ class _SecondPageState extends State<SecondPage> with TickerProviderStateMixin {
     for (int i = 0; i < years.length; i++) {
       Map<String, dynamic> item = {
         'domain': years[i].toString(),
-        'measure': detail_prism_info?[years[i]]?['indEScore'] != null ? detail_prism_info?[years[i]]?['indEScore']: 0,
+        'measure': detail_prism_info[years[i]]?['indEScore'] != null ? detail_prism_info[years[i]]!['indEScore']: 0,
       };
       dataIndPrismE.add(item);
     }
@@ -264,7 +278,7 @@ class _SecondPageState extends State<SecondPage> with TickerProviderStateMixin {
     for (int i = 0; i < years.length; i++) {
       Map<String, dynamic> item = {
         'domain': years[i].toString(),
-        'measure': detail_prism_info?[years[i]]?['indSScore'] != null ? detail_prism_info?[years[i]]?['indSScore']: 0,
+        'measure': detail_prism_info[years[i]]?['indSScore'] != null ? detail_prism_info[years[i]]!['indSScore']: 0,
       };
       dataIndPrismS.add(item);
     }
@@ -273,7 +287,7 @@ class _SecondPageState extends State<SecondPage> with TickerProviderStateMixin {
     for (int i = 0; i < years.length; i++) {
       Map<String, dynamic> item = {
         'domain': years[i].toString(),
-        'measure': detail_prism_info?[years[i]]?['indGScore'] != null ? detail_prism_info?[years[i]]?['indGScore']: 0,
+        'measure': detail_prism_info[years[i]]?['indGScore'] != null ? detail_prism_info[years[i]]!['indGScore']: 0,
       };
       dataIndPrismG.add(item);
     }
@@ -411,7 +425,7 @@ class _SecondPageState extends State<SecondPage> with TickerProviderStateMixin {
 
     List<Map<String, dynamic>> dataKcgs = [];
     for (int i = 0; i < years.length; i++) {
-      var score = detail_association_info?[years[i]]?['kcgsOverallScore'];
+      var score = detail_association_info[years[i]]!['kcgsOverallScore'];
       Map<String, dynamic> item = {
         'domain': years[i].toString(),
         'measure': score != null
@@ -429,7 +443,7 @@ class _SecondPageState extends State<SecondPage> with TickerProviderStateMixin {
 
     List<Map<String, dynamic>> dataEsglab = [];
     for (int i = 0; i < years.length; i++) {
-      var score = detail_association_info?[years[i]]?['esglabOverallScore'];
+      var score = detail_association_info[years[i]]?['esglabOverallScore'];
       Map<String, dynamic> item = {
         'domain': years[i].toString(),
         'measure': score != null
@@ -447,7 +461,7 @@ class _SecondPageState extends State<SecondPage> with TickerProviderStateMixin {
 
     List<Map<String, dynamic>> dataIndKcgs = [];
     for (int i = 0; i < years.length; i++) {
-      var score = detail_association_info?[years[i]]?['kcsgAvgOverallScore'];
+      var score = detail_association_info[years[i]]?['kcsgAvgOverallScore'];
       Map<String, dynamic> item = {
         'domain': years[i].toString(),
         'measure': score != null
@@ -465,7 +479,7 @@ class _SecondPageState extends State<SecondPage> with TickerProviderStateMixin {
 
     List<Map<String, dynamic>> dataIndEsglab = [];
     for (int i = 0; i < years.length; i++) {
-      var score = detail_association_info?[years[i]]?['esglabAvgOverallScore'];
+      var score = detail_association_info[years[i]]?['esglabAvgOverallScore'];
       Map<String, dynamic> item = {
         'domain': years[i].toString(),
         'measure': score != null
@@ -712,10 +726,6 @@ class _SecondPageState extends State<SecondPage> with TickerProviderStateMixin {
   // - GRI 정보
   Widget _buildESGTab(String tab) {
     List<String> gris = [];
-
-    detail_gri_index;
-
-
     for (var gri_index in detail_gri_index) {
       if (tab == "E") {
         // 200
@@ -736,6 +746,8 @@ class _SecondPageState extends State<SecondPage> with TickerProviderStateMixin {
         }
       }
     }
+    // gri
+    detail_gri_sentences;
 
     return SingleChildScrollView(
       child: Column(
@@ -752,20 +764,20 @@ class _SecondPageState extends State<SecondPage> with TickerProviderStateMixin {
                       title: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          // 텍스트
-                          const Text('한 문장, 두 문장입니다.', style: TextStyle(color: Colors.grey)),
-                          const Text('핵심 문장입니다.'),
-                          const Text('한 문장, 두 문장입니다.', style: TextStyle(color: Colors.grey)),
-                          const Divider(thickness: 1, height: 1, color: Colors.grey),
-                          const Text('한 문장, 두 문장입니다.',style: TextStyle(color: Colors.grey)),
-                          const Text('핵심 문장입니다.'),
-                          const Text('한 문장, 두 문장입니다.',style: TextStyle(color: Colors.grey)),
-                          const Divider(thickness: 1, height: 1, color: Colors.grey),
-                          const Text('한 문장, 두 문장입니다.',style: TextStyle(color: Colors.grey)),
-                          const Text('핵심 문장입니다.'),
-                          const Text('한 문장, 두 문장입니다.',style: TextStyle(color: Colors.grey)),
-                          const Divider(thickness: 1, height: 1, color: Colors.grey),
-                          
+                          if (detail_gri_sentences[gri]?.length != null)...[
+                            for (int i = 0; i < detail_gri_sentences[gri]!.length; i++) ...[
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(detail_gri_sentences[gri]?[i][i+1][0], style: TextStyle(color: Colors.grey)),
+                                Text(detail_gri_sentences[gri]?[i][i+1][1]),
+                                Text(detail_gri_sentences[gri]?[i][i+1][2], style: TextStyle(color: Colors.grey)),
+                                const Divider(thickness: 1, height: 1, color: Colors.grey),
+                              ],
+                            ),
+                          ],
+                          ],
+
                           // 표
                           // 이미지로 대체
                           const Divider(thickness: 1, height: 1, color: Colors.grey),

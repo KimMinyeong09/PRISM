@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:js_util';
 
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
@@ -413,25 +412,43 @@ class ApiService {
     }
     return gri_indexs_instances;
   }
-  // //클릭한 회사 보고서내 gri유사 문장, 최신년도만
-  // static Future<ReportSentencesModel> outReportSentencess(String company) async {
-  //   final url = Uri.parse('$base_url/rank/oneCompany');
+  //클릭한 회사 보고서내 gri유사 문장, 최신년도만
+  static Future<List<ReportSentencesModel>> outReportSentencess(String company) async {
+    // final url = Uri.parse('$base_url/rank/oneCompany/');
   
-  //   final requestData = {
-  //     'company': company,
-  //   };
+    // final requestData = {
+    //   'company': company,
+    // };
     
-  //   final response = await http.post(url, body: requestData); 
+    // final response = await http.post(url, body: requestData); 
 
-  //   if (response.statusCode == 200) {
-  //     final report_sentences = jsonDecode(response.body);
-  //     return ReportSentencesModel.fromJson(report_sentences);
-  //   }
-  //   // 에러 처리
-  //   throw Exception('Failed to fetch gri sentences of sustain report');
-  // }
+    // List<ReportSentencesModel> report_sentences_instances = [];
+
+    // if (response.statusCode == 200) {
+    //   final report_sentences = jsonDecode(response.body);
+    //   for (var report_sentence in report_sentences) {
+    //     final instance = ReportSentencesModel.fromJson(report_sentence);
+    //     report_sentences_instances.add(instance);
+    //   }
+    //   return report_sentences_instances;
+    // }
+    // // 에러 처리
+    // throw Exception('Failed to fetch gri info of sustain report');
+    final jsonString = await rootBundle.loadString("../../assets/dummyJSON/report_sentences.json");
+
+    List<ReportSentencesModel> report_sentences_instances = [];
+
+    final jsonData = jsonDecode(jsonString);
+    final List<Map<String, dynamic>> report_sentences = List<Map<String, dynamic>>.from(jsonData);
+
+    for (var report_sentence in report_sentences) {
+      final instance = ReportSentencesModel.fromJson(report_sentence);
+      report_sentences_instances.add(instance);
+    }
+    return report_sentences_instances;
+  }
   // //클릭한 회사 보고서내 gri유사 테이블, 최신년도만
-  // static Future<ReportTableModel> outReportTables(String company) async {
+  // static Future<List<ReportTableModel>> outReportTables(String company) async {
   //   final url = Uri.parse('$base_url/rank/oneCompany/');
   
   //   final requestData = {
