@@ -1200,9 +1200,21 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             ],
           ),
           // KCGS
-          _buildAssociationRakingTable("KCGS", h_kcgs_scores[index]),
+          _buildAssociationRakingTable(
+            "KCGS",
+            fetch_comparing_datas[index]['kcgsOverallScore'],
+            fetch_comparing_datas[index]['kcgsEScore'],
+            fetch_comparing_datas[index]['kcgsSScore'],
+            fetch_comparing_datas[index]['kcgsGScore'],
+          ),
           // 한국ESG연구소
-          _buildAssociationRakingTable("한국ESG연구소", h_esglab_scores[index]),
+          _buildAssociationRakingTable(
+            "한국ESG연구소",
+            fetch_comparing_datas[index]['esglabOverallScore'],
+            fetch_comparing_datas[index]['esglabEScore'],
+            fetch_comparing_datas[index]['esglabSScore'],
+            fetch_comparing_datas[index]['esglabGScore'],
+          ),
           // GRI info
           if (comparing_gris.isEmpty)
             SizedBox(
@@ -1317,20 +1329,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     );
   }
 
-  SizedBox _buildAssociationRakingTable(String association, var score) {
-    String overall = "Error", e = "Error", s = "Error", g = "Error";
-    if (score is KcgsScore) {
-      overall = score.overallScore;
-      e = score.EScore;
-      s = score.SScore;
-      g = score.GScore;
-    }
-    else if(score is EsglabScore) {
-      overall = score.overallScore;
-      e = score.EScore;
-      s = score.SScore;
-      g = score.GScore;
-    }
+  SizedBox _buildAssociationRakingTable(String association, String all, String e, String s, String g) {
 
     return SizedBox(
       height: MediaQuery.of(context).size.height / 4,
@@ -1346,7 +1345,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 TableRow(
                   children: [
                     const TableCell(child: Text("종합점수", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15,), textAlign: TextAlign.center,)),
-                    TableCell(child: Text(overall, style: TextStyle(fontSize: 15,), textAlign: TextAlign.center,)), // TODO: 점수 받아오기
+                    TableCell(child: Text(all, style: TextStyle(fontSize: 15,), textAlign: TextAlign.center,)), // TODO: 점수 받아오기
                   ],
                 ),
                 TableRow(
