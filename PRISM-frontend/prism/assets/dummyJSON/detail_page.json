@@ -1,0 +1,211 @@
+[
+    {
+        "prism_scores": [
+            {
+                "eval_year": 2022,
+                "overall_score": 3,
+                "e_score": 9,
+                "s_score": 10,
+                "g_score": 1,
+                "overall_rank": 1,
+                "e_rank" : 1,
+                "s_rank" : 1,
+                "g_rank" : 2,
+                "ind_overall_rank" : 1,
+                "ind_e_rank" : 1,
+                "ind_s_rank": 1,
+                "ind_g_rank":1, 
+                "w_overall_score": 80,
+                "w_e_score": 47,
+                "w_s_score": 0,
+                "w_g_score": 91,
+                "w_overall_rank": 1,
+                "w_e_rank": 1,
+                "w_s_rank": 1, 
+                "w_g_rank": 1
+            },
+            {
+                "eval_year": 2021,
+                "overall_score": 31,
+                "e_score": 58,
+                "s_score": 13,
+                "g_score": 14,
+                "overall_rank": 13,
+                "e_rank" : 15,
+                "s_rank" : 18,
+                "g_rank" : 12,
+                "ind_overall_rank" : 14,
+                "ind_e_rank" : 15,
+                "ind_s_rank": 16,
+                "ind_g_rank":19, 
+                "w_overall_score": 74,
+                "w_e_score": 47,
+                "w_s_score": 12,
+                "w_g_score": 91,
+                "w_overall_rank": 31,
+                "w_e_rank": 41,
+                "w_s_rank": 51, 
+                "w_g_rank": 61
+            }
+        ],
+        "prism_ind_avg_scores": [
+            {
+                "eval_year": 2022,
+                "overall_score": 71,
+                "e_score": 43,
+                "s_score": 19,
+                "g_score": 77,
+                "w_overall_score": 76,
+                "w_e_score": 79,
+                "w_s_score": 3,
+                "w_g_score": 58
+            },
+            {
+                "eval_year": 2021,
+                "overall_score": 98,
+                "e_score": 0,
+                "s_score": 5,
+                "g_score": 72,
+                "w_overall_score": 84,
+                "w_e_score": 81,
+                "w_s_score": 58,
+                "w_g_score": 27
+            }
+        ],
+        "kcgs_scores": [
+            {
+                "eval_year": 2022,
+                "overall_score": "B+",
+                "e_score": "C",
+                "s_score": "B+",
+                "g_score": "B+"
+            },
+            {
+                "eval_year": 2021,
+                "overall_score": "B",
+                "e_score": "D",
+                "s_score": "B",
+                "g_score": "B"
+            }
+        ],
+        "esglab_scores": [],
+        "kcgs_ind_avg_scores": [
+            {
+                "eval_year": 2022,
+                "overall_score": "A",
+                "e_score": "A",
+                "s_score": "A",
+                "g_score": "A"
+            },
+            {
+                "eval_year": 2021,
+                "overall_score": "A",
+                "e_score": "A",
+                "s_score": "A",
+                "g_score": "A"
+            }
+        ],
+        "esglab_ind_avg_scores": [],
+        "sustain_reports" : [
+            {
+                "year": 2022,
+                "download_link": "https://kind.krx.co.kr/external/2022/08/02/000323/20220802000253/BNK%EA%B8%88%EC%9C%B5%EA%B7%B8%EB%A3%B9%20%EC%A7%80%EC%86%8D%EA%B0%80%EB%8A%A5%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C%202021%28%EA%B5%AD%EB%AC%B8%29.pdf",
+                "e_score":40,
+                "s_score":50,
+                "g_score":60
+            },
+            {
+                "year": 2021,
+                "download_link":"https://kind.krx.co.kr/external/2022/08/05/000178/20220805000093/2021-2022%20DB%ED%95%98%EC%9D%B4%ED%85%8D%20ESG%EA%B2%BD%EC%98%81%EB%B3%B4%EA%B3%A0%EC%84%9C.pdf",
+                "e_score":50,
+                "s_score":60,
+                "g_score":40
+            }
+        ],
+        "gri_info" : [
+            {
+                "gri_index": "201-1"
+             },
+             {
+                 "gri_index":"301-1"
+             },
+             {
+                 "gri_index":"401-1"
+             }
+        ],
+        "report_sentences" : [
+            {
+                "gri_index": "201-1",
+                "sim_rank":1,
+                "most_sentences": "201-1 가장 유사한 문장 1위",
+                "preced_sentences": "201-1 가장 유사한 문장 1위 앞문장",
+                "back_sentences":"뒷문장, 201-1 가장 유사한 문장 1위",
+                "page":12
+            },
+            {
+                "gri_index": "201-1",
+                "sim_rank":2,
+                "most_sentences": "201-1 가장 유사한 문장 2위",
+                "preced_sentences": "201-1 가장 유사한 문장 2위 앞문장",
+                "back_sentences":"뒷문장, 201-1 가장 유사한 문장 2위",
+                "page":12
+            },
+            {
+                "gri_index": "201-1",
+                "sim_rank":3,
+                "most_sentences": "201-1 가장 유사한 문장 3위",
+                "preced_sentences": "앞문장임!",
+                "back_sentences":"뒷문장임!",
+                "page":12
+            },
+            {
+                "gri_index": "301-1",
+                "sim_rank":1,
+                "most_sentences": "301-1 가장 유사한 문장",
+                "preced_sentences": "앞문장임!",
+                "back_sentences":"뒷문장임!",
+                "page":102
+            }
+        ],
+        "report_table" : [
+            {
+                "gri_index":"201-1",
+                "sim_rank":1,
+                "link":"https://cdn.imweb.me/thumbnail/20190401/5ca1fdc158021.jpg",
+                "page":51
+            },
+            {
+                "gri_index":"301-1",
+                "sim_rank":1,
+                "link":"https://blog.kakaocdn.net/dn/cGe4Tl/btrrfoaNadG/UxDqt2KOdx7GIvilcLMlL1/img.png",
+                "page":51
+            },
+            {
+                "gri_index":"401-1",
+                "sim_rank":1,
+                "link":"https://help.hancom.com/hoffice/webhelp/9.0/ko_kr/hshow/images/table_gallery_01.png",
+                "page":51
+            }
+        ],
+        "gri_usage_ind_avg_score": [
+            {
+                "year":2021,
+                "e_score":50,
+                "s_score":60,
+                "g_score":40
+            },
+            {
+                "year":2022,
+                "e_score":70,
+                "s_score":50,
+                "g_score":60
+            },
+            {
+                "year":2020,
+                "e_score":80,
+                "s_score":60,
+                "g_score":30
+            }
+        ]
+    }
+]

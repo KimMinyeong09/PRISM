@@ -108,7 +108,21 @@ class _SecondPageState extends State<SecondPage> with TickerProviderStateMixin {
       detail_gri_sentences = {};
       detail_gri_tables = {};
 
-      List<PrismScoreModel> prism_scores = await ApiService.outPrismScores(company_name);
+      List<Map<String, dynamic>> detailPage = await ApiService.outDetailPageInfo(company_name); 
+      final List<String> keys = [
+        "prism_scores",
+        "prism_ind_avg_scores",
+        "kcgs_scores", 
+        "esglab_scores",
+        "kcgs_ind_avg_scores",
+        "esglab_ind_avg_scores", 
+        "sustain_reports", 
+        "gri_info", 
+        "report_sentences", 
+        "report_table", 
+        "gri_usage_ind_avg_score"];
+
+      List<PrismScoreModel> prism_scores = ApiService.outPrismScores(detailPage[0][keys[0]]);
       for (var prism_score in prism_scores) {
         years.add(prism_score.evalYear);
         b_prism_info[prism_score.evalYear] = {
@@ -116,14 +130,17 @@ class _SecondPageState extends State<SecondPage> with TickerProviderStateMixin {
           'EScore': prism_score.EScore,
           'SScore': prism_score.SScore,
           'GScore': prism_score.GScore,
+
           'WOverallScore': prism_score.WOverallScore,
           'WEScore': prism_score.WEScore,
           'WSScore': prism_score.WSScore,
           'WGScore': prism_score.WGScore,
+
           'overallRank': prism_score.overallRank,
           'Erank': prism_score.Erank,
           'Srank': prism_score.Srank,
           'Grank': prism_score.Grank, 
+          
           'indOverallRank': prism_score.indOverallRank,
           'indERank': prism_score.indERank,
           'indSRank': prism_score.indSRank,
@@ -132,7 +149,7 @@ class _SecondPageState extends State<SecondPage> with TickerProviderStateMixin {
       }
       years.sort((a, b) => b.compareTo(a));
       
-      List<PrismIndAvgScoreModel> prism_ind_avg_scores = await ApiService.outPrismIndAvgScores(company_name);
+      List<PrismIndAvgScoreModel> prism_ind_avg_scores = ApiService.outPrismIndAvgScores(detailPage[0][keys[1]]);
       for (var prism_ind_avg_score in prism_ind_avg_scores) {
         i_prism_info[prism_ind_avg_score.year] = {
           'indOverallScore': prism_ind_avg_score.overallScore,
@@ -145,11 +162,6 @@ class _SecondPageState extends State<SecondPage> with TickerProviderStateMixin {
           'indWGScore': prism_ind_avg_score.wGScore,
         };
       }
-      print("----------------------------------------");
-      print(years);
-      print(b_prism_info);
-      print(i_prism_info);
-      print("----------------------------------------");
 
       Map<int, Map<String, dynamic>> prism_info = {};
       b_prism_info.forEach((key, value) {
@@ -167,7 +179,7 @@ class _SecondPageState extends State<SecondPage> with TickerProviderStateMixin {
         }
       });
 
-      List<KcgsScoreModel> kcgs_scores = await ApiService.outKcgsScores(company_name);
+      List<KcgsScoreModel> kcgs_scores = ApiService.outKcgsScores(detailPage[0][keys[2]]);
       for (var kcgs_score in kcgs_scores) {
         k_association_info[kcgs_score.evalYear] = {
           'kcgsOverallScore': kcgs_score.overallScore,
@@ -177,7 +189,7 @@ class _SecondPageState extends State<SecondPage> with TickerProviderStateMixin {
         };
       }
       
-      List<EsglabScoreModel> esglab_scores = await ApiService.outEsglabScores(company_name);
+      List<EsglabScoreModel> esglab_scores = ApiService.outEsglabScores(detailPage[0][keys[3]]);
       for(var esglab_score in esglab_scores) {
         el_association_info[esglab_score.evalYear] = {
           'esglabOverallScore': esglab_score.overallScore,
@@ -186,7 +198,7 @@ class _SecondPageState extends State<SecondPage> with TickerProviderStateMixin {
           'esglabGScore': esglab_score.GScore,
         };
       }
-      List<KcgsIndAvgScoreModel> kcgs_ind_avg_scores = await ApiService.outKcgsIndAvgScores(company_name);
+      List<KcgsIndAvgScoreModel> kcgs_ind_avg_scores = ApiService.outKcgsIndAvgScores(detailPage[0][keys[4]]);
       for (var kcgs_ind_avg_score in kcgs_ind_avg_scores) {
         k_a_association_info[kcgs_ind_avg_score.year] = {
           'kcsgAvgOverallScore': kcgs_ind_avg_score.overallScore,
@@ -195,7 +207,7 @@ class _SecondPageState extends State<SecondPage> with TickerProviderStateMixin {
           'kcsgAvgGScore': kcgs_ind_avg_score.GScore,
         };
       }
-      List<EsglabIndAvgScoreModel> esglab_ind_avg_scores = await ApiService.outEsglabIndAvgScores(company_name);
+      List<EsglabIndAvgScoreModel> esglab_ind_avg_scores = ApiService.outEsglabIndAvgScores(detailPage[0][keys[5]]);
       for (var esglab_ind_avg_score in esglab_ind_avg_scores) {
         el_a_association_info[esglab_ind_avg_score.year] = {
           'esglabAvgOverallScore': esglab_ind_avg_score.overallScore,
@@ -243,10 +255,8 @@ class _SecondPageState extends State<SecondPage> with TickerProviderStateMixin {
         }
       });
 
-      List<SustainReportModel> sustain_reports = await ApiService.outSustainReports(company_name);
+      List<SustainReportModel> sustain_reports = ApiService.outSustainReports(detailPage[0][keys[6]]);
       for(var sustain_report in sustain_reports) {
-        // print(sustain_report.year);
-        // print(sustain_report.download_link);
         download_links[sustain_report.year] = sustain_report.download_link;
         if (years[0] == sustain_report.year){
           esg_info = {
@@ -257,9 +267,8 @@ class _SecondPageState extends State<SecondPage> with TickerProviderStateMixin {
         }
         
       }
-      // print(download_links);
       
-      List<GriUsageIndAvgScoreModel> gri_usage_ind_avg_scores = await ApiService.outGriUsageIndAvgScores(company_name);
+      List<GriUsageIndAvgScoreModel> gri_usage_ind_avg_scores = ApiService.outGriUsageIndAvgScores(detailPage[0][keys[10]]);
       for(var gri_usage_ind_avg_score in gri_usage_ind_avg_scores) {
         if (years[0] == gri_usage_ind_avg_score.year){
           ind_esg_info = {
@@ -272,12 +281,12 @@ class _SecondPageState extends State<SecondPage> with TickerProviderStateMixin {
 
       Map<String, dynamic> esg_rates = {...esg_info, ...ind_esg_info};
 
-      List<GriInfoModel> gri_infos = await ApiService.outGriInfos(company_name);
+      List<GriInfoModel> gri_infos = ApiService.outGriInfos(detailPage[0][keys[7]]);
       for (var gri_info in gri_infos) {
         gri_index.add(gri_info.gri_index);
       }
 
-      List<ReportSentencesModel> report_sentences = await ApiService.outReportSentencess(company_name);
+      List<ReportSentencesModel> report_sentences = ApiService.outReportSentencess(detailPage[0][keys[8]]);
       for (var report_sentence in report_sentences) {
         if (gri_sentences.containsKey(report_sentence.gri_index)) {
           gri_sentences[report_sentence.gri_index]!.add({
@@ -301,7 +310,7 @@ class _SecondPageState extends State<SecondPage> with TickerProviderStateMixin {
       }
       print(gri_sentences);
 
-      List<ReportTableModel> report_tables = await ApiService.outReportTables(company_name);
+      List<ReportTableModel> report_tables = ApiService.outReportTables(detailPage[0][keys[9]]);
       for (var report_table in report_tables) {
         if (gri_tables.containsKey(report_table.gri_index)) {
           gri_tables[report_table.gri_index]!.add({

@@ -1,26 +1,20 @@
 [
     {
-        "Gri_usage_ind_avg_id":1,
-        "Year":2021,
-        "Industry":1,
-        "E_score":50,
-        "S_score":60,
-        "G_score":40
+        "year":2021,
+        "e_score":50,
+        "s_score":60,
+        "g_score":40
     },
     {
-        "Gri_usage_ind_avg_id":2,
-        "Year":2022,
-        "Industry":1,
-        "E_score":70,
-        "S_score":50,
-        "G_score":60
+        "year":2022,
+        "e_score":70,
+        "s_score":50,
+        "g_score":60
     },
     {
-        "Gri_usage_ind_avg_id":3,
-        "Year":2020,
-        "Industry":2,
-        "E_score":80,
-        "S_score":60,
-        "G_score":30
+        "year":2020,
+        "e_score":80,
+        "s_score":60,
+        "g_score":30
     }
 ]

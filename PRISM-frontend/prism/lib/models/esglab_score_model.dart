@@ -1,14 +1,12 @@
 class EsglabScoreModel {
   final String overallScore, EScore, SScore, GScore;
-  final int esglabScoreId, evalYear, companyId, esglabIndAvgId;
+  final int evalYear;
 
   EsglabScoreModel.fromJson(Map<String, dynamic> json)
-      : esglabScoreId = json['Esglab_score_id'],
-        evalYear = json['Eval_year'],
-        overallScore = json['Overall_score'],
-        EScore = json['E_score'],
-        SScore = json['S_score'],
-        GScore = json['G_score'],
-        companyId = json['Company_id'],
-        esglabIndAvgId = json['Esglab_ind_avg_id'];
+      : 
+        evalYear = json['eval_year'],
+        overallScore = json['overall_score'],
+        EScore = json['e_score'],
+        SScore = json['s_score'],
+        GScore = json['g_score'];
 }
