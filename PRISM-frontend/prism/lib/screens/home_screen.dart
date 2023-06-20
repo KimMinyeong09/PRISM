@@ -5,17 +5,13 @@ import 'package:prism/screens/detail_screen.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 import '../chart_data.dart';
-import '../models/esglab_ind_avg_score_model.dart';
 import '../models/esglab_score_model.dart';
-import '../models/gri_info_model.dart';
-import '../models/gri_usage_ind_avg_score_model.dart';
-import '../models/kcgs_ind_avg_score_model.dart';
 import '../models/kcgs_score_model.dart';
 import '../models/one_row_model.dart';
 import '../models/prism_ind_avg_score_model.dart';
 import '../models/prism_score_model.dart';
 import '../models/report_sentences_model.dart';
-import '../models/sustain_report_model.dart';
+import '../models/report_table_model.dart';
 import '../services/api_services.dart';
 
 
@@ -370,9 +366,59 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     // await ApiService.outSustainReport(company_and_year);
   }
 
+  late Map<String, List<Map<int, dynamic>>> detail_gri_sentences = {};
+  late Map<String, List<Map<int, dynamic>>> detail_gri_tables = {};
   void fetchComparingGRIData(List<Map<String, int>> reports, List<String> gri_indexes) async {
-    await ApiService.outReportSentences(reports, gri_indexes);
-    await ApiService.outReportTable(reports, gri_indexes);
+    try {
+      Map<String, List<Map<int, dynamic>>> gri_sentences = {};
+      List<ReportSentencesModel> report_sentences = await ApiService.outReportSentences(reports, gri_indexes);
+      for (var report_sentence in report_sentences) {
+          if (gri_sentences.containsKey(report_sentence.gri_index)) {
+            gri_sentences[report_sentence.gri_index]!.add({
+              report_sentence.sim_rank: [
+                report_sentence.preced_sentences,
+                report_sentence.most_sentences,
+                report_sentence.back_sentences
+              ]
+            });
+          } else {
+            gri_sentences[report_sentence.gri_index] = [
+              {
+                report_sentence.sim_rank: [
+                  report_sentence.preced_sentences,
+                  report_sentence.most_sentences,
+                  report_sentence.back_sentences
+                ]
+              }
+            ];
+          }
+        }
+      
+      Map<String, List<Map<int, dynamic>>> gri_tables = {};
+      List<ReportTableModel> report_tables = await ApiService.outReportTable(reports, gri_indexes);
+      for (var report_table in report_tables) {
+          if (gri_tables.containsKey(report_table.gri_index)) {
+            gri_tables[report_table.gri_index]!.add({
+              report_table.sim_rank: report_table.link
+              
+            });
+          } else {
+            gri_tables[report_table.gri_index] = [
+              {
+                report_table.sim_rank: report_table.link
+              }
+            ];
+          }
+        }
+
+      setState(() {
+        detail_gri_sentences = gri_sentences;
+        detail_gri_tables = gri_tables;
+      });
+    } catch (e) {
+      print('Error: $e');
+    }
+    
   }
 
   @override
