@@ -40,7 +40,7 @@ class ApiService {
     // List<OneRowModel> rows_instances = [];
     
     // if (response.statusCode == 200) {
-    //   final rows = jsonDecode(response.body);
+    //   final rows = jsonDecode(utf8.decode(response.bodyBytes));
     //   for (var row in rows) {
     //     final instance = OneRowModel.fromJson(row);
     //     rows_instances.add(instance);
@@ -49,12 +49,10 @@ class ApiService {
     // }
     
     final jsonString = await rootBundle.loadString("../../assets/dummyJSON/one_row.json");
-    // final jsonString = await Future.wait([rootBundle.loadString("../../assets/dummyJSON/one_row.json"), rootBundle.loadString("../../assets/dummyJSON/prism_score.json"), rootBundle.loadString("../../assets/dummyJSON/prism_ind_avg_score.json")]);
 
     List<OneRowModel> rows_instances = [];
 
     final jsonData = jsonDecode(jsonString);
-    // final jsonData = jsonDecode(jsonString[0]);
     final List<Map<String, dynamic>> rows = List<Map<String, dynamic>>.from(jsonData);
     
     for (var row in rows) {
@@ -141,7 +139,7 @@ class ApiService {
     // List<PrismScoreModel> prism_scores = [];
 
     // if (response.statusCode == 200) {
-    //   final scores = jsonDecode(response.body);
+    //   final scores = jsonDecode(utf8.decode(response.bodyBytes));
     //   for (var score in scores) {
     //     final instance = PrismScoreModel.fromJson(score);
     //     prism_scores.add(instance);
@@ -152,12 +150,10 @@ class ApiService {
     // throw Exception('Failed to fetch company Prism scores');
 
     final jsonString = await rootBundle.loadString("../../assets/dummyJSON/prism_score.json");
-    // final jsonString = await Future.wait([rootBundle.loadString("../../assets/dummyJSON/one_row.json"), rootBundle.loadString("../../assets/dummyJSON/prism_score.json"), rootBundle.loadString("../../assets/dummyJSON/prism_ind_avg_score.json")]);
 
     List<PrismScoreModel> prism_scores_instances = [];
 
     final jsonData = jsonDecode(jsonString);
-    // final jsonData = jsonDecode(jsonString[1]);
     final List<Map<String, dynamic>> prism_scores = List<Map<String, dynamic>>.from(jsonData);
 
     for (var prism_score in prism_scores) {
@@ -179,7 +175,7 @@ class ApiService {
     // List<PrismIndAvgScoreModel> prism_ind_avg_scores = [];
 
     // if (response.statusCode == 200) {
-    //   final scores = jsonDecode(response.body);
+    //   final scores = jsonDecode(utf8.decode(response.bodyBytes));
     //   for (var score in scores) {
     //     final instance = PrismIndAvgScoreModel.fromJson(score);
     //     prism_ind_avg_scores.add(instance);
@@ -215,7 +211,7 @@ class ApiService {
     // List<KcgsScoreModel> kcgs_scores = [];
 
     // if (response.statusCode == 200) {
-    //   final scores = jsonDecode(response.body);
+    //   final scores = jsonDecode(utf8.decode(response.bodyBytes));
     //   for (var score in scores) {
     //     final instance = KcgsScoreModel.fromJson(score);
     //     kcgs_scores.add(instance);
@@ -250,7 +246,7 @@ class ApiService {
     // List<EsglabScoreModel> esglab_scores = [];
 
     // if (response.statusCode == 200) {
-    //   final scores = jsonDecode(response.body);
+    //   final scores = jsonDecode(utf8.decode(response.bodyBytes));
     //   for (var score in scores) {
     //     final instance = EsglabScoreModel.fromJson(score);
     //     esglab_scores.add(instance);
@@ -285,7 +281,7 @@ class ApiService {
     // List<KcgsIndAvgScoreModel> kcgs_ind_avg_scores = [];
 
     // if (response.statusCode == 200) {
-    //   final scores = jsonDecode(response.body);
+    //   final scores = jsonDecode(utf8.decode(response.bodyBytes));
     //   for (var score in scores) {
     //     final instance = KcgsIndAvgScoreModel.fromJson(score);
     //     kcgs_ind_avg_scores.add(instance);
@@ -320,7 +316,7 @@ class ApiService {
     // List<EsglabIndAvgScoreModel> esglab_scores = [];
 
     // if (response.statusCode == 200) {
-    //   final scores = jsonDecode(response.body);
+    //   final scores = jsonDecode(utf8.decode(response.bodyBytes));
     //   for (var score in scores) {
     //     final instance = EsglabIndAvgScoreModel.fromJson(score);
     //     esglab_scores.add(instance);
@@ -355,7 +351,7 @@ class ApiService {
     // List<SustainReportModel> esglab_scores = [];
 
     // if (response.statusCode == 200) {
-    //   final reports = jsonDecode(response.body);
+    //   final reports = jsonDecode(utf8.decode(response.bodyBytes));
     //   for (var report in reports) {
     //     final instance = SustainReportModel.fromJson(report);
     //     esglab_scores.add(instance);
@@ -390,7 +386,7 @@ class ApiService {
     // List<GriInfoModel> gri_indexs = [];
 
     // if (response.statusCode == 200) {
-    //   final gris = jsonDecode(response.body);
+    //   final gris = jsonDecode(utf8.decode(response.bodyBytes));
     //   for (var gri in gris) {
     //     final instance = GriInfoModel.fromJson(gri);
     //     gri_indexs.add(instance);
@@ -425,7 +421,7 @@ class ApiService {
     // List<ReportSentencesModel> report_sentences_instances = [];
 
     // if (response.statusCode == 200) {
-    //   final report_sentences = jsonDecode(response.body);
+    //   final report_sentences = jsonDecode(utf8.decode(response.bodyBytes));
     //   for (var report_sentence in report_sentences) {
     //     final instance = ReportSentencesModel.fromJson(report_sentence);
     //     report_sentences_instances.add(instance);
@@ -460,7 +456,7 @@ class ApiService {
     // List<ReportTableModel> report_tables_instances = [];
 
     // if (response.statusCode == 200) {
-    //   final report_tables = jsonDecode(response.body);
+    //   final report_tables = jsonDecode(utf8.decode(response.bodyBytes));
     //   for (var report_table in report_tables) {
     //     final instance = ReportTableModel.fromJson(report_table);
     //     report_tables_instances.add(instance);
@@ -495,7 +491,7 @@ class ApiService {
     // List<GriUsageIndAvgScoreModel> gri_usage_ind_avg_scores = [];
 
     // if (response.statusCode == 200) {
-    //   final reports = jsonDecode(response.body);
+    //   final reports = jsonDecode(utf8.decode(response.bodyBytes));
     //   for (var report in reports) {
     //     final instance = GriUsageIndAvgScoreModel.fromJson(report);
     //     gri_usage_ind_avg_scores.add(instance);
@@ -531,7 +527,7 @@ class ApiService {
     // List<PrismScoreModel> prism_scores = [];
 
     // if (response.statusCode == 200) {
-    //   final scores = jsonDecode(response.body);
+    //   final scores = jsonDecode(utf8.decode(response.bodyBytes));
     //   for (var score in scores) {
     //     final instance = PrismScoreModel.fromJson(score);
     //     prism_scores.add(instance);
@@ -565,7 +561,7 @@ class ApiService {
     // List<PrismIndAvgScoreModel> prism_ind_avg_scores = [];
 
     // if (response.statusCode == 200) {
-    //   final scores = jsonDecode(response.body);
+    //   final scores = jsonDecode(utf8.decode(response.bodyBytes));
     //   for (var score in scores) {
     //     final instance = PrismIndAvgScoreModel.fromJson(score);
     //     prism_ind_avg_scores.add(instance);
@@ -599,7 +595,7 @@ class ApiService {
     // List<KcgsScoreModel> kcgs_scores = [];
 
     // if (response.statusCode == 200) {
-    //   final scores = jsonDecode(response.body);
+    //   final scores = jsonDecode(utf8.decode(response.bodyBytes));
     //   for (var score in scores) {
     //     final instance = KcgsScoreModel.fromJson(score);
     //     kcgs_scores.add(instance);
@@ -633,7 +629,7 @@ class ApiService {
     // List<EsglabScoreModel> esglab_scores = [];
 
     // if (response.statusCode == 200) {
-    //   final scores = jsonDecode(response.body);
+    //   final scores = jsonDecode(utf8.decode(response.bodyBytes));
     //   for (var score in scores) {
     //     final instance = EsglabScoreModel.fromJson(score);
     //     esglab_scores.add(instance);
@@ -667,7 +663,7 @@ class ApiService {
   //   List<SustainReportModel> report_instances = [];
 
   //   if (response.statusCode == 200) {
-  //     final reports = jsonDecode(response.body);
+  //     final reports = jsonDecode(utf8.decode(response.bodyBytes));
   //     for (var report in reports) {
   //       final instance = SustainReportModel.fromJson(report);
   //       report_instances.add(instance);
@@ -692,7 +688,7 @@ class ApiService {
     // final response = await http.post(url, headers: {"Content-Type": "application/json"}, body: jsonEncode(requestData));
 
     // if (response.statusCode == 200) {
-    //   final sentences = jsonDecode(response.body);
+    //   final sentences = jsonDecode(utf8.decode(response.bodyBytes));
     //   for (var sentence in sentences) {
     //     final instance = ReportSentencesModel.fromJson(sentence);
     //     sentences_instances.add(instance);
@@ -733,7 +729,7 @@ class ApiService {
     // final response = await http.post(url, headers: {"Content-Type": "application/json"}, body: jsonEncode(requestData));
 
     // if (response.statusCode == 200) {
-    //   final tables = jsonDecode(response.body);
+    //   final tables = jsonDecode(utf8.decode(response.bodyBytes));
     //   for (var table in tables) {
     //     final instance = ReportTableModel.fromJson(table);
     //     tables_instances.add(instance);
@@ -759,21 +755,4 @@ class ApiService {
     }
     return tables_instances;
   }
-  // //gri index사용 비율 업종 평균점수, 최신년도만
-  // static Future<GriUsageIndAvgScoreModel> outGriUsageIndAvgScore(List<Map<String, int>> reports, List<String> gri_indexes) async {
-  //   final url = Uri.parse('$base_url/comparing/context/');
-  //   final requestData = {
-  //     'reports': reports,
-  //     'gri_indexes': gri_indexes,
-  //   };
-    
-  //   final response = await http.post(url, headers: {"Content-Type": "application/json"}, body: jsonEncode(requestData));
-
-  //   if (response.statusCode == 200) {
-  //     final gri_usage_ind_avg_score = jsonDecode(response.body);
-  //     return GriUsageIndAvgScoreModel.fromJson(gri_usage_ind_avg_score);
-  //   }
-  //   // 에러 처리
-  //   throw Exception('Failed to fetch gri rate of company sustain reports');
-  // }
 }
