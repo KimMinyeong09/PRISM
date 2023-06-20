@@ -1642,10 +1642,14 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                         ),
                         DataCell(
                           IconButton(
-                            onPressed: () {
+                            onPressed: () async {
                               fetchCompanyDetailData(one_row_list[index].name);
                               print(detail_info_years);
                               print("---------in");
+
+                              await Future.delayed(Duration(seconds: 1)); // 1초 동안 지연
+
+                              
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(

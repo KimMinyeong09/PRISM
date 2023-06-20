@@ -45,6 +45,8 @@ dependencies:
   d_chart: ^2.2.11
   draw_graph: ^1.0.0
   syncfusion_flutter_charts: ^21.2.10
+  flutter_downloader: ^1.10.4
+  url_launcher: ^6.1.11
 
 dev_dependencies:
   flutter_test:
