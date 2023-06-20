@@ -13,28 +13,16 @@ import '../models/kcgs_ind_avg_score_model.dart';
 import '../models/prism_ind_avg_score_model.dart';
 import '../models/prism_score_model.dart';
 import '../models/report_sentences_model.dart';
+import '../models/report_table_model.dart';
 import '../models/sustain_report_model.dart';
 import '../services/api_services.dart';
 
 
 class SecondPage extends StatefulWidget {
   final String company_name, company_industry;
-  // final List<int> detail_info_years;
-  // final Map<int, Map<String, dynamic>> detail_prism_info, detail_association_info;
-  // final Map<int, String> detail_download_links;
-  // final Map<String, dynamic> detail_esg_info ;
-  // final List<String> detail_gri_index;
-  // final Map<String, List<Map<int, dynamic>>> detail_gri_sentences;
 
   const SecondPage(
     this.company_name, this.company_industry,
-    // this.detail_info_years,
-    // this.detail_prism_info,
-    // this.detail_association_info,
-    // this.detail_download_links,
-    // this.detail_esg_info,
-    // this.detail_gri_index,
-    // this.detail_gri_sentences,
     {Key? key}) : super(key: key);
 
   @override
@@ -43,12 +31,6 @@ class SecondPage extends StatefulWidget {
 
 class _SecondPageState extends State<SecondPage> with TickerProviderStateMixin {
   late String company_name, company_industry;
-  // late List<int> detail_info_years;
-  // late Map<int, Map<String, dynamic>> detail_prism_info, detail_association_info;
-  // late Map<int, String> detail_download_links;
-  // late Map<String, dynamic> detail_esg_info ;
-  // late List<String> detail_gri_index;
-  // late Map<String, List<Map<int, dynamic>>> detail_gri_sentences;
 
   late TabController _scoreTabController;
 
@@ -58,13 +40,6 @@ class _SecondPageState extends State<SecondPage> with TickerProviderStateMixin {
 
     company_name = widget.company_name;
     company_industry = widget.company_industry;
-    // detail_info_years = widget.detail_info_years;
-    // detail_prism_info = widget.detail_prism_info;
-    // detail_association_info = widget.detail_association_info;
-    // detail_download_links = widget.detail_download_links;
-    // detail_esg_info = widget.detail_esg_info;
-    // detail_gri_index = widget.detail_gri_index;
-    // detail_gri_sentences = widget.detail_gri_sentences;
 
     _scoreTabController = TabController(length: 3, vsync: this);
 
@@ -91,6 +66,8 @@ class _SecondPageState extends State<SecondPage> with TickerProviderStateMixin {
   late Map<int, String> detail_download_links = {};
   // 세부페이지 - ESG 정보 탭: gri_index에 따른 문장들
   late Map<String, List<Map<int, dynamic>>> detail_gri_sentences = {};
+  // 세부페이지 - ESG 정보 탭: gri_index에 따른 표
+  late Map<String, List<Map<int, dynamic>>> detail_gri_tables = {};
 
   List<int> years = [];
   Map<int, Map<String, dynamic>> b_prism_info = {};
@@ -104,6 +81,7 @@ class _SecondPageState extends State<SecondPage> with TickerProviderStateMixin {
   Map<String, dynamic> ind_esg_info = {};
   List<String> gri_index = [];
   Map<String, List<Map<int, dynamic>>> gri_sentences = {};
+  Map<String, List<Map<int, dynamic>>> gri_tables = {};
   void fetchCompanyDetailData(String company_name) async {
     try {
       years = [];
@@ -116,6 +94,9 @@ class _SecondPageState extends State<SecondPage> with TickerProviderStateMixin {
       esg_info = {};
       ind_esg_info = {};
       gri_index = [];
+      gri_sentences = {};
+      gri_tables = {};
+
 
       // SecondPage로 보내는 데이터 처음에 초기화
       detail_info_years = [];
@@ -125,6 +106,7 @@ class _SecondPageState extends State<SecondPage> with TickerProviderStateMixin {
       detail_gri_index = [];
       detail_download_links = {};
       detail_gri_sentences = {};
+      detail_gri_tables = {};
 
       List<PrismScoreModel> prism_scores = await ApiService.outPrismScores(company_name);
       for (var prism_score in prism_scores) {
@@ -317,11 +299,24 @@ class _SecondPageState extends State<SecondPage> with TickerProviderStateMixin {
           ];
         }
       }
-      
-
       print(gri_sentences);
-      // await ApiService.outReportTables(company_name);
-      
+
+      List<ReportTableModel> report_tables = await ApiService.outReportTables(company_name);
+      for (var report_table in report_tables) {
+        if (gri_tables.containsKey(report_table.gri_index)) {
+          gri_tables[report_table.gri_index]!.add({
+            report_table.sim_rank: report_table.link
+            
+          });
+        } else {
+          gri_tables[report_table.gri_index] = [
+            {
+              report_table.sim_rank: report_table.link
+            }
+          ];
+        }
+      }
+      print(gri_tables);
 
       setState(() {
         detail_info_years = years;
@@ -331,6 +326,7 @@ class _SecondPageState extends State<SecondPage> with TickerProviderStateMixin {
         detail_esg_info = esg_rates;
         detail_gri_index = gri_index;
         detail_gri_sentences = gri_sentences;
+        detail_gri_tables = gri_tables;
         print(detail_info_years);
         print(detail_prism_info);
         print(detail_association_info);
@@ -1056,14 +1052,27 @@ class _SecondPageState extends State<SecondPage> with TickerProviderStateMixin {
                             ),
                           ],
                           ],
-
                           // 표
-                          // 이미지로 대체
-                          const Divider(thickness: 1, height: 1, color: Colors.grey),
-                          // 이미지로 대체
-                          const Divider(thickness: 1, height: 1, color: Colors.grey),                      
-                          // 이미지로 대체
-                          const Divider(thickness: 1, height: 1, color: Colors.grey),
+                          if (detail_gri_tables[gri]?.length != null)...[
+                            for (int i = 0; i < detail_gri_tables[gri]!.length; i++) ...[
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Image.network(
+                                  detail_gri_tables[gri]?[i][i+1],
+                                  errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
+                                    // 예외 처리 로직을 작성합니다.
+                                    // 예를 들어, 예외 메시지를 출력하거나 기본 이미지를 보여줄 수 있습니다.
+                                    print('Image loading error: $exception');
+                                    return Text('Failed to load image');
+                                  },
+                                ),
+                                const Divider(thickness: 1, height: 1, color: Colors.grey),
+                              ],
+                            ),
+                          ],
+                          ],
+                          
                         ],
                       ),
                     ),

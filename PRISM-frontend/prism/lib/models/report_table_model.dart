@@ -21,5 +21,5 @@ class ReportTableModel {
       : gri_index = json['gri_index'],
         sim_rank = json['sim_rank'],
         link = json['link'],
-        page = json['Gri_info_id'];
+        page = json['page'];
 }

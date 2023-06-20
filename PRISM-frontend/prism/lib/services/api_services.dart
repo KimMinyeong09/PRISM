@@ -469,7 +469,7 @@ class ApiService {
     // }
     // // 에러 처리
     // throw Exception('Failed to fetch gri table info');
-    final jsonString = await rootBundle.loadString("../../assets/dummyJSON/report_sentences.json");
+    final jsonString = await rootBundle.loadString("../../assets/dummyJSON/report_table.json");
 
     List<ReportTableModel> report_tables_instances = [];
 
