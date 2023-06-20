@@ -710,8 +710,13 @@ class ApiService {
     final List<Map<String, dynamic>> sentences = List<Map<String, dynamic>>.from(jsonData);
 
     for (var sentence in sentences) {
-      final instance = ReportSentencesModel.fromJson(sentence);
-      sentences_instances.add(instance);
+      for (var gri_index in gri_indexes) {
+        if (sentence['gri_index'] == gri_index) {
+          final instance = ReportSentencesModel.fromJson(sentence);
+          sentences_instances.add(instance);
+        }
+      }
+      
     }
     return sentences_instances;
   }
@@ -737,7 +742,7 @@ class ApiService {
     // }
     // // 에러 처리
     // throw Exception('Failed to fetch table of company sustain reports');
-    final jsonString = await rootBundle.loadString("../../assets/dummyJSON/report_sentences.json");
+    final jsonString = await rootBundle.loadString("../../assets/dummyJSON/report_table.json");
 
     List<ReportTableModel> tables_instances = [];
 
@@ -745,8 +750,12 @@ class ApiService {
     final List<Map<String, dynamic>> tables = List<Map<String, dynamic>>.from(jsonData);
 
     for (var table in tables) {
-      final instance = ReportTableModel.fromJson(table);
-      tables_instances.add(instance);
+      for (var gri_index in gri_indexes) {
+        if (table['gri_index'] == gri_index) {
+          final instance = ReportTableModel.fromJson(table);
+          tables_instances.add(instance);
+        }
+      }
     }
     return tables_instances;
   }

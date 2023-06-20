@@ -414,6 +414,10 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       setState(() {
         detail_gri_sentences = gri_sentences;
         detail_gri_tables = gri_tables;
+        print("------------");
+        print(detail_gri_sentences);
+        print(detail_gri_tables);
+        print("------------");
       });
     } catch (e) {
       print('Error: $e');
@@ -728,6 +732,15 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                       onPressed: () {
                         setState(() {
                           comparing_gris.remove(gri);
+                          List<Map<String, int>> reports = [];
+              for (var comparing_item in comparing_items) {
+                String item = comparing_item;
+                List<String> splitText = item.split("\n");
+                String companyName = splitText[0];
+                int companyYear = int.parse(splitText[1]);
+                reports.add({companyName: companyYear});
+              }
+              fetchComparingGRIData(reports, comparing_gris);
                         });
                       },
                       style: TextButton.styleFrom(
@@ -924,9 +937,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                             ],
                           ),
                           // 텍스트
-                          extractSentences(gri_infos[index]),
-                          extractSentences(gri_infos[index]),
-                          extractSentences(gri_infos[index]),
+                          extractSentences(comparing_gri),
                           // 표
                           extractTable(report_tables[index]),
                           extractTable(report_tables[index]),
@@ -989,21 +1000,33 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             ],
           ),
         ],
+          
       ),
     );
   }
 
-  Padding extractSentences(ReportSentences gri_info) {
+  Padding extractSentences(String comparing_gri) {
+
+    print(detail_gri_sentences[comparing_gri]);
 
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Row(
         children: [
-          Text(gri_info.preced_sentences, style: const TextStyle(color: Colors.grey)),
-          Text(gri_info.most_sentence),
-          Text(gri_info.back_sentences, style: const TextStyle(color: Colors.grey)),
+          if (detail_gri_sentences[comparing_gri] != null)...[
+            for (int i = 0; i < detail_gri_sentences[comparing_gri]!.length; i++)...[
+              Column(
+                children: [
+                  Text(detail_gri_sentences[comparing_gri]?[i][i+1][0], style: TextStyle(color: Colors.grey)),
+                  Text(detail_gri_sentences[comparing_gri]?[i][i+1][1]),
+                  Text(detail_gri_sentences[comparing_gri]?[i][i+1][2], style: TextStyle(color: Colors.grey)),
+                ],
+              ),
+            ],
+          ],
+          if (detail_gri_sentences[comparing_gri] == null)...[
+            const Text("해당 데이터가 없습니다."),
+          ],
         ],
       ),
     );
@@ -1446,7 +1469,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   Future<String?> chooseGRI(BuildContext context) {
     return showDialog<String>(
       context: context,
-      barrierDismissible: true, // 바깥 영역 터치시 닫을지 여부
+      barrierDismissible: false, // 바깥 영역 터치시 닫을지 여부 : X
       builder: (BuildContext context) => AlertDialog(
         content: SingleChildScrollView(
           child: Column(
@@ -1475,6 +1498,15 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                                           if (gri_subs[k].contains(gri_mids[j]))
                                               TextButton(
                                                 onPressed: () {
+                                                  List<Map<String, int>> reports = [];
+              for (var comparing_item in comparing_items) {
+                String item = comparing_item;
+                List<String> splitText = item.split("\n");
+                String companyName = splitText[0];
+                int companyYear = int.parse(splitText[1]);
+                reports.add({companyName: companyYear});
+              }
+              fetchComparingGRIData(reports, comparing_gris);
                                                   setState(() {
                                                     if (comparing_gris.contains(gri_subs[k])) {
                                                       comparing_gris.remove(gri_subs[k]);
@@ -1514,7 +1546,18 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         ),
         actions: <Widget>[
           TextButton(
-            onPressed: () => Navigator.pop(context, 'OK'),
+            onPressed: (() {
+              List<Map<String, int>> reports = [];
+              for (var comparing_item in comparing_items) {
+                String item = comparing_item;
+                List<String> splitText = item.split("\n");
+                String companyName = splitText[0];
+                int companyYear = int.parse(splitText[1]);
+                reports.add({companyName: companyYear});
+              }
+              fetchComparingGRIData(reports, comparing_gris);
+              Navigator.pop(context, 'OK');
+            }),
             child: const Text('OK'),
           ),
         ],
