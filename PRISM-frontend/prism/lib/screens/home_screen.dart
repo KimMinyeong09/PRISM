@@ -939,9 +939,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                           // 텍스트
                           extractSentences(comparing_gri),
                           // 표
-                          extractTable(report_tables[index]),
-                          extractTable(report_tables[index]),
-                          extractTable(report_tables[index]),
+                          extractTable(report_tables[index], comparing_gri),
                       ],
                     ),
                   ),
@@ -951,56 +949,30 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     });
   }
 
-  Padding extractTable(ReportTable report_table) {
+  Padding extractTable(ReportTable report_table, String comparing_gri) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Column(
         children: [
-          Text(report_table.title),
-          DataTable(
-            columns: const <DataColumn>[
-              DataColumn(
-                label: Expanded(
-                child: Text('Name', style: TextStyle(fontStyle: FontStyle.italic)),
-              ),
-            ),
-            DataColumn(
-              label: Expanded(
-                child: Text('Age', style: TextStyle(fontStyle: FontStyle.italic)),
-              ),
-            ),
-            DataColumn(
-              label: Expanded(
-                child: Text('Role', style: TextStyle(fontStyle: FontStyle.italic)),
-              ),
-            ),
-          ],
-            rows: const <DataRow>[
-              DataRow(
-                cells: <DataCell>[
-                  DataCell(Text('Sarah')),
-                  DataCell(Text('19')),
-                  DataCell(Text('Student')),
-                ],
-              ),
-              DataRow(
-                cells: <DataCell>[
-                  DataCell(Text('Janine')),
-                  DataCell(Text('43')),
-                  DataCell(Text('Professor')),
-                ],
-              ),
-              DataRow(
-                cells: <DataCell>[
-                  DataCell(Text('William')),
-                  DataCell(Text('27')),
-                  DataCell(Text('Associate Professor')),
+          if (detail_gri_tables[comparing_gri] != null)...[
+            for (int i = 0; i < detail_gri_tables[comparing_gri]!.length; i++) ...[
+              Row(
+                children: [
+                  Image.network(
+                    detail_gri_tables[comparing_gri]?[i][i+1],
+                    errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
+                      // 예외 처리 로직을 작성합니다.
+                      // 예를 들어, 예외 메시지를 출력하거나 기본 이미지를 보여줄 수 있습니다.
+                      print('Image loading error: $exception');
+                      return Text('Failed to load image');
+                    },
+                  ),
+                  const Divider(thickness: 1, height: 1, color: Colors.grey),
                 ],
               ),
             ],
-          ),
+          ],
         ],
-          
       ),
     );
   }
