@@ -447,23 +447,41 @@ class ApiService {
     }
     return report_sentences_instances;
   }
-  // //클릭한 회사 보고서내 gri유사 테이블, 최신년도만
-  // static Future<List<ReportTableModel>> outReportTables(String company) async {
-  //   final url = Uri.parse('$base_url/rank/oneCompany/');
+  //클릭한 회사 보고서내 gri유사 테이블, 최신년도만
+  static Future<List<ReportTableModel>> outReportTables(String company) async {
+    // final url = Uri.parse('$base_url/rank/oneCompany/');
   
-  //   final requestData = {
-  //     'company': company,
-  //   };
+    // final requestData = {
+    //   'company': company,
+    // };
     
-  //   final response = await http.post(url, body: requestData); 
+    // final response = await http.post(url, body: requestData); 
 
-  //   if (response.statusCode == 200) {
-  //     final report_table = jsonDecode(response.body);
-  //     return ReportTableModel.fromJson(report_table);
-  //   }
-  //   // 에러 처리
-  //   throw Exception('Failed to fetch gri table of sustain report');
-  // }
+    // List<ReportTableModel> report_tables_instances = [];
+
+    // if (response.statusCode == 200) {
+    //   final report_tables = jsonDecode(response.body);
+    //   for (var report_table in report_tables) {
+    //     final instance = ReportTableModel.fromJson(report_table);
+    //     report_tables_instances.add(instance);
+    //   }
+    //   return report_tables_instances;
+    // }
+    // // 에러 처리
+    // throw Exception('Failed to fetch gri table info');
+    final jsonString = await rootBundle.loadString("../../assets/dummyJSON/report_sentences.json");
+
+    List<ReportTableModel> report_tables_instances = [];
+
+    final jsonData = jsonDecode(jsonString);
+    final List<Map<String, dynamic>> report_tables = List<Map<String, dynamic>>.from(jsonData);
+
+    for (var report_table in report_tables) {
+      final instance = ReportTableModel.fromJson(report_table);
+      report_tables_instances.add(instance);
+    }
+    return report_tables_instances;
+  }
   //gri index사용 비율 업종 평균점수, 최신년도만
   static Future<List<GriUsageIndAvgScoreModel>> outGriUsageIndAvgScores(String company) async {
     // final url = Uri.parse('$base_url/rank/oneCompany/');
