@@ -702,7 +702,6 @@ class _SecondPageState extends State<SecondPage> with TickerProviderStateMixin {
 
   // 평가기관 등급 탭
   Widget _buildRatingTab() {
-    // List<int> years = [2022, 2021, 2020];
     List<int> years = detail_info_years;
 
     detail_association_info;
@@ -1133,6 +1132,7 @@ class _SecondPageState extends State<SecondPage> with TickerProviderStateMixin {
                   ],
                   xValueMapper: (ChartData data, _) => data.category,
                   yValueMapper: (ChartData data, _) => data.value,
+                  maximumValue: 100,
                 ),
               ],
               palette: const <Color>[

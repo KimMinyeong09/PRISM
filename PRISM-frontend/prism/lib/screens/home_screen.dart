@@ -263,10 +263,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   late List<OneRowModel> one_row_list = [];  // ranking tab에서 이용
   void fetchOnePageData(String filter_score, int page) async {
     try {
-      // print(page);
-      // print(filter_score);
       List<OneRowModel> one_pages = await ApiService.outOnePage(page, filter_score, comparing_industries, search_name);
-      // print(one_pages);
       setState(() {
         one_row_list = one_pages;
       });
@@ -831,14 +828,14 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                         setState(() {
                           comparing_gris.remove(gri);
                           List<Map<String, int>> reports = [];
-              for (var comparing_item in comparing_items) {
-                String item = comparing_item;
-                List<String> splitText = item.split("\n");
-                String companyName = splitText[0];
-                int companyYear = int.parse(splitText[1]);
-                reports.add({companyName: companyYear});
-              }
-              fetchComparingGRIData(reports, comparing_gris);
+                          for (var comparing_item in comparing_items) {
+                            String item = comparing_item;
+                            List<String> splitText = item.split("\n");
+                            String companyName = splitText[0];
+                            int companyYear = int.parse(splitText[1]);
+                            reports.add({companyName: companyYear});
+                          }
+                          fetchComparingGRIData(reports, comparing_gris);
                         });
                       },
                       style: TextButton.styleFrom(
@@ -874,13 +871,13 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   List<Widget> printComparingInfo(BuildContext context) {
 
     List<Map<String, int>> company_and_year=[];
-                  for (var comparing_item in comparing_items) {
-                    String item = comparing_item;
-                    List<String> splitText = item.split("\n");
-                    String companyName = splitText[0];
-                    int companyYear = int.parse(splitText[1]);
-                    company_and_year.add({companyName: companyYear});
-                  }
+    for (var comparing_item in comparing_items) {
+      String item = comparing_item;
+      List<String> splitText = item.split("\n");
+      String companyName = splitText[0];
+      int companyYear = int.parse(splitText[1]);
+      company_and_year.add({companyName: companyYear});
+    }
     fetchComparingData(company_and_year);
 
     if (fetch_comparing_datas.isEmpty)
@@ -1368,7 +1365,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                                 builder: (BuildContext context) {
                                   // 연도 받아오기
                                   List<int> year = [2022, 2021, 2020];
-                                  // List<int> year = companyYears;
+                                  // TODO: 변경할 것  List<int> year = companyYears;
                                   
                                   return AlertDialog(
                                     content: Row(
@@ -1406,8 +1403,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                           ),
                         ),
                         DataCell(Text((rowIndex + 1).toString())),
-                        DataCell(Text(one_row_list[index].name)), // 수정
-                        DataCell(Text(one_row_list[index].industry)), // 수정
+                        DataCell(Text(one_row_list[index].name)),
+                        DataCell(Text(one_row_list[index].industry)),
                         DataCell(Text(one_row_list[index].score.toString())),
                         DataCell(
                           Row(
@@ -1469,7 +1466,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   Future<String?> chooseIndustries(BuildContext context, String scoreName) {
     return showDialog<String>(
       context: context,
-      barrierDismissible: true, // 바깥 영역 터치시 닫을지 여부: 닫지 않음
+      barrierDismissible: true, // 바깥 영역 터치시 닫을지 여부
       builder: (BuildContext context) => AlertDialog(
         content: Column(
           mainAxisSize: MainAxisSize.min,
@@ -1525,7 +1522,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   Future<String?> chooseGRI(BuildContext context) {
     return showDialog<String>(
       context: context,
-      barrierDismissible: false, // 바깥 영역 터치시 닫을지 여부 : X
+      barrierDismissible: true, // 바깥 영역 터치시 닫을지 여부
       builder: (BuildContext context) => AlertDialog(
         content: SingleChildScrollView(
           child: Column(
@@ -1555,38 +1552,35 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                                               TextButton(
                                                 onPressed: () {
                                                   List<Map<String, int>> reports = [];
-              for (var comparing_item in comparing_items) {
-                String item = comparing_item;
-                List<String> splitText = item.split("\n");
-                String companyName = splitText[0];
-                int companyYear = int.parse(splitText[1]);
-                reports.add({companyName: companyYear});
-              }
-              fetchComparingGRIData(reports, comparing_gris);
+                                                  for (var comparing_item in comparing_items) {
+                                                    String item = comparing_item;
+                                                    List<String> splitText = item.split("\n");
+                                                    String companyName = splitText[0];
+                                                    int companyYear = int.parse(splitText[1]);
+                                                    reports.add({companyName: companyYear});
+                                                  }
+                                                  fetchComparingGRIData(reports, comparing_gris);
                                                   setState(() {
-                                                    if (comparing_gris.contains(gri_subs[k])) {
-                                                      comparing_gris.remove(gri_subs[k]);
-                                                    } else {
-                                                      if (comparing_gris.length < 5) {
-                                                        comparing_gris.add(gri_subs[k]);
-                                                      }
+                                                  if (comparing_gris.contains(gri_subs[k])) {
+                                                    comparing_gris.remove(gri_subs[k]);
+                                                  } else {
+                                                    if (comparing_gris.length < 5) {
+                                                      comparing_gris.add(gri_subs[k]);
                                                     }
-                                                  });
-                                                },
-                                                child: Text(
-                                                  '${gri_subs[k]}: ${gri_subs_name[k]}',
-                                                  style: TextStyle(
-                                                    color: Colors.black,
-                                                    fontWeight:
-                                                        comparing_gris.contains(gri_subs[k])
-                                                            ? FontWeight.bold
-                                                            : FontWeight.normal,
-                                                  ),
+                                                  }
+                                                });
+                                              },
+                                              child: Text(
+                                                '${gri_subs[k]}: ${gri_subs_name[k]}',
+                                                style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontWeight:
+                                                      comparing_gris.contains(gri_subs[k])
+                                                          ? FontWeight.bold
+                                                          : FontWeight.normal,
                                                 ),
                                               ),
-                                            
-                                              
-
+                                            ),
                                       ],
                                     ),
                                   ),
