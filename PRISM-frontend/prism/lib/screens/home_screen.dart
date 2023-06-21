@@ -1070,6 +1070,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           if (detail_gri_sentences[comparing_gri] != null)...[
             for (int i = 0; i < detail_gri_sentences[comparing_gri]!.length; i++)...[
               Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(detail_gri_sentences[comparing_gri]?[i][i+1][0], style: TextStyle(color: Colors.grey)),
                   Text(detail_gri_sentences[comparing_gri]?[i][i+1][1]),
