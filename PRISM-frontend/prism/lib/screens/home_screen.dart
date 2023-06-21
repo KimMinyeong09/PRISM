@@ -1039,6 +1039,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 children: [
                   Image.network(
                     detail_gri_tables[comparing_gri]?[i][i+1],
+                    // width:MediaQuery.of(context).size.width / 4,
+                    height:MediaQuery.of(context).size.height / 4 - 16, 
                     errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
                       // 예외 처리 로직을 작성합니다.
                       // 예를 들어, 예외 메시지를 출력하거나 기본 이미지를 보여줄 수 있습니다.
