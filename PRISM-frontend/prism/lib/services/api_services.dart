@@ -284,7 +284,7 @@ class ApiService {
 
 
   // 비교페이지 내용 필요
-  static Future<List<Map<String, dynamic>>> outComparingPageInfo(List<Map<String, int>> company_and_year) async {
+  static Future<List<Map<String, dynamic>>> outComparingPageInfo(List<String> company_and_year) async {
     // final url = Uri.parse('$base_url/comparing/');
     // final requestData = {
     //   'company_and_year': company_and_year,

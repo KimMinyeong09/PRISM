@@ -46,6 +46,29 @@
                 "w_e_rank": 41,
                 "w_s_rank": 51, 
                 "w_g_rank": 61
+            },
+            {
+                "eval_year": 2020,
+                "overall_score": 31,
+                "e_score": 58,
+                "s_score": 13,
+                "g_score": 14,
+                "overall_rank": 13,
+                "e_rank" : 15,
+                "s_rank" : 18,
+                "g_rank" : 12,
+                "ind_overall_rank" : 14,
+                "ind_e_rank" : 15,
+                "ind_s_rank": 16,
+                "ind_g_rank":19, 
+                "w_overall_score": 74,
+                "w_e_score": 47,
+                "w_s_score": 12,
+                "w_g_score": 91,
+                "w_overall_rank": 31,
+                "w_e_rank": 41,
+                "w_s_rank": 51, 
+                "w_g_rank": 61
             }
         ],
         "prism_ind_avg_scores": [
@@ -59,6 +82,17 @@
                 "w_e_score": 79,
                 "w_s_score": 3,
                 "w_g_score": 58
+            },
+            {
+                "eval_year": 2021,
+                "overall_score": 98,
+                "e_score": 0,
+                "s_score": 5,
+                "g_score": 72,
+                "w_overall_score": 84,
+                "w_e_score": 81,
+                "w_s_score": 58,
+                "w_g_score": 27
             },
             {
                 "eval_year": 2021,
@@ -86,8 +120,37 @@
                 "e_score": "D",
                 "s_score": "B",
                 "g_score": "B"
+            },
+            {
+                "eval_year": 2021,
+                "overall_score": "B",
+                "e_score": "D",
+                "s_score": "B",
+                "g_score": "B"
             }
         ],
-        "esglab_scores": []
+        "esglab_scores": [
+            {
+                "eval_year": 2022,
+                "overall_score": "B+",
+                "e_score": "C",
+                "s_score": "B+",
+                "g_score": "B+"
+            },
+            {
+                "eval_year": 2021,
+                "overall_score": "B",
+                "e_score": "D",
+                "s_score": "B",
+                "g_score": "B"
+            },
+            {
+                "eval_year": 2021,
+                "overall_score": "B",
+                "e_score": "D",
+                "s_score": "B",
+                "g_score": "B"
+            }
+        ]
     }
 ]
