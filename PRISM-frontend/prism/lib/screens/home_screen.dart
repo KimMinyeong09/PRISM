@@ -463,7 +463,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   void fetchComparingGRIData(List<Map<String, int>> reports, List<String> gri_indexes) async {
     try {
       List<Map<String, dynamic>> comparingGriInfo = await ApiService.outComparingGriInfo(reports, gri_indexes);
-      List<String> keys = ["report_sentences", "report_table"];
+      List<String> keys = ["report_sentences", "report_tables"];
 
       Map<String, List<Map<int, dynamic>>> gri_sentences = {};
       List<ReportSentencesModel> report_sentences = ApiService.outReportSentences(comparingGriInfo[0][keys[0]]);
@@ -992,8 +992,10 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                         .size
                         .height /
                     4,
-                child: const Text(
-                    "GRI index를 선택해주세요 (최대 5개)"))
+                child: const Center(
+                  child: Text(
+                      "GRI index를 선택해주세요 (최대 5개)"),
+                ))
           else
             for (var comparing_gri in comparing_gris)
               Padding(
@@ -1146,6 +1148,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 ],
                 xValueMapper: (ChartData data, _) => data.category,
                 yValueMapper: (ChartData data, _) => data.value,
+                maximumValue: 100, 
               ),
             ],
             palette: const <Color>[

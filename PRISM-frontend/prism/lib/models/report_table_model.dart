@@ -5,6 +5,6 @@ class ReportTableModel {
   ReportTableModel.fromJson(Map<String, dynamic> json)
       : gri_index = json['gri_index'],
         sim_rank = json['sim_rank'],
-        link = json['link'],
-        page = json['page'];
+        link = json['html_code'],
+        page = json['page_num'];
 }

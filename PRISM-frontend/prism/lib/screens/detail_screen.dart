@@ -119,7 +119,7 @@ class _SecondPageState extends State<SecondPage> with TickerProviderStateMixin {
         "sustain_reports", 
         "gri_info", 
         "report_sentences", 
-        "report_table", 
+        "report_tables", 
         "gri_usage_ind_avg_score"];
 
       List<PrismScoreModel> prism_scores = ApiService.outPrismScores(detailPage[0][keys[0]]);

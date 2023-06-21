@@ -8,5 +8,5 @@ class ReportSentencesModel {
         most_sentences = json['most_sentences'],
         preced_sentences = json['preced_sentences'],
         back_sentences = json['back_sentences'],
-        page = json['page'];
+        page = json['page_num'];
 }
