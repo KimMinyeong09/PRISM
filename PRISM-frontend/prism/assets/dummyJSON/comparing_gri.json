@@ -1,0 +1,58 @@
+[
+    {
+        "report_sentences" : [
+            {
+                "gri_index": "201-1",
+                "sim_rank":1,
+                "most_sentences": "201-1 가장 유사한 문장 1위",
+                "preced_sentences": "201-1 가장 유사한 문장 1위 앞문장",
+                "back_sentences":"뒷문장, 201-1 가장 유사한 문장 1위",
+                "page":12
+            },
+            {
+                "gri_index": "201-1",
+                "sim_rank":2,
+                "most_sentences": "201-1 가장 유사한 문장 2위",
+                "preced_sentences": "201-1 가장 유사한 문장 2위 앞문장",
+                "back_sentences":"뒷문장, 201-1 가장 유사한 문장 2위",
+                "page":12
+            },
+            {
+                "gri_index": "201-1",
+                "sim_rank":3,
+                "most_sentences": "201-1 가장 유사한 문장 3위",
+                "preced_sentences": "앞문장임!",
+                "back_sentences":"뒷문장임!",
+                "page":12
+            },
+            {
+                "gri_index": "301-1",
+                "sim_rank":1,
+                "most_sentences": "301-1 가장 유사한 문장",
+                "preced_sentences": "앞문장임!",
+                "back_sentences":"뒷문장임!",
+                "page":102
+            }
+        ],
+        "report_table" : [
+            {
+                "gri_index":"201-1",
+                "sim_rank":1,
+                "link":"https://cdn.imweb.me/thumbnail/20190401/5ca1fdc158021.jpg",
+                "page":51
+            },
+            {
+                "gri_index":"301-1",
+                "sim_rank":1,
+                "link":"https://blog.kakaocdn.net/dn/cGe4Tl/btrrfoaNadG/UxDqt2KOdx7GIvilcLMlL1/img.png",
+                "page":51
+            },
+            {
+                "gri_index":"401-1",
+                "sim_rank":1,
+                "link":"https://help.hancom.com/hoffice/webhelp/9.0/ko_kr/hshow/images/table_gallery_01.png",
+                "page":51
+            }
+        ]
+    }
+]

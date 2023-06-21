@@ -465,8 +465,11 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   late Map<String, List<Map<int, dynamic>>> detail_gri_tables = {};
   void fetchComparingGRIData(List<Map<String, int>> reports, List<String> gri_indexes) async {
     try {
+      List<Map<String, dynamic>> comparingGriInfo = await ApiService.outComparingGriInfo(reports, gri_indexes);
+      List<String> keys = ["report_sentences", "report_table"];
+
       Map<String, List<Map<int, dynamic>>> gri_sentences = {};
-      List<ReportSentencesModel> report_sentences = await ApiService.outReportSentences(reports, gri_indexes);
+      List<ReportSentencesModel> report_sentences = ApiService.outReportSentences(comparingGriInfo[0][keys[0]]);
       for (var report_sentence in report_sentences) {
           if (gri_sentences.containsKey(report_sentence.gri_index)) {
             gri_sentences[report_sentence.gri_index]!.add({
@@ -490,7 +493,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         }
       
       Map<String, List<Map<int, dynamic>>> gri_tables = {};
-      List<ReportTableModel> report_tables = await ApiService.outReportTable(reports, gri_indexes);
+      List<ReportTableModel> report_tables = ApiService.outReportTable(comparingGriInfo[0][keys[1]]);
       for (var report_table in report_tables) {
           if (gri_tables.containsKey(report_table.gri_index)) {
             gri_tables[report_table.gri_index]!.add({

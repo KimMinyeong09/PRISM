@@ -362,107 +362,63 @@ class ApiService {
     }
     return esglab_scores_instances;
   }
-  // //회사 보고서 테이블 내용, 해당하는 회사_년도 만큼
-  // static Future<List<SustainReportModel>> outSustainReport(List<Map<String, int>> company_and_year) async {
-  //   final url = Uri.parse('$base_url/comparing/');
-  //   final requestData = {
-  //     'company_and_year': company_and_year,
-  //   };
-    
-  //   final response = await http.post(url, headers: {"Content-Type": "application/json"}, body: jsonEncode(requestData));
-
-  //   List<SustainReportModel> report_instances = [];
-
-  //   if (response.statusCode == 200) {
-  //     final reports = jsonDecode(utf8.decode(response.bodyBytes));
-  //     for (var report in reports) {
-  //       final instance = SustainReportModel.fromJson(report);
-  //       report_instances.add(instance);
-  //     }
-  //     return report_instances;
-  //   }
-  //   // 에러 처리
-  //   throw Exception('Failed to fetch company sustain reports');
-  // }
+  
 
   // 비교대상의 gri유사 문장 및 표 필요
-  //클릭한 회사 보고서내 gri유사 문장, 해당하는 회사_년도 만큼
-  static Future<List<ReportSentencesModel>> outReportSentences(List<Map<String, int>> reports, List<String> gri_indexes) async {
+  static Future<List<Map<String, dynamic>>> outComparingGriInfo(List<Map<String, int>> reports, List<String> gri_indexes) async {
     // final url = Uri.parse('$base_url/comparing/context/');
     // final requestData = {
     //   'reports': reports,
     //   'gri_indexes': gri_indexes,
     // };
 
-    // List<ReportSentencesModel> sentences_instances = [];
+    // List<ReportSentencesModel> comparing_gri_datas = [];
     
     // final response = await http.post(url, headers: {"Content-Type": "application/json"}, body: jsonEncode(requestData));
 
     // if (response.statusCode == 200) {
-    //   final sentences = jsonDecode(utf8.decode(response.bodyBytes));
-    //   for (var sentence in sentences) {
-    //     final instance = ReportSentencesModel.fromJson(sentence);
-    //     sentences_instances.add(instance);
+    //   final comparing_gris = jsonDecode(utf8.decode(response.bodyBytes));
+    //   for (var comparing_gri in comparing_gris) {
+    //     final instance = ReportSentencesModel.fromJson(comparing_gri);
+    //     comparing_gri_datas.add(instance);
     //   }
-    //   return sentences_instances;
+    //   return comparing_gri_datas;
     // }
     // // 에러 처리
-    // throw Exception('Failed to fetch sentences of company sustain reports');
+    // throw Exception('Failed to fetch Comparing Gri Info');
+    final jsonString = await rootBundle.loadString("../../assets/dummyJSON/comparing_gri.json");
 
-    final jsonString = await rootBundle.loadString("../../assets/dummyJSON/report_sentences.json");
-
-    List<ReportSentencesModel> sentences_instances = [];
+    List<Map<String, dynamic>> comparing_gri_datas = [];
 
     final jsonData = jsonDecode(jsonString);
-    final List<Map<String, dynamic>> sentences = List<Map<String, dynamic>>.from(jsonData);
+    final List<Map<String, dynamic>> comparing_gris = List<Map<String, dynamic>>.from(jsonData);
+
+    for (var comparing_gri in comparing_gris) {
+      final instance = comparing_gri;
+      comparing_gri_datas.add(instance);
+    }
+    return comparing_gri_datas;
+  }
+  
+  //클릭한 회사 보고서내 gri유사 문장, 해당하는 회사_년도 만큼
+  static List<ReportSentencesModel> outReportSentences(List<dynamic> data)  {
+    List<ReportSentencesModel> sentences_instances = [];
+    final List<Map<String, dynamic>> sentences = List<Map<String, dynamic>>.from(data);
 
     for (var sentence in sentences) {
-      for (var gri_index in gri_indexes) {
-        if (sentence['gri_index'] == gri_index) {
-          final instance = ReportSentencesModel.fromJson(sentence);
-          sentences_instances.add(instance);
-        }
-      }
-      
+      final instance = ReportSentencesModel.fromJson(sentence);
+      sentences_instances.add(instance);
     }
     return sentences_instances;
   }
   //클릭한 회사 보고서내 gri유사 테이블, 해당하는 회사_년도 만큼
-  static Future<List<ReportTableModel>> outReportTable(List<Map<String, int>> reports, List<String> gri_indexes) async {
-    // final url = Uri.parse('$base_url/comparing/context/');
-    // final requestData = {
-    //   'reports': reports,
-    //   'gri_indexes': gri_indexes,
-    // };
-    
-    // List<ReportTableModel> tables_instances = [];
-    
-    // final response = await http.post(url, headers: {"Content-Type": "application/json"}, body: jsonEncode(requestData));
-
-    // if (response.statusCode == 200) {
-    //   final tables = jsonDecode(utf8.decode(response.bodyBytes));
-    //   for (var table in tables) {
-    //     final instance = ReportTableModel.fromJson(table);
-    //     tables_instances.add(instance);
-    //   }
-    //   return tables_instances;
-    // }
-    // // 에러 처리
-    // throw Exception('Failed to fetch table of company sustain reports');
-    final jsonString = await rootBundle.loadString("../../assets/dummyJSON/report_table.json");
-
+  static List<ReportTableModel> outReportTable(List<dynamic> data)  {
     List<ReportTableModel> tables_instances = [];
-
-    final jsonData = jsonDecode(jsonString);
-    final List<Map<String, dynamic>> tables = List<Map<String, dynamic>>.from(jsonData);
+    final List<Map<String, dynamic>> tables = List<Map<String, dynamic>>.from(data);
 
     for (var table in tables) {
-      for (var gri_index in gri_indexes) {
-        if (table['gri_index'] == gri_index) {
-          final instance = ReportTableModel.fromJson(table);
-          tables_instances.add(instance);
-        }
-      }
+      final instance = ReportTableModel.fromJson(table);
+      tables_instances.add(instance);
     }
     return tables_instances;
   }
