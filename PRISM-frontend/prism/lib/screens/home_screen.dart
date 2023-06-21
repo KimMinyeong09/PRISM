@@ -15,26 +15,6 @@ import '../models/report_table_model.dart';
 import '../services/api_services.dart';
 
 
-// 하드 코딩용 class
-class ReportSentences {
-  final int sustain_report_id, gri_info_id,report_senetences_id, sim_rank, page;
-  final String most_sentence, preced_sentences, back_sentences;
-
-  ReportSentences({
-    required this.sustain_report_id, required this.gri_info_id, required this.report_senetences_id, required this.sim_rank, required this.page,
-    required this.most_sentence, required this.preced_sentences, required this.back_sentences
-  });
-}
-
-class ReportTable {
-  final int sustain_report_id, gri_info_id, report_table_id, sim_rank, page;
-  final String title, Html_code;
-
-  ReportTable({
-    required this.sustain_report_id, required this.gri_info_id, required this.report_table_id, required this.sim_rank, required this.page,
-    required this.title, required this.Html_code
-  });
-}
 
 
 class HomeScreen extends StatefulWidget {
@@ -66,10 +46,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   List<String> comparing_gris = [];
   // *** 선택된 기업 사이드메뉴에서 삭제 가능 / 불가능
   bool remove_comparing_items = true;
-
-  // API- 회사 정보 저장 (하드코딩)
-  late List<ReportSentences> gri_infos;
-  late List<ReportTable> report_tables;
 
   // 업종 리스트
   List<String> industries = [
@@ -301,15 +277,126 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
   late List<Map<String, dynamic>> fetch_comparing_datas = [];
   void fetchComparingData(List<Map<String, int>> company_and_year) async {
+    try {
+    List<Map<String, dynamic>> comparing_datas = [];
+
+    List<Map<String, dynamic>> comparingPage = await ApiService.outComparingPageInfo(company_and_year);
+    final List<String> keys = [
+      "prism_scores",
+      "prism_ind_avg_scores",
+      "kcgs_scores",
+      "esglab_scores"
+    ];
     
-    List<PrismScoreModel> prism_scores = await ApiService.outPrismScore(company_and_year);
-    List<PrismIndAvgScoreModel> prism_ind_avg_scores = await ApiService.outPrismIndAvgScore(company_and_year);
-    List<KcgsScoreModel> kcgs_scores = await ApiService.outKcgsScore(company_and_year);
-    List<EsglabScoreModel> esglab_scores = await ApiService.outEsglabScore(company_and_year);
+    List<PrismScoreModel> prism_scores = ApiService.outPrismScore(comparingPage[0][keys[0]]);
+    List<PrismIndAvgScoreModel> prism_ind_avg_scores = ApiService.outPrismIndAvgScore(comparingPage[0][keys[1]]);
+    List<KcgsScoreModel> kcgs_scores = ApiService.outKcgsScore(comparingPage[0][keys[2]]);
+    List<EsglabScoreModel> esglab_scores = ApiService.outEsglabScore(comparingPage[0][keys[3]]);
 
     for (var i = 0; i < company_and_year.length; i++) {
-      fetch_comparing_datas.add(
-        {
+      var kcgs = kcgs_scores.length != 0 ? true : false;
+      var esglab = esglab_scores.length != 0 ? true : false;
+
+      Map<String, dynamic> tmp = {};
+
+      if (kcgs && !esglab) {
+        tmp = {
+          "overallScore" : prism_scores[i].overallScore,
+          "EScore" : prism_scores[i].EScore,
+          "SScore" : prism_scores[i].SScore,
+          "GScore" : prism_scores[i].GScore,
+
+          "overallRank" : prism_scores[i].overallRank,
+          "Erank" : prism_scores[i].Erank,
+          "Srank" : prism_scores[i].Srank,
+          "Grank" : prism_scores[i].Grank,
+
+          "indOverallRank" : prism_scores[i].indOverallRank,
+          "indERank" : prism_scores[i].indERank,
+          "indSRank" : prism_scores[i].indSRank,
+          "indGRank" : prism_scores[i].indGRank,
+
+          "WOverallScore" : prism_scores[i].WOverallScore, 
+          "WEScore" : prism_scores[i].WEScore,
+          "WSScore" : prism_scores[i].WSScore,
+          "WGScore" : prism_scores[i].WGScore,
+
+          "WOverallRank" : prism_scores[i].WOverallRank,
+          "WERank" : prism_scores[i].WERank,
+          "WSRank" : prism_scores[i].WSRank,
+          "WGRank" : prism_scores[i].WGRank, 
+
+          "indOverallScore" : prism_ind_avg_scores[i].overallScore,
+          "indEScore" : prism_ind_avg_scores[i].EScore,
+          "indSScore" : prism_ind_avg_scores[i].SScore,
+          "indGScore" : prism_ind_avg_scores[i].GScore,
+
+          "indWOverallScore" : prism_ind_avg_scores[i].wOverallScore,
+          "indWEScore" : prism_ind_avg_scores[i].wEScore,
+          "indWSScore" : prism_ind_avg_scores[i].wSScore,
+          "indWGScore" : prism_ind_avg_scores[i].wGScore,
+
+          "kcgsOverallScore" : kcgs_scores[i].overallScore,
+          "kcgsEScore" : kcgs_scores[i].EScore,
+          "kcgsSScore" : kcgs_scores[i].SScore,
+          "kcgsGScore" : kcgs_scores[i].GScore,
+
+          "esglabOverallScore" : "",
+          "esglabEScore" : "",
+          "esglabSScore" : "",
+          "esglabGScore" : ""
+        };
+      }
+      else if(!kcgs && esglab) {
+        tmp = {
+          "overallScore" : prism_scores[i].overallScore,
+          "EScore" : prism_scores[i].EScore,
+          "SScore" : prism_scores[i].SScore,
+          "GScore" : prism_scores[i].GScore,
+
+          "overallRank" : prism_scores[i].overallRank,
+          "Erank" : prism_scores[i].Erank,
+          "Srank" : prism_scores[i].Srank,
+          "Grank" : prism_scores[i].Grank,
+
+          "indOverallRank" : prism_scores[i].indOverallRank,
+          "indERank" : prism_scores[i].indERank,
+          "indSRank" : prism_scores[i].indSRank,
+          "indGRank" : prism_scores[i].indGRank,
+
+          "WOverallScore" : prism_scores[i].WOverallScore, 
+          "WEScore" : prism_scores[i].WEScore,
+          "WSScore" : prism_scores[i].WSScore,
+          "WGScore" : prism_scores[i].WGScore,
+
+          "WOverallRank" : prism_scores[i].WOverallRank,
+          "WERank" : prism_scores[i].WERank,
+          "WSRank" : prism_scores[i].WSRank,
+          "WGRank" : prism_scores[i].WGRank, 
+
+          "indOverallScore" : prism_ind_avg_scores[i].overallScore,
+          "indEScore" : prism_ind_avg_scores[i].EScore,
+          "indSScore" : prism_ind_avg_scores[i].SScore,
+          "indGScore" : prism_ind_avg_scores[i].GScore,
+
+          "indWOverallScore" : prism_ind_avg_scores[i].wOverallScore,
+          "indWEScore" : prism_ind_avg_scores[i].wEScore,
+          "indWSScore" : prism_ind_avg_scores[i].wSScore,
+          "indWGScore" : prism_ind_avg_scores[i].wGScore,
+
+          "kcgsOverallScore" : "",
+          "kcgsEScore" : "",
+          "kcgsSScore" : "",
+          "kcgsGScore" : "",
+
+          "esglabOverallScore" : esglab_scores[i].overallScore,
+          "esglabEScore" : esglab_scores[i].EScore,
+          "esglabSScore" : esglab_scores[i].SScore,
+          "esglabGScore" : esglab_scores[i].GScore
+        };
+      }
+      else {
+        tmp = {
           "overallScore" : prism_scores[i].overallScore,
           "EScore" : prism_scores[i].EScore,
           "SScore" : prism_scores[i].SScore,
@@ -354,16 +441,24 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           "esglabEScore" : esglab_scores[i].EScore,
           "esglabSScore" : esglab_scores[i].SScore,
           "esglabGScore" : esglab_scores[i].GScore
-        }
+        };
+      }
+
+      comparing_datas.add(
+        tmp
       );
     }
 
+    print("test");
+
     setState(() {
-      fetch_comparing_datas;
+      fetch_comparing_datas = comparing_datas;
       print(fetch_comparing_datas);
     });
 
-    // await ApiService.outSustainReport(company_and_year);
+     } catch (e) {
+      print('Error: $e');
+    }
   }
 
   late Map<String, List<Map<int, dynamic>>> detail_gri_sentences = {};
@@ -785,24 +880,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                   }
     fetchComparingData(company_and_year);
 
-    var reportSentences = ReportSentences(
-        sustain_report_id: 1, gri_info_id: 1, report_senetences_id: 1, sim_rank: 1, page: 50,
-        most_sentence: "중요 문장!!", preced_sentences: "이전문장", back_sentences: "이후문장",
-      );
-    var reportTable = ReportTable(
-        sustain_report_id: 1, gri_info_id: 1, report_table_id: 1, sim_rank: 1, page: 60,
-        title: "제목", Html_code: "String",
-      );
-
-    
-    gri_infos = [
-        for (var i = 0; i < comparing_items.length; i++)
-          reportSentences,
-      ];
-      report_tables = [
-        for (var i = 0; i < comparing_items.length; i++)
-          reportTable,
-      ];
     if (fetch_comparing_datas.isEmpty)
       return List.generate(comparing_items.length, (index) {
         return Row(
@@ -939,7 +1016,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                           // 텍스트
                           extractSentences(comparing_gri),
                           // 표
-                          extractTable(report_tables[index], comparing_gri),
+                          extractTable(comparing_gri),
                       ],
                     ),
                   ),
@@ -949,7 +1026,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     });
   }
 
-  Padding extractTable(ReportTable report_table, String comparing_gri) {
+  Padding extractTable(String comparing_gri) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Column(
@@ -1005,6 +1082,10 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   }
 
   SizedBox _buildAssociationRakingTable(String association, String all, String e, String s, String g) {
+
+    if (all == ""){
+      return SizedBox();
+    }
 
     return SizedBox(
       height: MediaQuery.of(context).size.height / 4,
