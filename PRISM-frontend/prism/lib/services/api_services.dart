@@ -365,7 +365,7 @@ class ApiService {
   
 
   // 비교대상의 gri유사 문장 및 표 필요
-  static Future<List<Map<String, dynamic>>> outComparingGriInfo(List<Map<String, int>> reports, List<String> gri_indexes) async {
+  static Future<List<Map<String, dynamic>>> outComparingGriInfo(List<String> reports, List<String> gri_indexes) async {
     // final url = Uri.parse('$base_url/comparing/context/');
     // final requestData = {
     //   'reports': reports,

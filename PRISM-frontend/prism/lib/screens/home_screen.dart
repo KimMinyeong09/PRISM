@@ -460,7 +460,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
   late Map<String, List<Map<int, dynamic>>> detail_gri_sentences = {};
   late Map<String, List<Map<int, dynamic>>> detail_gri_tables = {};
-  void fetchComparingGRIData(List<Map<String, int>> reports, List<String> gri_indexes) async {
+  void fetchComparingGRIData(List<String> reports, List<String> gri_indexes) async {
     try {
       List<Map<String, dynamic>> comparingGriInfo = await ApiService.outComparingGriInfo(reports, gri_indexes);
       List<String> keys = ["report_sentences", "report_tables"];
@@ -827,13 +827,14 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                       onPressed: () {
                         setState(() {
                           comparing_gris.remove(gri);
-                          List<Map<String, int>> reports = [];
+                          List<String> reports = [];
                           for (var comparing_item in comparing_items) {
                             String item = comparing_item;
                             List<String> splitText = item.split("\n");
                             String companyName = splitText[0];
-                            int companyYear = int.parse(splitText[1]);
-                            reports.add({companyName: companyYear});
+                            String companyYear = splitText[1];
+                            reports.add("$companyYear\_$companyName");
+                            print(reports);
                           }
                           fetchComparingGRIData(reports, comparing_gris);
                         });
@@ -1556,13 +1557,14 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                                           if (gri_subs[k].contains(gri_mids[j]))
                                               TextButton(
                                                 onPressed: () {
-                                                  List<Map<String, int>> reports = [];
+                                                  List<String> reports = [];
                                                   for (var comparing_item in comparing_items) {
                                                     String item = comparing_item;
                                                     List<String> splitText = item.split("\n");
                                                     String companyName = splitText[0];
-                                                    int companyYear = int.parse(splitText[1]);
-                                                    reports.add({companyName: companyYear});
+                                                    String companyYear = splitText[1];
+                                                    reports.add("$companyYear\_$companyName");
+                                                    print(reports);
                                                   }
                                                   fetchComparingGRIData(reports, comparing_gris);
                                                   setState(() {
@@ -1602,14 +1604,15 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         actions: <Widget>[
           TextButton(
             onPressed: (() {
-              List<Map<String, int>> reports = [];
+              List<String> reports = [];
               for (var comparing_item in comparing_items) {
                 String item = comparing_item;
                 List<String> splitText = item.split("\n");
                 String companyName = splitText[0];
-                int companyYear = int.parse(splitText[1]);
-                reports.add({companyName: companyYear});
-              }
+                String companyYear = splitText[1];
+                reports.add("$companyYear\_$companyName");
+                print(reports);
+              } 
               fetchComparingGRIData(reports, comparing_gris);
               Navigator.pop(context, 'OK');
             }),
