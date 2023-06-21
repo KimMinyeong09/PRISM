@@ -273,7 +273,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   }
 
   late List<Map<String, dynamic>> fetch_comparing_datas = [];
-  void fetchComparingData(List<Map<String, int>> company_and_year) async {
+  void fetchComparingData(List<String> company_and_year) async {
     try {
     List<Map<String, dynamic>> comparing_datas = [];
 
@@ -287,12 +287,18 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     
     List<PrismScoreModel> prism_scores = ApiService.outPrismScore(comparingPage[0][keys[0]]);
     List<PrismIndAvgScoreModel> prism_ind_avg_scores = ApiService.outPrismIndAvgScore(comparingPage[0][keys[1]]);
-    List<KcgsScoreModel> kcgs_scores = ApiService.outKcgsScore(comparingPage[0][keys[2]]);
-    List<EsglabScoreModel> esglab_scores = ApiService.outEsglabScore(comparingPage[0][keys[3]]);
+    List<KcgsScoreModel> kcgs_scores = [];
+    if (comparingPage[0][keys[2]].toString() != "[]") {
+      kcgs_scores = ApiService.outKcgsScore(comparingPage[0][keys[2]]);
+    }
+    List<EsglabScoreModel> esglab_scores = [];
+    if (comparingPage[0][keys[3]].toString() != "[]") {
+      esglab_scores = ApiService.outEsglabScore(comparingPage[0][keys[3]]);
+    }
 
     for (var i = 0; i < company_and_year.length; i++) {
-      var kcgs = kcgs_scores.length != 0 ? true : false;
-      var esglab = esglab_scores.length != 0 ? true : false;
+      var kcgs = kcgs_scores.isNotEmpty ? true : false;
+      var esglab = esglab_scores.isNotEmpty ? true : false;
 
       Map<String, dynamic> tmp = {};
 
@@ -586,6 +592,17 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 priority: 1,
                 title: 'Comparing',
                 onTap: (page, _) {
+                  List<String> company_and_year=[];
+    for (var comparing_item in comparing_items) {
+      String item = comparing_item;
+      List<String> splitText = item.split("\n");
+      String companyName = splitText[0];
+      int companyYear = int.parse(splitText[1]);
+      company_and_year.add("$companyYear\_$companyName");
+    }
+    print(company_and_year.length);
+    print(company_and_year);
+    fetchComparingData(company_and_year);
                   side_menu.changePage(page);
                   remove_comparing_items = false;
                 },
@@ -597,7 +614,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 onTap: (page, _) {
                   if (remove_comparing_items) {
                     comparing_items.remove(comparing_items[0]);
-                    setState(() {});
+                    setState(() {comparing_items;});
                   }
                 },
               ),
@@ -607,7 +624,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 onTap: (page, _) {
                   if (remove_comparing_items) {
                     comparing_items.remove(comparing_items[1]);
-                    setState(() {});
+                    setState(() {comparing_items;});
                   }
                 },
               ),
@@ -617,7 +634,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 onTap: (page, _) {
                   if (remove_comparing_items) {
                     comparing_items.remove(comparing_items[2]);
-                    setState(() {});
+                    setState(() {comparing_items;});
                   }
                 },
               ),
@@ -871,16 +888,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   // 비교 페이지 데이터 출력
   List<Widget> printComparingInfo(BuildContext context) {
 
-    List<Map<String, int>> company_and_year=[];
-    for (var comparing_item in comparing_items) {
-      String item = comparing_item;
-      List<String> splitText = item.split("\n");
-      String companyName = splitText[0];
-      int companyYear = int.parse(splitText[1]);
-      company_and_year.add({companyName: companyYear});
-    }
-    fetchComparingData(company_and_year);
-
     if (fetch_comparing_datas.isEmpty)
       return List.generate(comparing_items.length, (index) {
         return Row(
@@ -890,14 +897,31 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       });
     return List.generate(
       comparing_items.length, (index) {
+
+        
       String item = comparing_items[index];
       List<String> splitText = item.split("\n");
       String companyName = splitText[0];
       String companyYear = splitText[1];
 
+      
+
+      List<String> company_and_year=[];
+    for (var comparing_item in comparing_items) {
+      String item = comparing_item;
+      List<String> splitText = item.split("\n");
+      String companyName = splitText[0];
+      int companyYear = int.parse(splitText[1]);
+      company_and_year.add("$companyYear\_$companyName");
+    }
+    print(company_and_year.length);
+    print(company_and_year);
+    fetchComparingData(company_and_year);
+
       print("here!");
       print(index);
-      print(fetch_comparing_datas[index]);
+      print(fetch_comparing_datas);
+      // print(fetch_comparing_datas[index]);
       
       return Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -1390,7 +1414,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                                               }
                                             }
                                             Navigator.pop(context);
-                                            setState(() {});
+                                            // setState(() {comparing_items;});
                                           },
                                           child: Text(
                                             currentYear.toString(),
