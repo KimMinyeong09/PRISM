@@ -20,7 +20,13 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/industry/', IndustryAPIView.as_view(), name='industry-api'),
 
+    ##TEST용
+    path("test/", test),
+
     #아래는 https://www.notion.so/API-url-JSON-4dda3eaa812740a685547801e6d49f4a?pvs=4 참조
     path("rank/page/", oneOfPage),
-    path("rank/oneCompany/years/", yearsOfCompany)
+    path("rank/oneCompany/years/", yearsOfCompany),
+    path("rank/oneCompany/", oneOfCompany),
+    path("comparing/", comparing),
+    path("comparing/context/", contextOfComparing)
 ]
