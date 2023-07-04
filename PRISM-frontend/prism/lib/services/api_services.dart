@@ -19,77 +19,80 @@ import '../models/report_sentences_model.dart';
 
 
 class ApiService {
-  static const String base_url = 'http://127.0.0.1:8000/';
+  static const String base_url = 'http://127.0.0.1:8000';
 
   // 한 페이지를 불러와야할 때
   // 필터결과에 해당하는 행 최대 10개
   static Future<List<OneRowModel>> outOnePage(int page, String filter_score, List<String> filter_industries, String filter_name) async {
-    // final url = Uri.parse('$base_url/rank/$page');
+    final url = Uri.parse('$base_url/rank/page/');
     
     final requestData = {
+      'page': page,
       'filter_score': filter_score,
       'filter_industries': filter_industries,
       'filter_name': filter_name,
     };
     
     // final response = await http.post(url, body: jsonEncode(requestData));
-
-    // List<OneRowModel> rows_instances = [];
-    
-    // if (response.statusCode == 200) {
-    //   final rows = jsonDecode(response.body);
-    //   for (var row in rows) {
-    //     final instance = OneRowModel.fromJson(row);
-    //     rows_instances.add(instance);
-    //   }
-    //   return rows_instances;
-    // }
-    
-    final jsonString = await rootBundle.loadString("../../assets/dummyJson/one_row.json");
+    final response = await http.post(url, headers: {"Content-Type": "application/json"}, body: jsonEncode(requestData));
 
     List<OneRowModel> rows_instances = [];
-
-    final jsonData = jsonDecode(jsonString);
-    final List<Map<String, dynamic>> rows = List<Map<String, dynamic>>.from(jsonData);
     
-    for (var row in rows) {
-      if (page <= row['pages_number']) {
-      if (filter_score == "prism-ALL") {
-        if (filter_industries.isNotEmpty){
-          for (var industry in filter_industries) {
-            if (row['industry'] == industry) {
-              if (filter_name == "") {
-                final instance = OneRowModel.fromJson(row);
-                rows_instances.add(instance);
-              }
-              else {
-                if (row['name'].toString().contains(filter_name)) {
-                  final instance = OneRowModel.fromJson(row);
-                  rows_instances.add(instance);
-                }
-              }
-            }
-          }
-          
-        }
-        else
-        {
-          if (filter_name == "") {
-                final instance = OneRowModel.fromJson(row);
-                rows_instances.add(instance);
-              }
-              else {
-                if (row['name'].toString().contains(filter_name)) {
-                  final instance = OneRowModel.fromJson(row);
-                  rows_instances.add(instance);
-                }
-              }
-        }
+    if (response.statusCode == 200) {
+      final rows = jsonDecode(response.body);
+      print(rows);
+      for (var row in rows) {
+        final instance = OneRowModel.fromJson(row);
+        rows_instances.add(instance);
       }
-      }
+      return rows_instances;
     }
     
-    return rows_instances;
+    // final jsonString = await rootBundle.loadString("../../assets/dummyJson/one_row.json");
+
+    // List<OneRowModel> rows_instances = [];
+
+    // final jsonData = jsonDecode(jsonString);
+    // final List<Map<String, dynamic>> rows = List<Map<String, dynamic>>.from(jsonData);
+    
+    // for (var row in rows) {
+    //   if (page <= row['pages_number']) {
+    //   if (filter_score == "prism-ALL") {
+    //     if (filter_industries.isNotEmpty){
+    //       for (var industry in filter_industries) {
+    //         if (row['industry'] == industry) {
+    //           if (filter_name == "") {
+    //             final instance = OneRowModel.fromJson(row);
+    //             rows_instances.add(instance);
+    //           }
+    //           else {
+    //             if (row['name'].toString().contains(filter_name)) {
+    //               final instance = OneRowModel.fromJson(row);
+    //               rows_instances.add(instance);
+    //             }
+    //           }
+    //         }
+    //       }
+          
+    //     }
+    //     else
+    //     {
+    //       if (filter_name == "") {
+    //             final instance = OneRowModel.fromJson(row);
+    //             rows_instances.add(instance);
+    //           }
+    //           else {
+    //             if (row['name'].toString().contains(filter_name)) {
+    //               final instance = OneRowModel.fromJson(row);
+    //               rows_instances.add(instance);
+    //             }
+    //           }
+    //     }
+    //   }
+    //   }
+    // }
+    
+    // return rows_instances;
 
 
     // 에러 처리

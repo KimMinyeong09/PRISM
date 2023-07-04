@@ -66,6 +66,7 @@ def test(request):
 
 @api_view(["POST"])
 def oneOfPage(request):
+    pprint.pprint(request.data)
     with connection.cursor() as cursor:
         sql = f"SELECT * FROM COMPANY"
         cursor.execute(sql)
